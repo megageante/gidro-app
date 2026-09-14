@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gidro — Learn Malagasy &amp; English</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;700;800&display=swap');
+
+:root{
+  --bg:#FAF6EE;
+  --card:#FFFCF3;
+  --ink:#2E2A25;
+  --ink-soft:#6B6459;
+  --forest:#3A7CA5;
+  --forest-light:#5B93B8;
+  --gold:#B5651D;
+  --gold-deep:#7A4313;
+  --plum:#A6394B;
+  --plum-deep:#7A2536;
+  --success:#3E8C63;
+  --success-deep:#245C3E;
+  --locked:#D8D2BD;
+  --locked-ink:#9A927A;
+  --radius:18px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Manrope',sans-serif;
+  min-height:100vh;
+}
+h1,h2,h3,.display{font-family:'Fraunces',serif;}
+button{font-family:inherit;}
+.wrap{max-width:520px;margin:0 auto;padding:20px 16px 60px;}
+
+/* header */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-mark{width:42px;height:42px;flex-shrink:0;}
+.brand-name{font-size:22px;font-weight:600;color:var(--forest);line-height:1;}
+.brand-tag{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+.stats{display:flex;gap:10px;}
+.stat{display:flex;align-items:center;gap:5px;background:var(--card);border-radius:999px;padding:6px 12px;font-weight:700;font-size:14px;box-shadow:0 1px 0 rgba(46,42,37,0.06);}
+.stat svg{width:18px;height:18px;flex-shrink:0;}
+
+/* direction toggle */
+.toggle-row{display:flex;justify-content:center;margin-bottom:26px;}
+.toggle{display:flex;background:var(--card);border-radius:999px;padding:4px;box-shadow:0 1px 0 rgba(46,42,37,0.06);}
+.toggle button{
+  border:none;background:transparent;padding:9px 16px;border-radius:999px;font-weight:700;font-size:13px;
+  color:var(--ink-soft);cursor:pointer;transition:background .18s ease, color .18s ease;
+}
+.toggle button.active{background:var(--forest);color:#FAF6EE;}
+
+/* path */
+.path{position:relative;display:flex;flex-direction:column;align-items:center;gap:38px;padding:10px 0 20px;}
+.node-row{display:flex;width:100%;}
+.node-row.pos-0{justify-content:center;}
+.node-row.pos-1{justify-content:flex-start;padding-left:14%;}
+.node-row.pos-2{justify-content:flex-end;padding-right:14%;}
+.node-row.pos-3{justify-content:center;}
+.node-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;width:110px;}
+.node{
+  width:76px;height:76px;border-radius:50%;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;font-size:26px;
+  color:#FAF6EE;box-shadow:0 5px 0 rgba(0,0,0,0.16);position:relative;transition:transform .12s ease;
+}
+.node:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,0.16);}
+.node.locked{background:var(--locked);color:var(--locked-ink);cursor:default;box-shadow:0 5px 0 rgba(0,0,0,0.06);}
+.node.locked:active{transform:none;box-shadow:0 5px 0 rgba(0,0,0,0.06);}
+.node.done::after{
+  content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--success);opacity:.5;
+}
+.node.next{animation:pulse 1.8s ease-in-out infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 5px 0 rgba(0,0,0,0.16), 0 0 0 0 rgba(58,124,165,0.35);}50%{box-shadow:0 5px 0 rgba(0,0,0,0.16), 0 0 0 10px rgba(58,124,165,0);}}
+.node-title{font-weight:700;font-size:13px;text-align:center;color:var(--ink);}
+.node-sub{font-family:'Fraunces',serif;font-style:italic;font-size:12px;color:var(--ink-soft);text-align:center;}
+.lock-icon{width:22px;height:22px;}
+
+/* lesson overlay */
+.overlay{position:fixed;inset:0;background:var(--bg);z-index:50;display:none;flex-direction:column;}
+.overlay.show{display:flex;}
+.lesson-head{display:flex;align-items:center;gap:14px;padding:16px 18px;}
+.close-btn{background:none;border:none;cursor:pointer;color:var(--ink-soft);padding:4px;}
+.close-btn svg{width:24px;height:24px;}
+.progress-track{flex:1;height:14px;background:var(--card);border-radius:999px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--forest-light);border-radius:999px;transition:width .3s ease;}
+.hearts{display:flex;gap:4px;}
+.hearts svg{width:20px;height:20px;}
+
+.lesson-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 24px;text-align:center;}
+.q-label{font-size:13px;color:var(--ink-soft);margin-bottom:8px;}
+.q-prompt{font-family:'Fraunces',serif;font-weight:600;font-size:38px;line-height:1.15;color:var(--forest);margin:0;max-width:340px;}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:420px;}
+.opt{
+  background:var(--card);border:2px solid transparent;border-radius:14px;padding:16px 10px;font-size:16px;font-weight:700;
+  cursor:pointer;color:var(--ink);transition:border-color .12s ease, background .12s ease;
+}
+.opt:hover{border-color:var(--forest-light);}
+.opt.correct{background:#DEEFE2;border-color:var(--success);color:var(--success-deep);}
+.opt.wrong{background:#F3DEE1;border-color:var(--plum);color:var(--plum-deep);}
+.opt.disabledopt{cursor:default;}
+
+.feedback-bar{padding:20px 22px;display:none;align-items:center;justify-content:space-between;gap:16px;}
+.feedback-bar.show{display:flex;}
+.feedback-bar.ok{background:#DEEFE2;}
+.feedback-bar.bad{background:#F3DEE1;}
+.feedback-text{font-weight:800;font-size:16px;}
+.feedback-text.ok-text{color:var(--success-deep);}
+.feedback-text.bad-text{color:var(--plum-deep);}
+.feedback-sub{font-size:13px;font-weight:500;margin-top:2px;}
+.continue-btn{
+  border:none;border-radius:14px;padding:14px 26px;font-weight:800;font-size:15px;cursor:pointer;color:#FAF6EE;
+  box-shadow:0 4px 0 rgba(0,0,0,0.15);
+}
+.continue-btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,0.15);}
+.continue-btn.ok-btn{background:var(--success);}
+.continue-btn.bad-btn{background:var(--plum);}
+
+/* complete screen */
+.complete-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;}
+.complete-wrap svg{width:110px;height:110px;margin-bottom:8px;}
+.complete-title{font-size:30px;font-weight:700;color:var(--forest);margin:6px 0 4px;}
+.complete-sub{color:var(--ink-soft);font-size:15px;margin-bottom:26px;}
+.complete-stats{display:flex;gap:14px;margin-bottom:30px;}
+.complete-stat{background:var(--card);border-radius:14px;padding:14px 20px;min-width:96px;}
+.complete-stat b{display:block;font-size:22px;font-family:'Fraunces',serif;color:var(--forest);}
+.complete-stat span{font-size:12px;color:var(--ink-soft);}
+.primary-btn{
+  border:none;border-radius:14px;padding:15px 34px;font-weight:800;font-size:16px;cursor:pointer;color:#FAF6EE;
+  background:var(--forest);box-shadow:0 4px 0 var(--forest-light2, #123128);
+}
+.primary-btn:active{transform:translateY(3px);box-shadow:none;}
+
+/* premium */
+.upgrade-chip{
+  display:flex;align-items:center;gap:5px;border:none;border-radius:999px;padding:6px 13px;font-weight:800;font-size:13px;
+  cursor:pointer;background:var(--gold);color:#2E2A25;box-shadow:0 1px 0 rgba(46,42,37,0.06);
+}
+.premium-badge{
+  display:flex;align-items:center;gap:5px;border-radius:999px;padding:6px 13px;font-weight:800;font-size:13px;
+  background:var(--forest);color:#FAF6EE;
+}
+.upgrade-chip svg, .premium-badge svg{width:16px;height:16px;}
+.node.premium-locked{background:#EFE0BC;color:var(--gold-deep);cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,0.08);}
+.premium-star{width:24px;height:24px;}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(46,42,37,0.45);z-index:80;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.show{display:flex;}
+.modal-card{background:var(--card);border-radius:20px;max-width:400px;width:100%;padding:26px 24px;position:relative;}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;cursor:pointer;color:var(--ink-soft);}
+.modal-close svg{width:22px;height:22px;}
+.modal-title{font-size:24px;color:var(--forest);margin:0 0 4px;}
+.modal-note{font-size:13px;color:var(--ink-soft);margin-bottom:18px;}
+.plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.plan{border:2px solid var(--locked);border-radius:14px;padding:14px 12px;}
+.plan.highlight{border-color:var(--gold);}
+.plan-name{font-weight:800;font-size:14px;margin-bottom:2px;}
+.plan-price{font-family:'Fraunces',serif;font-size:20px;color:var(--forest);margin-bottom:8px;}
+.plan ul{margin:0;padding-left:18px;font-size:12.5px;color:var(--ink-soft);line-height:1.6;}
+.upgrade-confirm{width:100%;border:none;border-radius:14px;padding:14px;font-weight:800;font-size:15px;cursor:pointer;
+  background:var(--gold);color:#FAF6EE;box-shadow:0 4px 0 var(--gold-deep);}
+.upgrade-confirm:active{transform:translateY(3px);box-shadow:none;}
+.demo-note{font-size:11.5px;color:var(--ink-soft);text-align:center;margin-top:10px;}
+
+.ad-slot{
+  width:100%;max-width:360px;background:#E4DFCB;border:1px dashed var(--locked-ink);border-radius:14px;
+  padding:14px;margin:0 0 22px;text-align:left;
+}
+.ad-label{font-size:10.5px;letter-spacing:.02em;color:var(--ink-soft);margin-bottom:6px;}
+.ad-title{font-weight:800;font-size:14px;margin-bottom:2px;}
+.ad-body{font-size:12.5px;color:var(--ink-soft);margin-bottom:10px;}
+.ad-remove{font-size:12.5px;font-weight:800;color:var(--forest);background:none;border:none;cursor:pointer;padding:0;}
+
+.btn-row{display:flex;flex-direction:column;gap:10px;width:100%;max-width:280px;}
+.secondary-btn{
+  border:2px solid var(--forest);border-radius:14px;padding:13px 30px;font-weight:800;font-size:15px;cursor:pointer;
+  background:transparent;color:var(--forest);
+}
+.secondary-btn:active{transform:translateY(2px);}
+.review-list{width:100%;max-width:400px;display:flex;flex-direction:column;gap:8px;margin-bottom:24px;text-align:left;}
+.review-item{
+  display:flex;align-items:center;justify-content:space-between;background:var(--card);border-radius:12px;
+  padding:12px 16px;
+}
+.review-mg{font-family:'Fraunces',serif;font-weight:600;font-size:17px;color:var(--forest);}
+.review-en{font-size:14px;color:var(--ink-soft);}
+
+.speak-btn{
+  display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;
+  border:none;background:var(--card);color:var(--forest);cursor:pointer;flex-shrink:0;vertical-align:middle;
+  box-shadow:0 1px 0 rgba(46,42,37,0.08);
+}
+.speak-btn svg{width:18px;height:18px;}
+.speak-btn:active{transform:scale(0.92);}
+.speak-btn.small{width:26px;height:26px;background:transparent;box-shadow:none;color:var(--ink-soft);}
+.speak-btn.small svg{width:15px;height:15px;}
+.prompt-row{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 0 34px;}
+
+@media (prefers-reduced-motion:reduce){.node.next{animation:none;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="36" r="16" fill="#3A7CA5"/>
+        <circle cx="18" cy="20" r="7" fill="#3A7CA5"/>
+        <circle cx="46" cy="20" r="7" fill="#3A7CA5"/>
+        <circle cx="18" cy="20" r="3.2" fill="#FAF6EE"/>
+        <circle cx="46" cy="20" r="3.2" fill="#FAF6EE"/>
+        <circle cx="26" cy="34" r="3" fill="#FAF6EE"/>
+        <circle cx="38" cy="34" r="3" fill="#FAF6EE"/>
+        <circle cx="26" cy="34" r="1.3" fill="#2E2A25"/>
+        <circle cx="38" cy="34" r="1.3" fill="#2E2A25"/>
+        <path d="M29 41c1.5 1.3 4.5 1.3 6 0" stroke="#FAF6EE" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M50 40c6 2 8 12 2 16-4 2.6-3-3-1-6-4 1-8-2-6-6 1-2 3-4 5-4z" fill="#B5651D"/>
+      </svg>
+      <div>
+        <div class="brand-name">Gidro</div>
+        <div class="brand-tag">Mianatra Teny — Learn languages</div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat" style="color:var(--gold-deep)">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C9 7 6 9 6 14a6 6 0 0012 0c0-3-1.5-4.5-2.5-6 .3 2-.7 3-1.7 3C15 9 14 6.5 12 2z" fill="#B5651D"/></svg>
+        <span id="streakCount">0</span>
+      </div>
+      <div class="stat" style="color:var(--forest)">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2l3 5 5.5.8-4 3.9.9 5.5L12 14.8 7.6 17.2l.9-5.5-4-3.9L10 7z" fill="#3A7CA5"/></svg>
+        <span id="xpCount">0</span>
+      </div>
+      <button class="upgrade-chip" id="upgradeChipTop">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 15.3l-4.8 2.6.9-5.4-3.9-3.8 5.4-.8z" fill="#2E2A25"/></svg>
+        <span id="upgradeChipLabel">Upgrade</span>
+      </button>
+      <button class="stat" id="soundToggle" style="cursor:pointer;color:var(--forest);" aria-label="Toggle sound"></button>
+    </div>
+  </div>
+
+  <div class="toggle-row">
+    <div class="toggle" id="dirToggle">
+      <button data-dir="mg-en" class="active">Malagasy → English</button>
+      <button data-dir="en-mg">English → Malagasy</button>
+    </div>
+  </div>
+
+  <div class="path" id="path"></div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="lesson-head">
+    <button class="close-btn" id="closeLesson" aria-label="Close lesson">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+    </button>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="hearts" id="heartsRow"></div>
+  </div>
+
+  <div class="lesson-body" id="lessonBody">
+    <div class="q-label" id="qLabel"></div>
+    <div class="prompt-row">
+      <div class="q-prompt" id="qPrompt"></div>
+      <button class="speak-btn" id="speakPrompt" aria-label="Hear pronunciation">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8a5 5 0 010 8"/></svg>
+      </button>
+    </div>
+    <div class="options" id="options"></div>
+  </div>
+
+  <div class="feedback-bar" id="feedbackBar">
+    <div>
+      <div class="feedback-text" id="feedbackText"></div>
+      <div class="feedback-sub" id="feedbackSub"></div>
+    </div>
+    <button class="continue-btn" id="continueBtn">Continue</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="upgradeModal">
+  <div class="modal-card">
+    <button class="modal-close" id="closeModal" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+    </button>
+    <h2 class="modal-title">Go Premium</h2>
+    <div class="modal-note">Unlock every unit and drop the ads between lessons.</div>
+    <div class="plan-grid">
+      <div class="plan">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">$0</div>
+        <ul>
+          <li>Greetings, Numbers &amp; Family units</li>
+          <li>Streaks, XP and hearts</li>
+          <li>Ad between lessons</li>
+        </ul>
+      </div>
+      <div class="plan highlight">
+        <div class="plan-name">Premium</div>
+        <div class="plan-price">$4.99/mo</div>
+        <ul>
+          <li>Every unit, including Colors &amp; Animals</li>
+          <li>No ads</li>
+          <li>New units first</li>
+        </ul>
+      </div>
+    </div>
+    <button class="upgrade-confirm" id="confirmUpgrade">Simulate upgrade</button>
+    <div class="demo-note">This is a design prototype — no real payment is charged.</div>
+  </div>
+</div>
+
+<script>
+const UNITS = [
+  { id:'greet', title:'Fiarahabana', sub:'Greetings', accent:'#3A7CA5', items:[
+    {mg:'Salama', en:'Hello'},
+    {mg:'Veloma', en:'Goodbye'},
+    {mg:'Misaotra', en:'Thank you'},
+    {mg:'Azafady', en:'Excuse me / please'},
+    {mg:'Eny', en:'Yes'},
+    {mg:'Tsia', en:'No'},
+  ]},
+  { id:'numbers', title:'Isa', sub:'Numbers', accent:'#B5651D', items:[
+    {mg:'Iray', en:'One'},
+    {mg:'Roa', en:'Two'},
+    {mg:'Telo', en:'Three'},
+    {mg:'Efatra', en:'Four'},
+    {mg:'Dimy', en:'Five'},
+    {mg:'Enina', en:'Six'},
+    {mg:'Fito', en:'Seven'},
+    {mg:'Valo', en:'Eight'},
+  ]},
+  { id:'family', title:'Fianakaviana', sub:'Family', accent:'#A6394B', items:[
+    {mg:'Ray', en:'Father'},
+    {mg:'Reny', en:'Mother'},
+    {mg:'Zanaka', en:'Child'},
+    {mg:'Rahalahy', en:'Brother'},
+    {mg:'Anabavy', en:'Sister'},
+    {mg:'Fianakaviana', en:'Family'},
+  ]},
+  { id:'colors', title:'Loko', sub:'Colors', accent:'#3E8C63', items:[
+    {mg:'Mena', en:'Red'},
+    {mg:'Mavo', en:'Yellow'},
+    {mg:'Maitso', en:'Green'},
+    {mg:'Manga', en:'Blue'},
+    {mg:'Fotsy', en:'White'},
+    {mg:'Mainty', en:'Black'},
+  ]},
+  { id:'animals', title:'Biby sy Sakafo', sub:'Animals & food', accent:'#5B93B8', items:[
+    {mg:'Gidro', en:'Lemur'},
+    {mg:'Alika', en:'Dog'},
+    {mg:'Saka', en:'Cat'},
+    {mg:'Vorona', en:'Bird'},
+    {mg:'Vary', en:'Rice'},
+    {mg:'Rano', en:'Water'},
+  ]},
+];
+
+const FREE_UNIT_LIMIT = 3;
+
+let state = {
+  completed: [],
+  xp: 0,
+  streak: 0,
+  lastActive: null,
+  direction: 'mg-en',
+  premium: false,
+  soundOn: true,
+};
+
+let lesson = null;
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+let audioCtx = null;
+function getAudioCtx(){
+  if(!audioCtx){
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new Ctx();
+  }
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+function playTone(freq, startTime, duration, type, peakGain){
+  const ctx = getAudioCtx();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, startTime);
+  gain.gain.setValueAtTime(0.0001, startTime);
+  gain.gain.exponentialRampToValueAtTime(peakGain, startTime + 0.012);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(startTime);
+  osc.stop(startTime + duration + 0.02);
+}
+
+function playSweep(freqStart, freqEnd, startTime, duration, type, peakGain){
+  const ctx = getAudioCtx();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freqStart, startTime);
+  osc.frequency.exponentialRampToValueAtTime(freqEnd, startTime + duration);
+  gain.gain.setValueAtTime(0.0001, startTime);
+  gain.gain.exponentialRampToValueAtTime(peakGain, startTime + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(startTime);
+  osc.stop(startTime + duration + 0.02);
+}
+
+function playCorrectSound(){
+  if(!state.soundOn) return;
+  const ctx = getAudioCtx();
+  const now = ctx.currentTime;
+  [523.25, 659.25, 783.99, 1046.5].forEach((freq, i)=>{
+    const t = now + i * 0.085;
+    playTone(freq, t, 0.32, 'triangle', 0.32);
+    playTone(freq * 2, t, 0.2, 'sine', 0.12);
+  });
+}
+
+function playLessonCompleteSound(){
+  if(!state.soundOn) return;
+  const ctx = getAudioCtx();
+  const now = ctx.currentTime;
+
+  const stabChord = [261.63, 329.63, 392.0, 523.25];
+  stabChord.forEach(freq=>{
+    playTone(freq, now, 0.3, 'sawtooth', 0.14);
+    playTone(freq * 1.005, now, 0.3, 'triangle', 0.1);
+  });
+
+  const runStart = now + 0.22;
+  const scale = [523.25, 587.33, 659.25, 783.99, 880.0, 987.77, 1046.5];
+  scale.forEach((freq, i)=>{
+    const t = runStart + i * 0.055;
+    playTone(freq, t, 0.14, 'triangle', 0.2);
+    playTone(freq * 2, t, 0.1, 'sine', 0.08);
+  });
+
+  const finalStart = runStart + scale.length * 0.055 + 0.02;
+  const finalChord = [523.25, 659.25, 783.99, 1046.5, 1318.5];
+  finalChord.forEach(freq=>{
+    playTone(freq, finalStart, 0.85, 'triangle', 0.22);
+    playTone(freq * 1.006, finalStart, 0.85, 'sine', 0.12);
+    playTone(freq * 0.997, finalStart, 0.85, 'sawtooth', 0.05);
+  });
+}
+
+function playWompNote(freq1, freq2, startTime, duration, peakGain){
+  const ctx = getAudioCtx();
+  const osc = ctx.createOscillator();
+  const filt = ctx.createBiquadFilter();
+  const gain = ctx.createGain();
+  osc.type = 'sawtooth';
+  filt.type = 'lowpass';
+  filt.frequency.setValueAtTime(900, startTime);
+  osc.frequency.setValueAtTime(freq1, startTime);
+  osc.frequency.linearRampToValueAtTime(freq2, startTime + duration * 0.7);
+  gain.gain.setValueAtTime(0.0001, startTime);
+  gain.gain.exponentialRampToValueAtTime(peakGain, startTime + 0.03);
+  gain.gain.setValueAtTime(peakGain, startTime + duration * 0.55);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+  osc.connect(filt);
+  filt.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(startTime);
+  osc.stop(startTime + duration + 0.02);
+}
+
+function playIncorrectSound(){
+  if(!state.soundOn) return;
+  const ctx = getAudioCtx();
+  const now = ctx.currentTime;
+  playWompNote(233.08, 220.0, now, 0.4, 0.26);
+  playWompNote(196.0, 174.61, now + 0.38, 0.75, 0.26);
+}
+
+function soundIconHTML(on){
+  return on
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8a5 5 0 010 8"/><path d="M18.5 5.5a9 9 0 010 13"/></svg>'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><line x1="16" y1="9" x2="21" y2="14"/><line x1="21" y1="9" x2="16" y2="14"/></svg>';
+}
+
+document.getElementById('soundToggle').addEventListener('click', ()=>{
+  state.soundOn = !state.soundOn;
+  saveState();
+  renderSoundToggle();
+  if(state.soundOn) playCorrectSound();
+});
+
+function renderSoundToggle(){
+  document.getElementById('soundToggle').innerHTML = soundIconHTML(state.soundOn);
+}
+
+async function loadState(){
+  try{
+    const raw = localStorage.getItem('gidro_progress');
+    if(raw){
+      const parsed = JSON.parse(raw);
+      state = Object.assign(state, parsed);
+    }
+  }catch(e){
+    // no saved progress yet, or storage unavailable
+  }
+  applyStreakCheck();
+  render();
+}
+
+async function saveState(){
+  try{
+    localStorage.setItem('gidro_progress', JSON.stringify(state));
+  }catch(e){
+    console.error('could not save progress', e);
+  }
+}
+
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+}
+
+function applyStreakCheck(){
+  if(!state.lastActive) return;
+  const last = new Date(state.lastActive);
+  const now = new Date(todayStr());
+  const diffDays = Math.round((now - new Date(last.getFullYear(), last.getMonth(), last.getDate())) / 86400000);
+  if(diffDays > 1){
+    state.streak = 0;
+  }
+}
+
+function registerActivity(){
+  const today = todayStr();
+  if(state.lastActive === today){
+    // already counted today
+  } else {
+    const last = state.lastActive ? new Date(state.lastActive) : null;
+    if(last){
+      const diff = Math.round((new Date(today) - new Date(last.getFullYear(), last.getMonth(), last.getDate())) / 86400000);
+      state.streak = diff === 1 ? state.streak + 1 : 1;
+    } else {
+      state.streak = 1;
+    }
+    state.lastActive = today;
+  }
+}
+
+function render(){
+  document.getElementById('streakCount').textContent = state.streak;
+  document.getElementById('xpCount').textContent = state.xp;
+  document.querySelectorAll('#dirToggle button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.dir === state.direction);
+  });
+  const chip = document.getElementById('upgradeChipTop');
+  if(state.premium){
+    chip.className = 'premium-badge';
+    chip.innerHTML = '<svg viewBox="0 0 24 24" fill="none"><path d="M12 3l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 15.3l-4.8 2.6.9-5.4-3.9-3.8 5.4-.8z" fill="#FAF6EE"/></svg><span>Premium</span>';
+  } else {
+    chip.className = 'upgrade-chip';
+    chip.innerHTML = '<svg viewBox="0 0 24 24" fill="none"><path d="M12 3l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 15.3l-4.8 2.6.9-5.4-3.9-3.8 5.4-.8z" fill="#2E2A25"/></svg><span>Upgrade</span>';
+    chip.onclick = openUpgradeModal;
+  }
+  renderSoundToggle();
+  renderPath();
+}
+
+function renderPath(){
+  const path = document.getElementById('path');
+  path.innerHTML = '';
+  let nextFound = false;
+  UNITS.forEach((u, idx)=>{
+    const progressUnlocked = idx === 0 || state.completed.includes(UNITS[idx-1].id);
+    const needsPremium = idx >= FREE_UNIT_LIMIT && !state.premium;
+    const unlocked = progressUnlocked && !needsPremium;
+    const done = state.completed.includes(u.id);
+    const isNext = unlocked && !done && !nextFound;
+    if(isNext) nextFound = true;
+
+    const row = document.createElement('div');
+    row.className = 'node-row pos-' + (idx % 4);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'node-wrap';
+
+    const btn = document.createElement('button');
+    btn.className = 'node' + (unlocked ? '' : ' locked') + (done ? ' done' : '') + (isNext ? ' next' : '');
+    if(unlocked){
+      btn.style.background = u.accent;
+      btn.textContent = idx + 1;
+      btn.onclick = () => startLesson(idx);
+    } else if(progressUnlocked && needsPremium){
+      btn.classList.remove('locked');
+      btn.classList.add('premium-locked');
+      btn.innerHTML = '<svg class="premium-star" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 15.3l-4.8 2.6.9-5.4-3.9-3.8 5.4-.8z" fill="#7A4313"/></svg>';
+      btn.onclick = openUpgradeModal;
+    } else {
+      btn.innerHTML = '<svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>';
+    }
+
+    const title = document.createElement('div');
+    title.className = 'node-title';
+    title.textContent = u.sub;
+    const sub = document.createElement('div');
+    sub.className = 'node-sub';
+    sub.textContent = u.title;
+
+    wrap.appendChild(btn);
+    wrap.appendChild(title);
+    wrap.appendChild(sub);
+    row.appendChild(wrap);
+    path.appendChild(row);
+  });
+}
+
+function openUpgradeModal(){
+  document.getElementById('upgradeModal').classList.add('show');
+}
+function closeUpgradeModal(){
+  document.getElementById('upgradeModal').classList.remove('show');
+}
+document.getElementById('closeModal').addEventListener('click', closeUpgradeModal);
+document.getElementById('upgradeModal').addEventListener('click', (e)=>{
+  if(e.target.id === 'upgradeModal') closeUpgradeModal();
+});
+document.getElementById('confirmUpgrade').addEventListener('click', ()=>{
+  state.premium = true;
+  saveState();
+  closeUpgradeModal();
+  render();
+});
+
+document.getElementById('dirToggle').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  state.direction = btn.dataset.dir;
+  saveState();
+  render();
+});
+
+function buildQuestions(unit){
+  const items = shuffle(unit.items);
+  return items.map(item=>{
+    const isMgToEn = state.direction === 'mg-en';
+    const correct = isMgToEn ? item.en : item.mg;
+    const promptText = isMgToEn ? item.mg : item.en;
+    const pool = unit.items.filter(i => i !== item).map(i => isMgToEn ? i.en : i.mg);
+    const distractors = shuffle(pool).slice(0,3);
+    const options = shuffle([correct, ...distractors]);
+    return { promptText, correct, options, isMgToEn };
+  });
+}
+
+function startLesson(idx){
+  const unit = UNITS[idx];
+  lesson = {
+    unit, idx,
+    questions: buildQuestions(unit),
+    qi: 0,
+    hearts: 5,
+    xpEarned: 0,
+    answered: false,
+  };
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('heartsRow').style.visibility = 'visible';
+  document.getElementById('lessonBody').innerHTML = `
+    <div class="q-label" id="qLabel"></div>
+    <div class="prompt-row">
+      <div class="q-prompt" id="qPrompt"></div>
+      <button class="speak-btn" id="speakPrompt" aria-label="Hear pronunciation">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8a5 5 0 010 8"/></svg>
+      </button>
+    </div>
+    <div class="options" id="options"></div>
+  `;
+  document.getElementById('progressFill').style.background = unit.accent;
+  renderHearts();
+  renderQuestion();
+}
+
+const PHONETIC_OVERRIDES = {
+  'iray': 'ee-reyeee',
+};
+
+function malagasyToPhonetic(word){
+  const lower = word.toLowerCase();
+  if(PHONETIC_OVERRIDES[lower]) return PHONETIC_OVERRIDES[lower];
+  let out = '';
+  const s = lower;
+  let i = 0;
+  while(i < s.length){
+    if(s.substr(i, 2) === 'tr'){
+      out += 'tch';
+      i += 2;
+      continue;
+    }
+    if(s.substr(i, 2) === 'ao'){
+      out += 'ow';
+      i += 2;
+      continue;
+    }
+    if(s.substr(i, 2) === 'ay' && i + 2 === s.length){
+      out += 'eye';
+      i += 2;
+      continue;
+    }
+    const c = s[i];
+    if(c === 'i' || c === 'y'){ out += 'ee'; }
+    else if(c === 'o'){ out += 'oo'; }
+    else if(c === 'a'){ out += 'a'; }
+    else if(c === 'e'){ out += 'ay'; }
+    else { out += c; }
+    i++;
+  }
+  return out;
+}
+
+function speakWord(text, lang){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  let spoken = text;
+  let voiceLang = lang;
+  if(lang === 'mg-MG'){
+    spoken = malagasyToPhonetic(text);
+    voiceLang = 'en-US';
+  }
+  const utter = new SpeechSynthesisUtterance(spoken);
+  utter.lang = voiceLang;
+  utter.rate = 0.8;
+  window.speechSynthesis.speak(utter);
+}
+
+function renderHearts(){
+  const row = document.getElementById('heartsRow');
+  row.innerHTML = '';
+  for(let i=0;i<5;i++){
+    const filled = i < lesson.hearts;
+    const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('viewBox','0 0 24 24');
+    svg.innerHTML = filled
+      ? '<path d="M12 21s-7-4.6-9.5-9C.7 8.5 2 5 5.3 5c2 0 3.4 1.2 4.2 2.4C10.3 6.2 11.7 5 13.7 5 17 5 18.3 8.5 21.5 12c-2.5 4.4-9.5 9-9.5 9z" fill="#A6394B"/>'
+      : '<path d="M12 21s-7-4.6-9.5-9C.7 8.5 2 5 5.3 5c2 0 3.4 1.2 4.2 2.4C10.3 6.2 11.7 5 13.7 5 17 5 18.3 8.5 21.5 12c-2.5 4.4-9.5 9-9.5 9z" fill="none" stroke="#D8D2BD" stroke-width="2"/>';
+    row.appendChild(svg);
+  }
+}
+
+function renderQuestion(){
+  const q = lesson.questions[lesson.qi];
+  lesson.answered = false;
+  document.getElementById('progressFill').style.width = Math.round((lesson.qi / lesson.questions.length) * 100) + '%';
+  document.getElementById('qLabel').textContent = q.isMgToEn ? 'Malagasy word' : 'English word';
+  document.getElementById('qPrompt').textContent = q.promptText;
+  const promptLang = q.isMgToEn ? 'mg-MG' : 'en-US';
+  document.getElementById('speakPrompt').onclick = () => speakWord(q.promptText, promptLang);
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  q.options.forEach(opt=>{
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.textContent = opt;
+    b.onclick = () => selectAnswer(opt, b);
+    optsEl.appendChild(b);
+  });
+  document.getElementById('feedbackBar').classList.remove('show','ok','bad');
+  if(state.soundOn) speakWord(q.promptText, promptLang);
+}
+
+function selectAnswer(opt, btnEl){
+  if(lesson.answered) return;
+  lesson.answered = true;
+  const q = lesson.questions[lesson.qi];
+  const correct = opt === q.correct;
+  document.querySelectorAll('.opt').forEach(b=>{
+    b.classList.add('disabledopt');
+    b.onclick = null;
+    if(b.textContent === q.correct) b.classList.add('correct');
+    else if(b === btnEl) b.classList.add('wrong');
+  });
+  const bar = document.getElementById('feedbackBar');
+  const text = document.getElementById('feedbackText');
+  const sub = document.getElementById('feedbackSub');
+  const cbtn = document.getElementById('continueBtn');
+  if(correct){
+    playCorrectSound();
+    lesson.xpEarned += 10;
+    bar.classList.add('show','ok');
+    text.classList.remove('bad-text'); text.classList.add('ok-text');
+    text.textContent = 'Marina! Correct!';
+    sub.textContent = '+10 XP';
+    cbtn.classList.remove('bad-btn'); cbtn.classList.add('ok-btn');
+  } else {
+    playIncorrectSound();
+    lesson.hearts = Math.max(0, lesson.hearts - 1);
+    renderHearts();
+    bar.classList.add('show','bad');
+    text.classList.remove('ok-text'); text.classList.add('bad-text');
+    text.textContent = 'Diso — not quite';
+    sub.textContent = 'Correct answer: ' + q.correct;
+    cbtn.classList.remove('ok-btn'); cbtn.classList.add('bad-btn');
+  }
+}
+
+document.getElementById('continueBtn').addEventListener('click', ()=>{
+  lesson.qi += 1;
+  if(lesson.qi >= lesson.questions.length){
+    finishLesson();
+  } else {
+    renderQuestion();
+  }
+});
+
+function finishLesson(){
+  document.getElementById('progressFill').style.width = '100%';
+  if(!state.completed.includes(lesson.unit.id)){
+    state.completed.push(lesson.unit.id);
+  }
+  state.xp += lesson.xpEarned;
+  registerActivity();
+  saveState();
+  playLessonCompleteSound();
+  renderCompleteScreen();
+}
+
+function renderCompleteScreen(){
+  const body = document.getElementById('lessonBody');
+  document.getElementById('feedbackBar').classList.remove('show');
+  document.getElementById('heartsRow').style.visibility = 'hidden';
+  body.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'complete-wrap';
+  wrap.innerHTML = `
+    <svg viewBox="0 0 64 64" fill="none">
+      <circle cx="32" cy="36" r="16" fill="${lesson.unit.accent}"/>
+      <circle cx="18" cy="20" r="7" fill="${lesson.unit.accent}"/>
+      <circle cx="46" cy="20" r="7" fill="${lesson.unit.accent}"/>
+      <circle cx="18" cy="20" r="3.2" fill="#FAF6EE"/>
+      <circle cx="46" cy="20" r="3.2" fill="#FAF6EE"/>
+      <circle cx="26" cy="34" r="3" fill="#FAF6EE"/>
+      <circle cx="38" cy="34" r="3" fill="#FAF6EE"/>
+    </svg>
+    <div class="complete-title">Vita! Lesson complete</div>
+    <div class="complete-sub">${lesson.unit.sub} — ${lesson.unit.title}</div>
+    <div class="complete-stats">
+      <div class="complete-stat"><b>+${lesson.xpEarned}</b><span>XP earned</span></div>
+      <div class="complete-stat"><b>${state.streak}</b><span>Day streak</span></div>
+      <div class="complete-stat"><b>${lesson.hearts}/5</b><span>Hearts left</span></div>
+    </div>
+    ${state.premium ? '' : `
+    <div class="ad-slot">
+      <div class="ad-label">Advertisement</div>
+      <div class="ad-title">Practice Malagasy every day</div>
+      <div class="ad-body">Placeholder ad space — connect a real ad network here.</div>
+      <button class="ad-remove" id="removeAds">Remove ads — go Premium</button>
+    </div>`}
+    <div class="btn-row">
+      <button class="primary-btn" id="backToPath">Back to path</button>
+      <button class="secondary-btn" id="reviewWords">Review the words</button>
+      <button class="secondary-btn" id="practiceAgain">Practice again</button>
+    </div>
+  `;
+  body.appendChild(wrap);
+  document.getElementById('backToPath').addEventListener('click', closeLesson);
+  document.getElementById('reviewWords').addEventListener('click', showReviewWords);
+  document.getElementById('practiceAgain').addEventListener('click', ()=> startLesson(lesson.idx));
+  if(!state.premium){
+    document.getElementById('removeAds').addEventListener('click', openUpgradeModal);
+  }
+}
+
+function showReviewWords(){
+  const body = document.getElementById('lessonBody');
+  const unit = lesson.unit;
+  body.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'complete-wrap';
+  const rows = unit.items.map(it => `
+    <div class="review-item">
+      <span style="display:flex;align-items:center;gap:6px;">
+        <span class="review-mg">${it.mg}</span>
+        <button class="speak-btn small" data-word="${it.mg}" data-lang="mg-MG" aria-label="Hear ${it.mg}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8a5 5 0 010 8"/></svg>
+        </button>
+      </span>
+      <span style="display:flex;align-items:center;gap:6px;">
+        <span class="review-en">${it.en}</span>
+        <button class="speak-btn small" data-word="${it.en}" data-lang="en-US" aria-label="Hear ${it.en}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8a5 5 0 010 8"/></svg>
+        </button>
+      </span>
+    </div>
+  `).join('');
+  wrap.innerHTML = `
+    <div class="complete-title">${unit.sub}</div>
+    <div class="complete-sub">${unit.title}</div>
+    <div class="review-list" style="margin-top:20px;">${rows}</div>
+    <button class="primary-btn" id="backToComplete">Done</button>
+  `;
+  body.appendChild(wrap);
+  wrap.querySelectorAll('.speak-btn.small').forEach(btn=>{
+    btn.onclick = () => speakWord(btn.dataset.word, btn.dataset.lang);
+  });
+  document.getElementById('backToComplete').addEventListener('click', renderCompleteScreen);
+}
+
+function closeLesson(){
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('heartsRow').style.visibility = 'visible';
+  document.getElementById('lessonBody').innerHTML = `
+    <div class="q-label" id="qLabel"></div>
+    <div class="prompt-row">
+      <div class="q-prompt" id="qPrompt"></div>
+      <button class="speak-btn" id="speakPrompt" aria-label="Hear pronunciation">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8a5 5 0 010 8"/></svg>
+      </button>
+    </div>
+    <div class="options" id="options"></div>
+  `;
+  lesson = null;
+  render();
+}
+
+document.getElementById('closeLesson').addEventListener('click', closeLesson);
+
+loadState();
+</script>
+</body>
+</html>
