@@ -205,6 +205,12 @@ h1,h2,h3{font-family:var(--display);margin:0;line-height:1.1;text-wrap:balance}
 .bye .g svg{width:120px;height:120px}
 .toast{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;font-weight:800;border-radius:14px;padding:12px 16px;z-index:60;max-width:90vw;text-align:center}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* buttons react to touch and mouse */
+button,a.btn,.btn,.opt,.tile,.mon,.day,.cbub,.ticket,.mode,.mini,.fact.price,.chip-btn,.iconbtn,.acct{transition:filter .15s ease,transform .1s ease,background-color .15s ease,box-shadow .1s ease;-webkit-tap-highlight-color:transparent}
+@media (hover:hover){button:hover,a.btn:hover,.btn:hover,.opt:hover,.tile:hover,.mon:hover,.day:hover,.ticket:hover,.mode:hover,.fact.price:hover,.iconbtn:hover,.acct:hover{filter:brightness(.94)}}
+button:active,a.btn:active,.btn:active,.opt:active,.tile:active,.mon:active,.ticket:active,.mode:active,.mini:active,.fact.price:active,.iconbtn:active,.acct:active{filter:brightness(.86);transform:translateY(2px)}
+.opt[disabled],.opt[disabled]:hover{filter:none;transform:none}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
 </head>
@@ -281,6 +287,7 @@ const T = {
   soon:'Being prepared', done:'Done', start:'Start', cont:'Continue today’s lesson', contS:w=>w,
   startFree:'Start Week 1 free', startFreeS:'5 school days · no card needed',
   placement:'My child already knows some Malagasy', placementS:'Take the placement test (2 minutes)',
+  surprise:n=>n+' new words to discover', ownerH:'Owner test mode', ownerP:'Only your account sees this. Every class, month and day is open, in any order.', ownerReset:'Erase all my progress', ownerResetP:'Start again from the very beginning, like a new family.', ownerPlace:'Try the placement test', ownerDone:'Progress erased',
   testOut:'Test out of this month', testOutS:'Pass with 80% to skip ahead',
   wReview:'Review', wGame:{match:'Match game',paint:'Color by word',count:'Counting game',story:'Story time'},
   dayKinds:['Lesson','Lesson','Lesson','Game','Week quiz'], testDay:'Level test', reviewDay:n=>'Review week '+n,
@@ -330,6 +337,7 @@ const T = {
   soon:'En préparation', done:'Fini', start:'Commencer', cont:'Continuer la leçon du jour', contS:w=>w,
   startFree:'Commencer la semaine 1 gratuitement', startFreeS:'5 jours d’école · sans carte bancaire',
   placement:'Mon enfant connaît déjà un peu le malgache', placementS:'Passer le test de niveau (2 minutes)',
+  surprise:n=>n+' nouveaux mots à découvrir', ownerH:'Mode test propriétaire', ownerP:'Seul votre compte voit ceci. Toutes les classes, tous les mois et tous les jours sont ouverts, dans n’importe quel ordre.', ownerReset:'Effacer tous mes progrès', ownerResetP:'Recommencer depuis le début, comme une nouvelle famille.', ownerPlace:'Essayer le test de niveau', ownerDone:'Progrès effacés',
   testOut:'Passer le test du mois', testOutS:'80 % pour avancer directement',
   wReview:'Révision', wGame:{match:'Jeu des paires',paint:'Coloriage magique',count:'Jeu pour compter',story:'L’heure de l’histoire'},
   dayKinds:['Leçon','Leçon','Leçon','Jeu','Quiz de la semaine'], testDay:'Test de niveau', reviewDay:n=>'Révision semaine '+n,
@@ -434,7 +442,8 @@ function plan(c, m, w, d){
 function dayList(c){ const out = []; cls(c).months.forEach((mo, i) => { if (!mo.ready) return; for (let w = 1; w <= 4; w++) for (let d = 1; d <= 5; d++) out.push([c, i+1, w, d]); }); return out; }
 function nextDay(c){ return dayList(c).find(([a,m,w,d]) => !isDone(dayId(a,m,w,d))) || null; }
 function monthProgress(c, m){ let n = 0; for (let w = 1; w <= 4; w++) for (let d = 1; d <= 5; d++) if (isDone(dayId(c,m,w,d))) n++; return n; }
-function isUnlocked(c, m, w, d){
+function isUnlocked(c, m, w, d, strict){
+  if (G.isOwner() && !strict) return true;
   const list = dayList(c), i = list.findIndex(x => x[1]===m && x[2]===w && x[3]===d);
   return i === 0 || list.slice(0, i).every(([a,b,e,f]) => isDone(dayId(a,b,e,f)));
 }
@@ -504,10 +513,10 @@ function openMonth(m){
     const title = w <= 3 ? L().week(w) : L().week(w) + ' · ' + L().wReview;
     const n = [1,2,3,4,5].filter(d => isDone(dayId(curClass,m,w,d))).length;
     return `<div class="week"><div class="wt"><b>${esc(title)}</b><span>${n}/5</span></div>
-      <div class="days">${[1,2,3,4,5].map(d => { const id = dayId(curClass,m,w,d), done = isDone(id), open = !done && isUnlocked(curClass,m,w,d);
+      <div class="days">${[1,2,3,4,5].map(d => { const id = dayId(curClass,m,w,d), done = isDone(id), open = !done && isUnlocked(curClass,m,w,d,true);
         const label = (w===4&&d===5) ? '🎓' : d;
         return `<button class="day ${done?'done':''} ${open?'open':''} ${w===4&&d===5?'test':''} ${!canPlay(curClass,m,w)?'paid':''}" data-w="${w}" data-d="${d}" aria-label="${esc(L().week(w)+' '+L().day(d))}"><b>${done?'✓':label}</b></button>`; }).join('')}</div>
-      <div class="wlist">${words.map(x => esc(WORDS[x].mg)).join(' · ')}</div></div>`;
+      <div class="wlist">${([1,2,3,4,5].some(d => isDone(dayId(curClass,m,w,d)) || isUnlocked(curClass,m,w,d))) ? words.map(x => esc(WORDS[x].mg)).join(' · ') : '🔒 ' + L().surprise(words.length)}</div></div>`;
   }).join('');
   $('weeks').querySelectorAll('.day').forEach(b => b.onclick = () => openDay(curClass, m, +b.dataset.w, +b.dataset.d));
   $('testOut').hidden = monthProgress(curClass, m) === 20;
@@ -888,7 +897,8 @@ function parentArea(tab){
     body = `<p style="margin:0;font-weight:700">${G.user ? esc(L().accIn(G.user.email)) : L().accOut}</p>
       <p style="margin:0;font-weight:800">${L().plan(G.has('school'))}</p>
       ${G.has('school') ? `<p class="muted" style="margin:0;font-size:14px;font-weight:700">${L().manage}</p>` : `<button class="btn green" id="pjoin">${L().join}</button>`}
-      ${G.user ? `<button class="btn ghost" id="pout">${L().signOut}</button>` : `<button class="btn ghost" id="pin">${L().signIn}</button>`}`;
+      ${G.user ? `<button class="btn ghost" id="pout">${L().signOut}</button>` : `<button class="btn ghost" id="pin">${L().signIn}</button>`}
+      ${G.isOwner() ? `<div class="banner warm"><b>${L().ownerH}</b><span>${L().ownerP}</span><button class="btn small" id="oplace" style="width:100%">${L().ownerPlace}</button><button class="btn ghost small" id="oreset" style="width:100%"><span>${L().ownerReset}</span><small>${L().ownerResetP}</small></button></div>` : ''}`;
   }
   box.innerHTML = tabs + body + `<button class="btn ghost" id="pclose">${L().close}</button>`;
   box.querySelectorAll('.tabs button').forEach(b => b.onclick = () => parentArea(+b.dataset.i));
@@ -899,6 +909,10 @@ function parentArea(tab){
   if ($('pjoin')) $('pjoin').onclick = () => { closeSheet('parents'); openMember(); };
   if ($('pout')) $('pout').onclick = async () => { await G.signOut(); parentArea(2); refresh(); };
   if ($('pin')) $('pin').onclick = () => { accountForm(box, () => parentArea(2)); };
+  if ($('oplace')) $('oplace').onclick = () => { closeSheet('parents'); startPlacement(); };
+  if ($('oreset')) $('oreset').onclick = () => confirmBox(L().ownerReset, L().ownerResetP, L().cfStay, L().ownerReset, async () => {
+    await G.removeTagsWhere(t => t.startsWith('s:')); G.xp = 0; G.streak = 0; G.lastActive = null; await G.save();
+    curClass = 'pre'; G.store.set('gidroClass', 'pre'); closeSheet('parents'); refresh(); show('sHome'); toast(L().ownerDone); });
   $('parents').hidden = false;
 }
 

@@ -164,6 +164,9 @@ section h2{font-size:26px;}
 <style>
 .acct{background:var(--card);border:2px solid var(--line);border-radius:12px;padding:6px 10px;font-weight:800;font-size:13px;cursor:pointer}
 .tag.lock{background:var(--line);color:var(--ink-soft);}
+.hiddenterm{filter:blur(4px);opacity:.6;user-select:none}
+.ticket.soon{cursor:default;opacity:.75;border-style:dashed}
+.ticket.soon .tag{background:var(--coral-tint);color:var(--coral-deep)}
 .src{font-size:12px;color:var(--ink-soft);font-weight:700;text-align:center}
 .sheet{position:fixed;inset:0;background:rgba(31,42,68,.55);display:flex;align-items:flex-end;justify-content:center;z-index:40}
 .sheet[hidden],header[hidden]{display:none!important}
@@ -199,6 +202,12 @@ section h2{font-size:26px;}
 .site-footer .bottom{max-width:960px;margin:0 auto;padding:12px 32px 16px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
 .site-footer .totop{color:#1f2a44;background:#fff;text-decoration:none;font-weight:700;font-size:13px;padding:8px 16px;border-radius:999px;}
 @media (max-width:760px){.site-footer .cols{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 12px;padding:22px 20px 12px;font-size:13px;}.site-footer .cols>div:first-child{grid-column:1/-1;}.site-footer p{max-width:none;}.site-footer .bottom{padding:10px 20px max(14px,env(safe-area-inset-bottom));}}
+
+/* buttons react to touch and mouse */
+button,a.btn,.btn,.opt,.tile,.mon,.day,.cbub,.ticket,.mode,.mini,.fact.price,.chip-btn,.iconbtn,.acct{transition:filter .15s ease,transform .1s ease,background-color .15s ease,box-shadow .1s ease;-webkit-tap-highlight-color:transparent}
+@media (hover:hover){button:hover,a.btn:hover,.btn:hover,.opt:hover,.tile:hover,.mon:hover,.day:hover,.ticket:hover,.mode:hover,.fact.price:hover,.iconbtn:hover,.acct:hover{filter:brightness(.94)}}
+button:active,a.btn:active,.btn:active,.opt:active,.tile:active,.mon:active,.ticket:active,.mode:active,.mini:active,.fact.price:active,.iconbtn:active,.acct:active{filter:brightness(.86);transform:translateY(2px)}
+.opt[disabled],.opt[disabled]:hover{filter:none;transform:none}
 </style>
 </head>
 <body>
@@ -242,7 +251,7 @@ section h2{font-size:26px;}
     </section>
     <section>
       <div class="facts" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <button class="mini" id="buyM" style="flex-direction:column;align-items:center;cursor:pointer;box-shadow:0 4px 0 var(--line)"><b style="font-family:var(--display);font-size:26px" id="pM"></b><span class="muted" data-t="perMonth"></span><span class="tag ready" style="margin-top:4px;font-size:13px;padding:6px 12px;background:var(--cta);color:var(--ink)" data-t="joinBtn">Join now</span></button>
+        <button class="mini" id="buyM" style="flex-direction:column;align-items:center;cursor:pointer;border-color:var(--cta);box-shadow:0 4px 0 var(--cta-deep)"><b style="font-family:var(--display);font-size:26px" id="pM"></b><span class="muted" data-t="perMonth"></span><span class="tag ready" style="margin-top:4px;font-size:13px;padding:6px 12px;background:var(--cta);color:var(--ink)" data-t="joinBtn">Join now</span></button>
         <button class="mini" id="buyY" style="flex-direction:column;align-items:center;cursor:pointer;border-color:var(--green);box-shadow:0 4px 0 var(--green-deep)"><b style="font-family:var(--display);font-size:26px" id="pY"></b><span class="muted" data-t="perYear"></span><span class="tag ready" style="margin-top:4px;font-size:13px;padding:6px 12px;background:var(--green);color:#fff" data-t="joinBtn">Join now</span></button>
       </div>
       <p class="lead" style="font-size:14px" data-t="priceP"></p>
@@ -350,7 +359,7 @@ const T = {
     byeH:'Veloma, come back any time', byeP:'Your cards will be here when you return.', byeB:'Back to Gidro Everyday', byeSite:'Visit nosymasina.com',
     exitH:'Leave this game?', exitP:'This round stops here. You can start it again any time.', exitNo:'Keep going', exitYes:'Yes, exit',
     m:{cards:['Flashcards','Tap to flip'], learn:['Learn','Pick the right meaning'], match:['Match','Race the clock'], write:['Write','Type the Malagasy']},
-    free:'Free', members:'Members', cardsN:n=>n+' cards', terms:'Cards in this set', src:s=>'Malagasy: '+s,
+    free:'Free', members:'Members', inside:n=>n+' cards in this set', discover:n=>'+ '+n+' more to discover in the games', soonH:'Coming soon', soonTag:'Coming soon', soon:[['🎧','Listen and repeat','Hear real Malagasy voices'],['💬','Real conversations','Short talks at the market, the taxi, the doctor'],['🌿','Culture tips','Fady, fihavanana and good manners']], cardsN:n=>n+' cards', terms:'Cards in this set', src:s=>'Malagasy: '+s,
     mgL:'Malagasy', enL:'English', tapFlip:'Tap to flip', still:'Still learning', know:'I know it',
     startWith:'Start with:', shuffle:'Shuffle',
     qMean:'What does this mean?', right:'Correct', wrongT:'Not quite', answer:'Answer: ', cont:'Continue',
@@ -373,7 +382,7 @@ const T = {
     byeH:'Veloma, revenez quand vous voulez', byeP:'Vos cartes vous attendent.', byeB:'Retour à Gidro Everyday', byeSite:'Visiter nosymasina.com',
     exitH:'Quitter ce jeu ?', exitP:'Cette partie s’arrête ici. Vous pourrez la reprendre quand vous voulez.', exitNo:'Continuer', exitYes:'Oui, quitter',
     m:{cards:['Cartes','Touchez pour retourner'], learn:['Apprendre','Choisissez le bon sens'], match:['Associer','Contre la montre'], write:['Écrire','Tapez le malgache']},
-    free:'Gratuit', members:'Membres', cardsN:n=>n+' cartes', terms:'Cartes de cette série', src:s=>'Malgache : '+s,
+    free:'Gratuit', members:'Membres', inside:n=>n+' cartes dans cette série', discover:n=>'+ '+n+' autres à découvrir dans les jeux', soonH:'Bientôt', soonTag:'Bientôt', soon:[['🎧','Écouter et répéter','De vraies voix malgaches'],['💬','Vraies conversations','Petits dialogues au marché, en taxi, chez le médecin'],['🌿','Conseils culturels','Fady, fihavanana et bonnes manières']], cardsN:n=>n+' cartes', terms:'Cartes de cette série', src:s=>'Malgache : '+s,
     mgL:'Malgache', enL:'Français', tapFlip:'Touchez pour retourner', still:'Encore à revoir', know:'Je sais',
     startWith:'Commencer par :', shuffle:'Mélanger',
     qMean:'Que veut dire ceci ?', right:'Correct', wrongT:'Pas tout à fait', answer:'Réponse : ', cont:'Continuer',
@@ -410,7 +419,8 @@ function renderHome(){
       <div class="info"><b>${esc(s[G.lang][0])}</b><span>${esc(s[G.lang][1])}</span><br><span class="tag ${s.free?'ready':o?'ready':'lock'}">${s.free?L().free:o?'':'🔒 '+L().members}${s.free||!o?' · ':''}${L().cardsN(s.cards.length)}</span></div>
       <div class="go" aria-hidden="true">›</div>
     </button>`;}).join('');
-  $('tickets').querySelectorAll('.ticket').forEach(b=>b.onclick=()=>{ if(!open_(b.dataset.k)){ openMember(); return; } openSet(b.dataset.k); });
+  $('tickets').insertAdjacentHTML('beforeend', L().soon.map(x=>`<div class="ticket soon"><div class="stub">${x[0]}</div><div class="info"><b>${esc(x[1])}</b><span>${esc(x[2])}</span><br><span class="tag">${L().soonTag}</span></div><div class="go"></div></div>`).join(''));
+  $('tickets').querySelectorAll('.ticket[data-k]').forEach(b=>b.onclick=()=>{ if(!open_(b.dataset.k)){ openMember(); return; } openSet(b.dataset.k); });
   $('pM').textContent=G.PAY.everyday.price.monthly; $('pY').textContent=G.PAY.everyday.price.yearly;
   $('acctBtn').textContent=G.user?L().account:L().login;
 }
@@ -422,8 +432,11 @@ function renderSet(){
   $('setName').textContent=s[G.lang][0]; $('setSub').textContent=s[G.lang][1];
   $('modeGrid').innerHTML=['cards','learn','match','write'].map(m=>`<button class="mode" data-m="${m}">${MODE_ICON[m]}<b>${L().m[m][0]}</b><span>${L().m[m][1]}</span></button>`).join('');
   $('modeGrid').querySelectorAll('.mode').forEach(b=>b.onclick=()=>startMode(b.dataset.m));
-  $('termsL').textContent=L().terms;
-  $('terms').innerHTML=s.cards.map(c=>`<div class="term"><div class="m">${esc(c.mg)}</div><div class="e">${esc(mean(c))}</div></div>`).join('');
+  $('termsL').textContent=L().inside(s.cards.length);
+  const peek=s.cards.slice(0,2), hid=Math.min(3, s.cards.length-2);
+  $('terms').innerHTML=peek.map(c=>`<div class="term"><div class="m">${esc(c.mg)}</div><div class="e">${esc(mean(c))}</div></div>`).join('')
+    + Array.from({length:hid},()=>`<div class="term hiddenterm" aria-hidden="true"><div class="m">••••••</div><div class="e">••••••••</div></div>`).join('')
+    + `<div class="term" style="grid-template-columns:1fr;text-align:center;color:var(--ink-soft);font-weight:800">${L().discover(s.cards.length-peek.length)}</div>`;
   $('setSrc').textContent=s.src==='Nene'?'':L().src(s.src);
 }
 $('setBack').onclick=()=>{show('sHome');};

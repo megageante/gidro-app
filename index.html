@@ -113,7 +113,7 @@ section h2{font-size:26px;}
 
 .note{font-size:12px;color:var(--ink-soft);text-align:center;}
 @media (max-width:360px){.facts{grid-template-columns:1fr 1fr;}}
-.fact.price{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:inherit;box-shadow:0 4px 0 var(--line);}
+.fact.price{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:inherit;border-color:var(--cta);box-shadow:0 4px 0 var(--cta-deep);}
 .fact.price.best{border-color:var(--green);box-shadow:0 4px 0 var(--green-deep);}
 .fact.price:active{transform:translateY(3px);}
 .fact.price .join{margin-top:6px;background:var(--cta);color:var(--ink);font-weight:800;font-size:14px;border-radius:12px;padding:8px 14px;}
@@ -131,6 +131,12 @@ section h2{font-size:26px;}
 .site-footer .bottom{max-width:960px;margin:0 auto;padding:12px 32px 16px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
 .site-footer .totop{color:#1f2a44;background:#fff;text-decoration:none;font-weight:700;font-size:13px;padding:8px 16px;border-radius:999px;}
 @media (max-width:760px){.site-footer .cols{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 12px;padding:22px 20px 12px;font-size:13px;}.site-footer .cols>div:first-child{grid-column:1/-1;}.site-footer p{max-width:none;}.site-footer .bottom{padding:10px 20px max(14px,env(safe-area-inset-bottom));}}
+
+/* buttons react to touch and mouse */
+button,a.btn,.btn,.opt,.tile,.mon,.day,.cbub,.ticket,.mode,.mini,.fact.price,.chip-btn,.iconbtn,.acct{transition:filter .15s ease,transform .1s ease,background-color .15s ease,box-shadow .1s ease;-webkit-tap-highlight-color:transparent}
+@media (hover:hover){button:hover,a.btn:hover,.btn:hover,.opt:hover,.tile:hover,.mon:hover,.day:hover,.ticket:hover,.mode:hover,.fact.price:hover,.iconbtn:hover,.acct:hover{filter:brightness(.94)}}
+button:active,a.btn:active,.btn:active,.opt:active,.tile:active,.mon:active,.ticket:active,.mode:active,.mini:active,.fact.price:active,.iconbtn:active,.acct:active{filter:brightness(.86);transform:translateY(2px)}
+.opt[disabled],.opt[disabled]:hover{filter:none;transform:none}
 </style>
 </head>
 <body>

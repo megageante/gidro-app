@@ -39,7 +39,12 @@
 
     setLang(l){ this.lang = l; store.set('gidroLangV2', l); try{ localStorage.setItem('gidroLang', l); }catch(e){} document.documentElement.lang = l; },
 
+    /* Owner test mode: this account opens everything, in any order (for testing only) */
+    OWNERS: ['nosymasina@gmail.com'],
+    isOwner(){ return !!(this.user && this.user.email && this.OWNERS.includes(this.user.email.toLowerCase())); },
+
     has(plan){
+      if (this.isOwner()) return true;
       if (this.tags.has('plan:' + plan)) return true;
       // accounts upgraded under the old single Gidro Pro plan keep full access
       if (this.profile && this.profile.is_premium && ![...this.tags].some(t => t.startsWith('plan:'))) return true;
