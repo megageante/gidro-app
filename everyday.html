@@ -186,6 +186,19 @@ section h2{font-size:26px;}
 .btn.green{background:var(--green);color:#fff;box-shadow:0 4px 0 var(--green-deep)}
 .linkbtn{background:none;border:none;font-weight:800;color:var(--ink-soft);cursor:pointer;padding:6px}
 .toastx{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;font-weight:800;border-radius:14px;padding:12px 16px;z-index:60;max-width:90vw;text-align:center}
+
+.site-footer{margin:56px calc(-1 * max(16px, env(safe-area-inset-right, 0px))) 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px)));background:#1f2a44;color:#cfd5e2;font-size:14px;font-family:'Manrope',system-ui,sans-serif;}
+.site-footer[hidden]{display:none!important}
+.site-footer .cols{max-width:960px;margin:0 auto;padding:44px 32px 24px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px;}
+.site-footer .fbrand{font-family:'Fraunces',serif;font-weight:700;font-size:22px;color:#fff;text-decoration:none;}
+.site-footer .fbrand span{color:#f4a940;}
+.site-footer p{margin:10px 0 0;line-height:1.55;max-width:260px;}
+.site-footer h3{font-family:'Manrope',sans-serif;font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#f4a940;margin:4px 0 12px;}
+.site-footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;}
+.site-footer ul a{color:#fff;text-decoration:none;display:inline-block;padding:5px 0;font-weight:600;}
+.site-footer .bottom{max-width:960px;margin:0 auto;padding:18px 32px 26px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+.site-footer .totop{color:#1f2a44;background:#fff;text-decoration:none;font-weight:700;font-size:13px;padding:8px 16px;border-radius:999px;}
+@media (max-width:760px){.site-footer .cols{grid-template-columns:1fr 1fr;padding:36px 20px 20px;}.site-footer .bottom{padding:16px 20px 24px;}}
 </style>
 </head>
 <body>
@@ -280,6 +293,44 @@ section h2{font-size:26px;}
     </div>
   </div>
 </div>
+<footer class="site-footer" id="siteFooter">
+  <div class="cols">
+    <div>
+      <a class="fbrand" href="/">Nosy<span>Masina</span></a>
+      <p data-t="fTag">Learn Malagasy and English with songs, stories, books, and videos.</p>
+    </div>
+    <div>
+      <h3 data-t="fExplore">Explore</h3>
+      <ul>
+        <li><a href="/" data-t="navHome">Home</a></li>
+        <li><a href="/blog" data-t="navBlog">Blog</a></li>
+        <li><a href="/learn" data-t="fSchool">Gidro School</a></li>
+        <li><a href="/learn/everyday">Gidro Everyday</a></li>
+        <li><a href="/shop" data-t="navShop">Shop</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3 data-t="navShop">Shop</h3>
+      <ul>
+        <li><a href="/shop#malagasy-english" data-t="fBooksEn">Malagasy - English books</a></li>
+        <li><a href="/shop#malagasy-francais" data-t="fBooksFr">Malagasy - Français books</a></li>
+        <li><a href="/shop#t-shirts" data-t="fTees">T-shirts</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3 data-t="fConnect">Connect</h3>
+      <ul>
+        <li><a href="https://www.youtube.com/c/NosyMasinaLearnMalagasy?sub_confirmation=1" target="_blank" rel="noopener">YouTube</a></li>
+        <li><a href="https://www.facebook.com/nosymasinalearnmalagasyandenglish/" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="/#contact" data-t="fContact">Contact us</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="bottom">
+    <span>&copy; 2026 Nosy Masina</span>
+    <a class="totop" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" data-t="fTop">Back to top ↑</a>
+  </div>
+</footer>
 <div class="sheet" id="member" hidden role="dialog" aria-modal="true"><div class="box" id="memberBox"></div></div>
 <script src="/learn/gidro-core.js"></script>
 <script src="/learn/everyday-content.js"></script>
@@ -291,7 +342,7 @@ const MODE_ICON = {
   write:'<svg viewBox="0 0 24 24" fill="none" stroke="#1f2a44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13 7l4 4"/></svg>'
 };
 const T = {
-  en:{navHome:'Home', navBlog:'Blog', navLearn:'Learn', navShop:'Shop', navCart:'Cart',
+  en:{fTag:'Learn Malagasy and English with songs, stories, books, and videos.', fExplore:'Explore', fSchool:'Gidro School', fBooksEn:'Malagasy - English books', fBooksFr:'Malagasy - Français books', fTees:'T-shirts', fConnect:'Connect', fContact:'Contact us', fTop:'Back to top ↑',navHome:'Home', navBlog:'Blog', navLearn:'Learn', navShop:'Shop', navCart:'Cart',
     eyebrow:'Malagasy for grown-ups', h1:'The Malagasy you need, the day you need it',
     heroP:'Flashcard sets for real life: meeting people, getting around, the market, eating out, money, the doctor, emergencies and more. Study the cards, play the games, then use it on your trip.',
     setsH:'Choose a set', kE:'For children', kH:'Gidro School', kP:'A full Malagasy school for ages 3 to 8, from Preschool up, with lessons, tests and weekly reports.',
@@ -314,7 +365,7 @@ const T = {
     accCheck:'Check your email to confirm, then log in here.', accNeed:'Please enter your email and password.',
     accIn:e=>'Signed in as '+e, plan:ok=>ok?'Membership: active':'Membership: free sets only', manage:'To change or cancel, use the link in your Stripe receipt email.', join:'Become a member', signOut:'Sign out', close:'Close',
     thanks:'Misaotra! Your membership is active.', waitPay:'Finishing your membership…'},
-  fr:{navHome:'Accueil', navBlog:'Blog', navLearn:'Apprendre', navShop:'Boutique', navCart:'Panier',
+  fr:{fTag:'Apprendre le malgache et l’anglais avec des chansons, des histoires, des livres et des vidéos.', fExplore:'Explorer', fSchool:'École Gidro', fBooksEn:'Livres malgache - anglais', fBooksFr:'Livres malgache - français', fTees:'T-shirts', fConnect:'Nous suivre', fContact:'Nous contacter', fTop:'Haut de page ↑',navHome:'Accueil', navBlog:'Blog', navLearn:'Apprendre', navShop:'Boutique', navCart:'Panier',
     eyebrow:'Le malgache pour les adultes', h1:'Le malgache utile, le jour où vous en avez besoin',
     heroP:"Des séries de cartes pour la vraie vie : faire connaissance, se déplacer, le marché, le restaurant, l'argent, le médecin, les urgences et plus encore. Révisez, jouez, puis servez-vous-en en voyage.",
     setsH:'Choisissez une série', kE:'Pour les enfants', kH:'École Gidro', kP:'Une vraie école de malgache de 3 à 8 ans, dès la petite section, avec leçons, tests et bilans chaque semaine.',
@@ -347,7 +398,7 @@ const open_=k=>SETS[k].free||G.has('everyday');
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 const norm=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z ]/g,'').trim();
 
-function show(id){['sHome','sSet','sStudy','sBye'].forEach(s=>$(s).hidden=(s!==id)); $('sitebar').hidden=(id!=='sHome'); clearInterval(timer); window.scrollTo(0,0);}
+function show(id){['sHome','sSet','sStudy','sBye'].forEach(s=>$(s).hidden=(s!==id)); $('sitebar').hidden=(id!=='sHome'); $('siteFooter').hidden=(id!=='sHome'); clearInterval(timer); window.scrollTo(0,0);}
 function bar(i,n){ $('fill').style.width=(n?Math.round(i/n*100):0)+'%'; $('count').textContent=n?(Math.min(i+1,n)+' / '+n):''; }
 
 /* HOME */

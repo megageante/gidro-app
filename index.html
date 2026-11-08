@@ -118,6 +118,19 @@ section h2{font-size:26px;}
 .fact.price:active{transform:translateY(3px);}
 .fact.price .join{margin-top:6px;background:var(--cta);color:var(--ink);font-weight:800;font-size:14px;border-radius:12px;padding:8px 14px;}
 .fact.price.best .join{background:var(--green);color:#fff;}
+
+.site-footer{margin:56px calc(-1 * max(16px, env(safe-area-inset-right, 0px))) 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px)));background:#1f2a44;color:#cfd5e2;font-size:14px;font-family:'Manrope',system-ui,sans-serif;}
+.site-footer[hidden]{display:none!important}
+.site-footer .cols{max-width:960px;margin:0 auto;padding:44px 32px 24px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px;}
+.site-footer .fbrand{font-family:'Fraunces',serif;font-weight:700;font-size:22px;color:#fff;text-decoration:none;}
+.site-footer .fbrand span{color:#f4a940;}
+.site-footer p{margin:10px 0 0;line-height:1.55;max-width:260px;}
+.site-footer h3{font-family:'Manrope',sans-serif;font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#f4a940;margin:4px 0 12px;}
+.site-footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;}
+.site-footer ul a{color:#fff;text-decoration:none;display:inline-block;padding:5px 0;font-weight:600;}
+.site-footer .bottom{max-width:960px;margin:0 auto;padding:18px 32px 26px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+.site-footer .totop{color:#1f2a44;background:#fff;text-decoration:none;font-weight:700;font-size:13px;padding:8px 16px;border-radius:999px;}
+@media (max-width:760px){.site-footer .cols{grid-template-columns:1fr 1fr;padding:36px 20px 20px;}.site-footer .bottom{padding:16px 20px 24px;}}
 </style>
 </head>
 <body>
@@ -230,9 +243,48 @@ section h2{font-size:26px;}
   </div>
 
 </div>
+<footer class="site-footer" id="siteFooter">
+  <div class="cols">
+    <div>
+      <a class="fbrand" href="/">Nosy<span>Masina</span></a>
+      <p data-t="fTag">Learn Malagasy and English with songs, stories, books, and videos.</p>
+    </div>
+    <div>
+      <h3 data-t="fExplore">Explore</h3>
+      <ul>
+        <li><a href="/" data-t="navHome">Home</a></li>
+        <li><a href="/blog" data-t="navBlog">Blog</a></li>
+        <li><a href="/learn" data-t="fSchool">Gidro School</a></li>
+        <li><a href="/learn/everyday">Gidro Everyday</a></li>
+        <li><a href="/shop" data-t="navShop">Shop</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3 data-t="navShop">Shop</h3>
+      <ul>
+        <li><a href="/shop#malagasy-english" data-t="fBooksEn">Malagasy - English books</a></li>
+        <li><a href="/shop#malagasy-francais" data-t="fBooksFr">Malagasy - Français books</a></li>
+        <li><a href="/shop#t-shirts" data-t="fTees">T-shirts</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3 data-t="fConnect">Connect</h3>
+      <ul>
+        <li><a href="https://www.youtube.com/c/NosyMasinaLearnMalagasy?sub_confirmation=1" target="_blank" rel="noopener">YouTube</a></li>
+        <li><a href="https://www.facebook.com/nosymasinalearnmalagasyandenglish/" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="/#contact" data-t="fContact">Contact us</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="bottom">
+    <span>&copy; 2026 Nosy Masina</span>
+    <a class="totop" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" data-t="fTop">Back to top ↑</a>
+  </div>
+</footer>
 <script>
 const T = {
   en: {
+    fTag:'Learn Malagasy and English with songs, stories, books, and videos.', fExplore:'Explore', fSchool:'Gidro School', fBooksEn:'Malagasy - English books', fBooksFr:'Malagasy - Français books', fTees:'T-shirts', fConnect:'Connect', fContact:'Contact us', fTop:'Back to top ↑',
     navHome:'Home', navBlog:'Blog', navLearn:'Learn', navShop:'Shop', navCart:'Cart',
     brand:'Gidro School', eyebrow:'A full Malagasy school for children',
     h1:'Learn Malagasy the way children learn in school',
@@ -266,6 +318,7 @@ const T = {
     adP:'A separate app for adults: the Malagasy you need at the airport, the market, the bank, the hospital and with family.'
   },
   fr: {
+    fTag:'Apprendre le malgache et l’anglais avec des chansons, des histoires, des livres et des vidéos.', fExplore:'Explorer', fSchool:'École Gidro', fBooksEn:'Livres malgache - anglais', fBooksFr:'Livres malgache - français', fTees:'T-shirts', fConnect:'Nous suivre', fContact:'Nous contacter', fTop:'Haut de page ↑',
     navHome:'Accueil', navBlog:'Blog', navLearn:'Apprendre', navShop:'Boutique', navCart:'Panier',
     brand:'École Gidro', eyebrow:'Une vraie école de malgache pour les enfants',
     h1:"Apprendre le malgache comme à l'école",
