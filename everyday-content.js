@@ -1,0 +1,150 @@
+/* Gidro Everyday sets.
+   "basics": Malagasy confirmed by Nene.
+   All other sets: Malagasy copied from the WildMadagascar.org phrase lists
+   (wildmadagascar.org/people/malagasy-*.html). English is from the same lists; French added by Claude.
+   free:true sets open without a membership. */
+const SOURCE_WM = 'WildMadagascar.org';
+const SETS = {
+  basics: { icon:'💬', free:true, src:'Nene', en:['Basics','Hello, thank you, yes and no'], fr:['Les bases','Bonjour, merci, oui et non'], cards:[
+    { mg:'Salama', en:'Hello', fr:'Bonjour' },
+    { mg:'Veloma', en:'Goodbye', fr:'Au revoir' },
+    { mg:'Misaotra', en:'Thank you', fr:'Merci' },
+    { mg:'Azafady', en:'Please / Excuse me', fr:"S'il vous plaît / Pardon" },
+    { mg:'Eny', en:'Yes', fr:'Oui' },
+    { mg:'Tsia', en:'No', fr:'Non' }
+  ]},
+  meeting: { icon:'🤝', free:true, src:SOURCE_WM, en:['Meeting people','Names, where you are from, polite words'], fr:['Faire connaissance','Le nom, d’où l’on vient, les mots polis'], cards:[
+    { mg:'Manahoana', en:'Hello / How are you?', fr:'Bonjour / Comment ça va ?' },
+    { mg:'Tsara fa misaotra', en:'Fine, thank you', fr:'Bien, merci' },
+    { mg:'Faly mahalala anao', en:'Nice to meet you', fr:'Enchanté(e)' },
+    { mg:'Iza no anaranao?', en:'What is your name?', fr:'Comment vous appelez-vous ?' },
+    { mg:'Avy aiza ianao?', en:'Where are you from?', fr:'D’où venez-vous ?' },
+    { mg:'Aiza ianao no mipetraka?', en:'Where do you live?', fr:'Où habitez-vous ?' },
+    { mg:'Firy taona ianao?', en:'How old are you?', fr:'Quel âge avez-vous ?' },
+    { mg:'Tsy misy fisaorana', en:'You’re welcome', fr:'De rien' },
+    { mg:'Miala tsiny aho', en:'I am sorry', fr:'Je suis désolé(e)' },
+    { mg:'Mandra-pihaona!', en:'See you!', fr:'À bientôt !' },
+    { mg:'Soava dia!', en:'Have a good trip!', fr:'Bon voyage !' },
+    { mg:'Arahabaina!', en:'Congratulations!', fr:'Félicitations !' },
+    { mg:'Tsy mahay miteny gasy aho', en:'I do not speak Malagasy', fr:'Je ne parle pas malgache' },
+    { mg:'Mahazo kely aho', en:'I understand a little', fr:'Je comprends un peu' },
+    { mg:'Afaka manampy ahy ve ianao?', en:'Could you help me?', fr:'Pouvez-vous m’aider ?' }
+  ]},
+  family: { icon:'👨‍👩‍👧', src:SOURCE_WM, en:['With the family','My husband, my children, my parents'], fr:['En famille','Mon mari, mes enfants, mes parents'], cards:[
+    { mg:'ny vadiko', en:'my husband / my wife', fr:'mon mari / ma femme' },
+    { mg:'ny zanako', en:'my children', fr:'mes enfants' },
+    { mg:'ny zanako vavy', en:'my daughter', fr:'ma fille' },
+    { mg:'ny zanako lahy', en:'my son', fr:'mon fils' },
+    { mg:'ny raiko', en:'my father', fr:'mon père' },
+    { mg:'ny reniko', en:'my mother', fr:'ma mère' },
+    { mg:'ny ray aman-dreniko', en:'my parents', fr:'mes parents' },
+    { mg:'ny namako', en:'my friend', fr:'mon ami(e)' },
+    { mg:'Manambady ve ianao?', en:'Are you married?', fr:'Êtes-vous marié(e) ?' },
+    { mg:'Manan-janaka aho', en:'I have children', fr:'J’ai des enfants' },
+    { mg:'Inona no asanao?', en:'What is your job?', fr:'Quel est votre métier ?' }
+  ]},
+  travel: { icon:'✈️', src:SOURCE_WM, en:['Getting around','Airport, taxi, directions'], fr:['Se déplacer','Aéroport, taxi, directions'], cards:[
+    { mg:'Tara ny raoplanina', en:'The plane is delayed', fr:'L’avion est en retard' },
+    { mg:'Aiza no tianao aleha?', en:'Where do you want to go?', fr:'Où voulez-vous aller ?' },
+    { mg:'Ohatrinona ny mankany?', en:'How much does it cost to go there?', fr:'Combien ça coûte pour y aller ?' },
+    { mg:'Adiny firy ny mankany?', en:'How long will it take?', fr:'Combien de temps faut-il ?' },
+    { mg:'Manana madinika ve ianao?', en:'Do you have change?', fr:'Avez-vous de la monnaie ?' },
+    { mg:'Lavitra eto ve izany?', en:'Is it far from here?', fr:'Est-ce loin d’ici ?' },
+    { mg:'Tsy lavitra io', en:'It is not far', fr:'Ce n’est pas loin' },
+    { mg:'Very aho', en:'I am lost', fr:'Je suis perdu(e)' },
+    { mg:'Miverena', en:'Go back', fr:'Retournez' },
+    { mg:'ankavia', en:'left', fr:'à gauche' },
+    { mg:'ankavanana', en:'right', fr:'à droite' },
+    { mg:'Te ho any amoron-dranomasina aho', en:'I would like to go to the beach', fr:'Je voudrais aller à la plage' },
+    { mg:'Te-hitsangatsangana aho', en:'I would like to go for a walk', fr:'Je voudrais me promener' }
+  ]},
+  market: { icon:'🧺', src:SOURCE_WM, en:['At the market','Prices, bargaining, buying'], fr:['Au marché','Prix, marchandage, achats'], cards:[
+    { mg:'Aiza no misy ny tsena?', en:'Where is the market?', fr:'Où est le marché ?' },
+    { mg:'Ohatrinona ity?', en:'How much is this?', fr:'C’est combien ?' },
+    { mg:'Lafo be izany', en:'That is too expensive', fr:'C’est trop cher' },
+    { mg:'Mbola lafo amiko izany', en:'That is still too expensive for me', fr:'C’est encore trop cher pour moi' },
+    { mg:'Ohatrinona ny farany?', en:'What is your last price?', fr:'Quel est votre dernier prix ?' },
+    { mg:'Tiako vidiana ity', en:'I would like to buy this', fr:'Je voudrais acheter ceci' },
+    { mg:'Misy loko hafa ve?', en:'Do you have a different color?', fr:'Avez-vous une autre couleur ?' },
+    { mg:'Mbola misy hafa ve?', en:'Do you have more?', fr:'En avez-vous d’autres ?' },
+    { mg:'harona', en:'basket / bag', fr:'panier / sac' },
+    { mg:'satroka', en:'hat', fr:'chapeau' },
+    { mg:'kiraro', en:'shoes', fr:'chaussures' },
+    { mg:'voninkazo', en:'flower', fr:'fleur' }
+  ]},
+  food: { icon:'🍚', src:SOURCE_WM, en:['Eating out','Hungry, thirsty, delicious'], fr:['Au restaurant','Faim, soif, délicieux'], cards:[
+    { mg:'Mazotoa homana', en:'Enjoy your meal', fr:'Bon appétit' },
+    { mg:'Noana aho', en:'I am hungry', fr:'J’ai faim' },
+    { mg:'Mangetaheta aho', en:'I am thirsty', fr:'J’ai soif' },
+    { mg:'Voky aho', en:'I am full', fr:'J’ai bien mangé' },
+    { mg:'Natsiro be', en:'That was delicious', fr:'C’était délicieux' },
+    { mg:'Inona ity?', en:'What is this?', fr:'Qu’est-ce que c’est ?' },
+    { mg:'Izay fa misaotra', en:'That’s all, thanks', fr:'C’est tout, merci' },
+    { mg:'Aiza ny trano fivoahana?', en:'Where is the toilet?', fr:'Où sont les toilettes ?' },
+    { mg:'vary', en:'rice', fr:'riz' },
+    { mg:'rano', en:'water', fr:'eau' },
+    { mg:'kafe', en:'coffee', fr:'café' },
+    { mg:'dite', en:'tea', fr:'thé' },
+    { mg:'hena', en:'meat', fr:'viande' },
+    { mg:'trondro', en:'fish', fr:'poisson' },
+    { mg:'voankazo', en:'fruit', fr:'fruits' },
+    { mg:'sira', en:'salt', fr:'sel' },
+    { mg:'siramamy', en:'sugar', fr:'sucre' }
+  ]},
+  money: { icon:'💵', src:SOURCE_WM, en:['Money and the bank','Change, coins, the bank'], fr:['L’argent et la banque','Change, pièces, banque'], cards:[
+    { mg:'Aiza ny banky akaiky indrindra eto?', en:'Where is the nearest bank?', fr:'Où est la banque la plus proche ?' },
+    { mg:'Aiza no afaka manakalo vola?', en:'Where can I change money?', fr:'Où puis-je changer de l’argent ?' },
+    { mg:'Afaka manome vola madinika ve ianao?', en:'Can you give me some small change?', fr:'Pouvez-vous me donner de la monnaie ?' },
+    { mg:'banky', en:'bank', fr:'banque' },
+    { mg:'vola', en:'money', fr:'argent' },
+    { mg:'vola madinika', en:'coins / small change', fr:'pièces / monnaie' },
+    { mg:'mividy', en:'to buy', fr:'acheter' },
+    { mg:'manao sonia', en:'to sign', fr:'signer' }
+  ]},
+  health: { icon:'🏥', src:SOURCE_WM, en:['At the doctor','Sick, pain, medicine'], fr:['Chez le médecin','Malade, douleur, médicaments'], cards:[
+    { mg:'Marary aho', en:'I am sick', fr:'Je suis malade' },
+    { mg:'Tsy metimety aho', en:'I do not feel well', fr:'Je ne me sens pas bien' },
+    { mg:'Mila dokotera aho', en:'I need a doctor', fr:'J’ai besoin d’un médecin' },
+    { mg:'Eto no marary', en:'It hurts here', fr:'J’ai mal ici' },
+    { mg:'Fanina aho', en:'I feel dizzy', fr:'J’ai la tête qui tourne' },
+    { mg:'Mamay aho', en:'I have a temperature', fr:'J’ai de la température' },
+    { mg:'Voan’ny gripa aho', en:'I have the flu', fr:'J’ai la grippe' },
+    { mg:'Mivalana aho', en:'I have diarrhea', fr:'J’ai la diarrhée' },
+    { mg:'Nandoa aho', en:'I have vomited', fr:'J’ai vomi' },
+    { mg:'Farmasia iza no misokatra anio alina?', en:'Which pharmacy is open tonight?', fr:'Quelle pharmacie est ouverte ce soir ?' },
+    { mg:'fanafody', en:'medicine', fr:'médicament' },
+    { mg:'tazo', en:'fever', fr:'fièvre' },
+    { mg:'nify', en:'tooth', fr:'dent' },
+    { mg:'tenda', en:'throat', fr:'gorge' },
+    { mg:'vavony', en:'stomach', fr:'estomac' }
+  ]},
+  emergency: { icon:'🚨', src:SOURCE_WM, en:['Emergencies','Help, police, lost things'], fr:['Urgences','Au secours, police, objets perdus'], cards:[
+    { mg:'Vonjeo!', en:'Help!', fr:'Au secours !' },
+    { mg:'Misy aksida atsy', en:'There has been an accident', fr:'Il y a eu un accident' },
+    { mg:'Afaka miantso dokotera ve ianao?', en:'Can you call a doctor?', fr:'Pouvez-vous appeler un médecin ?' },
+    { mg:'Afaka miantso polisy ve ianao?', en:'Can you call the police?', fr:'Pouvez-vous appeler la police ?' },
+    { mg:'Ento amin’ny hopitaly akaiky indrindra aho', en:'Take me to the nearest hospital', fr:'Emmenez-moi à l’hôpital le plus proche' },
+    { mg:'Maratra aho', en:'I am hurt', fr:'Je suis blessé(e)' },
+    { mg:'Mila mpandika teny aho', en:'I need an interpreter', fr:'J’ai besoin d’un interprète' },
+    { mg:'kara-panondro', en:'ID card', fr:'carte d’identité' },
+    { mg:'lakile', en:'key', fr:'clé' },
+    { mg:'solomaso', en:'eyeglasses', fr:'lunettes' }
+  ]},
+  time: { icon:'🕒', src:SOURCE_WM, en:['Time and days','Today, tomorrow, the days of the week'], fr:['L’heure et les jours','Aujourd’hui, demain, les jours de la semaine'], cards:[
+    { mg:'Amin’ny firy izao?', en:'What time is it?', fr:'Quelle heure est-il ?' },
+    { mg:'Tara aho', en:'I am late', fr:'Je suis en retard' },
+    { mg:'Maika aho', en:'I am in a hurry', fr:'Je suis pressé(e)' },
+    { mg:'anio', en:'today', fr:'aujourd’hui' },
+    { mg:'rahampitso', en:'tomorrow', fr:'demain' },
+    { mg:'omaly', en:'yesterday', fr:'hier' },
+    { mg:'maraina', en:'morning', fr:'matin' },
+    { mg:'alina', en:'night', fr:'nuit' },
+    { mg:'alatsinainy', en:'Monday', fr:'lundi' },
+    { mg:'talata', en:'Tuesday', fr:'mardi' },
+    { mg:'alarobia', en:'Wednesday', fr:'mercredi' },
+    { mg:'alakamisy', en:'Thursday', fr:'jeudi' },
+    { mg:'zoma', en:'Friday', fr:'vendredi' },
+    { mg:'asabotsy', en:'Saturday', fr:'samedi' },
+    { mg:'alahady', en:'Sunday', fr:'dimanche' }
+  ]}
+};

@@ -1,0 +1,7 @@
+# Gidro apps. nosymasina.com/learn/* is sent here by the main website.
+/learn                 /index.html       200
+/learn/school          /school.html      200
+/learn/everyday        /everyday.html    200
+/learn/*               /:splat           200
+/school                /school.html      200
+/everyday              /everyday.html    200

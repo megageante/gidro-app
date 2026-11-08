@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Gidro Everyday · Nosymasina</title>
+<meta name="description" content="Gidro Everyday: Malagasy flashcards and games for adults, for real situations like the market, the doctor and getting around.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;700;800&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
+<style>
+/* Layout: grown-up sibling of Gidro School. Dark ink hero, situation sets as ticket cards, then four study modes per set. EN/FR switch. */
+:root{
+  --ink:#1f2a44; --paper:#faf6ee; --green:#3e8c63; --blue:#3a7ca5; --coral:#b5651d;
+  --card:#ffffff; --ink-soft:#6b6459; --line:#ece6d4;
+  --green-deep:#2f6e4c; --green-tint:#e1f0e6; --blue-deep:#2d6386; --blue-tint:#e3eef5;
+  --coral-deep:#94530f; --coral-tint:#f6e6d6;
+  --display:'Fraunces',Georgia,serif;
+  --body:'Manrope','Segoe UI',system-ui,sans-serif;
+  --cta:#f4a940; --cta-deep:#c9831f;
+  color-scheme: light;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));}
+button,input{font-family:inherit;color:inherit;}
+button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px;}
+.app{max-width:460px;margin:0 auto;display:flex;flex-direction:column;gap:22px;padding-block:20px 36px;}
+.screen{display:flex;flex-direction:column;gap:20px;}
+.screen[hidden]{display:none!important;}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.08;text-wrap:balance;}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:22px;}
+.brand svg{width:40px;height:40px;}
+.lang{display:flex;background:var(--card);border:2px solid var(--line);border-radius:999px;padding:3px;}
+.lang button{border:none;background:transparent;border-radius:999px;padding:6px 12px;font-weight:800;font-size:14px;color:var(--ink-soft);cursor:pointer;}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--paper);}
+.eyebrow{font-weight:800;font-size:13px;letter-spacing:.07em;text-transform:uppercase;color:var(--coral);}
+.hero{background:var(--card);color:var(--ink);border:2px solid var(--line);border-radius:24px;padding:24px 20px;display:flex;flex-direction:column;gap:12px;}
+.hero .eyebrow{color:var(--coral-deep);}
+.hero h1 em{font-style:normal;color:var(--green-deep);}
+.hero h1{font-size:clamp(32px,9.5vw,42px);}
+.hero p{margin:0;color:var(--ink-soft);font-weight:700;}
+.modes-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+.mini{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:12px;display:flex;gap:10px;align-items:center;font-weight:800;}
+.mini svg{width:26px;height:26px;flex-shrink:0;}
+section{display:flex;flex-direction:column;gap:12px;}
+section h2{font-size:26px;}
+.lead{margin:0;color:var(--ink-soft);}
+.tickets{display:flex;flex-direction:column;gap:12px;}
+.ticket{display:grid;grid-template-columns:72px 1fr auto;align-items:center;background:var(--card);border:2px solid var(--line);border-radius:18px;overflow:hidden;cursor:pointer;text-align:left;padding:0;width:100%;}
+.ticket .stub{height:100%;min-height:84px;display:flex;align-items:center;justify-content:center;border-right:2px dashed var(--line);background:var(--paper)!important;}
+.ticket .stub svg{width:34px;height:34px;}
+.ticket .info{padding:12px 14px;min-width:0;}
+.ticket .info b{display:block;font-family:var(--display);font-size:20px;line-height:1.1;}
+.ticket .info span{font-size:14px;color:var(--ink-soft);font-weight:700;}
+.ticket .tag{display:inline-block;margin-top:4px;font-size:12px;font-weight:800;border-radius:999px;padding:2px 8px;}
+.tag.ready{background:var(--green-tint);color:var(--green-deep);}
+.tag.wait{background:var(--coral-tint);color:var(--coral-deep);}
+.ticket .go{padding-right:14px;color:var(--ink-soft);font-size:24px;font-weight:800;}
+.btn{display:block;text-align:center;text-decoration:none;border:none;border-radius:16px;padding:15px 20px;font-weight:800;font-size:17px;cursor:pointer;width:100%;color:var(--ink);background:var(--cta);box-shadow:0 4px 0 var(--cta-deep);}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--cta-deep);}
+.btn.ghost{background:var(--card);border:2px solid var(--line);box-shadow:0 4px 0 var(--line);}
+.btn.coral{background:var(--coral);box-shadow:0 4px 0 var(--coral-deep);}
+.btn small{display:block;font-weight:700;font-size:13px;color:var(--ink-soft);}
+.kids{background:var(--blue-tint);border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:8px;}
+.kids .eyebrow{color:var(--blue-deep);}
+.kids h3{font-size:22px;}
+.kids p{margin:0;color:var(--ink-soft);font-size:15px;}
+.kids .btn{background:var(--blue);box-shadow:0 4px 0 var(--blue-deep);margin-top:6px;}
+.toast{min-height:22px;text-align:center;font-weight:700;color:var(--blue-deep);font-size:14px;}
+
+/* website top bar: landing pages only */
+.sitebar{background:var(--ink);color:#fff;border-radius:18px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;}
+.sitebar .row1{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.sitebar .sb-brand{font-family:'Fraunces',Georgia,serif;font-weight:700;font-size:20px;color:#fff;text-decoration:none;}
+.sitebar .sb-brand span{color:var(--cta);}
+.sitebar nav{display:flex;gap:4px;flex-wrap:wrap;background:rgba(255,255,255,.08);padding:4px;border-radius:999px;}
+.sitebar nav a{color:#fff;text-decoration:none;font-weight:700;font-size:13px;padding:7px 12px;border-radius:999px;}
+.sitebar nav a:hover{background:rgba(255,255,255,.16);}
+.sitebar nav a.active{background:#fff;color:var(--ink);}
+.sitebar .lang{background:rgba(255,255,255,.1);border:none;}
+.sitebar .lang button{color:#fff;}
+.sitebar .lang button[aria-pressed="true"]{background:#fff;color:var(--ink);}
+/* exit confirm and goodbye */
+.confirm{position:fixed;inset:0;background:rgba(31,42,68,.55);display:flex;align-items:center;justify-content:center;z-index:50;
+  padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));}
+.confirm[hidden]{display:none!important;}
+.confirm .box{background:var(--card);border-radius:22px;padding:22px;max-width:380px;width:100%;display:flex;flex-direction:column;gap:12px;text-align:center;}
+.confirm h3{font-family:var(--display);font-size:24px;margin:0;}
+.confirm p{margin:0;color:var(--ink-soft);}
+.bye{align-items:center;text-align:center;padding-top:clamp(24px,8vh,70px);}
+.bye h2{font-family:var(--display);font-size:34px;}
+.bye p{margin:0;color:var(--ink-soft);font-weight:700;}
+.bye a.btn{display:block;text-decoration:none;text-align:center;}
+
+.note{font-size:12px;color:var(--ink-soft);text-align:center;}
+/* set + study */
+.bar{display:flex;align-items:center;gap:12px;}
+.icon-btn{background:none;border:none;padding:6px;border-radius:10px;cursor:pointer;color:var(--ink-soft);display:flex;}
+.icon-btn svg{width:24px;height:24px;}
+.track{flex:1;height:12px;background:var(--line);border-radius:999px;overflow:hidden;}
+.fill{height:100%;width:0;background:var(--coral);border-radius:999px;transition:width .3s ease;}
+.count{font-weight:800;font-size:14px;color:var(--ink-soft);font-variant-numeric:tabular-nums;min-width:44px;text-align:right;}
+.set-head h2{font-size:30px;}
+.set-head p{margin:4px 0 0;color:var(--ink-soft);font-weight:700;}
+.mode-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+.mode{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:16px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:6px;box-shadow:0 3px 0 var(--line);}
+.mode svg{width:30px;height:30px;}
+.mode b{font-family:var(--display);font-size:19px;line-height:1.1;}
+.mode span{font-size:13px;color:var(--ink-soft);font-weight:700;}
+.terms{display:flex;flex-direction:column;background:var(--card);border:2px solid var(--line);border-radius:18px;}
+.term{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;padding:12px 14px;border-top:2px solid var(--line);}
+.term:first-child{border-top:none;}
+.term .m{font-family:var(--display);font-weight:800;font-size:18px;}
+.term .e{color:var(--ink-soft);font-weight:700;}
+.term .pending{color:var(--coral-deep);font-weight:800;font-size:14px;}
+/* flashcard */
+.card-wrap{perspective:1200px;}
+.flash{position:relative;width:100%;height:280px;cursor:pointer;transform-style:preserve-3d;transition:transform .45s ease;border:none;background:none;padding:0;}
+.flash.flipped{transform:rotateY(180deg);}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:20px;text-align:center;border:2px solid var(--line);}
+.face.front{background:var(--card);}
+.face.back{background:var(--ink);color:var(--paper);transform:rotateY(180deg);border-color:var(--ink);}
+.face .lbl{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.7;}
+.face .word{font-family:var(--display);font-weight:800;font-size:clamp(32px,10vw,44px);line-height:1.1;}
+.face .hint{font-size:13px;font-weight:700;opacity:.6;}
+.row{display:flex;gap:10px;}
+.row .btn{flex:1;}
+.opt-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+.chip-btn{background:var(--card);border:2px solid var(--line);border-radius:999px;padding:6px 12px;font-weight:800;font-size:13px;cursor:pointer;}
+/* learn */
+.q-label{font-weight:800;font-size:14px;color:var(--ink-soft);}
+.q-word{font-family:var(--display);font-weight:800;font-size:clamp(30px,9vw,40px);line-height:1.1;}
+.options{display:grid;grid-template-columns:1fr;gap:10px;}
+.opt{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:14px 16px;font-weight:800;font-size:16px;cursor:pointer;text-align:left;box-shadow:0 3px 0 var(--line);}
+.opt.right{border-color:var(--green);background:var(--green-tint);color:var(--green-deep);}
+.opt.wrong{border-color:var(--coral);background:var(--coral-tint);color:var(--coral-deep);}
+.opt[disabled]{cursor:default;}
+.feedback{border-radius:16px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.feedback[hidden]{display:none!important;}
+.feedback.ok{background:var(--green-tint);color:var(--green-deep);}
+.feedback.bad{background:var(--coral-tint);color:var(--coral-deep);}
+.feedback b{font-family:var(--display);font-size:19px;}
+.feedback .btn{width:auto;padding:10px 18px;font-size:15px;}
+/* match */
+.match-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+.tile{background:var(--card);border:2px solid var(--line);border-radius:14px;min-height:84px;padding:8px;font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 3px 0 var(--line);transition:opacity .25s ease, transform .25s ease;}
+.tile.mg{font-family:var(--display);font-size:18px;}
+.tile.sel{border-color:var(--blue);background:var(--blue-tint);}
+.tile.miss{border-color:var(--coral);background:var(--coral-tint);}
+.tile.gone{opacity:0;transform:scale(.85);pointer-events:none;}
+.timer{font-family:var(--display);font-weight:800;font-size:28px;font-variant-numeric:tabular-nums;}
+/* write */
+.write-in{width:100%;border:2px solid var(--line);border-radius:14px;padding:14px;font-size:18px;font-weight:700;background:var(--card);}
+.err{color:var(--coral-deep);font-size:13px;font-weight:700;min-height:18px;}
+/* results */
+.result{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center;}
+.result .big{font-family:var(--display);font-weight:800;font-size:44px;line-height:1;font-variant-numeric:tabular-nums;}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;}}
+</style>
+<style>
+.acct{background:var(--card);border:2px solid var(--line);border-radius:12px;padding:6px 10px;font-weight:800;font-size:13px;cursor:pointer}
+.tag.lock{background:var(--line);color:var(--ink-soft);}
+.src{font-size:12px;color:var(--ink-soft);font-weight:700;text-align:center}
+.sheet{position:fixed;inset:0;background:rgba(31,42,68,.55);display:flex;align-items:flex-end;justify-content:center;z-index:40}
+.sheet[hidden],header[hidden]{display:none!important}
+.sheet .box{background:var(--paper);width:100%;max-width:460px;border-radius:26px 26px 0 0;padding:22px max(18px,env(safe-area-inset-left)) max(22px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px;max-height:92vh;overflow-y:auto}
+.sheet h3{font-family:var(--display);font-size:24px;margin:0}
+.field{display:flex;flex-direction:column;gap:4px;font-weight:800;font-size:14px}
+.field input{border:2px solid var(--line);border-radius:14px;padding:13px 14px;font-size:17px;background:var(--card);font-weight:700}
+.ferr{color:var(--coral-deep);font-weight:800;font-size:14px;min-height:20px}
+.tabs{display:flex;background:var(--card);border:2px solid var(--line);border-radius:999px;padding:3px}
+.tabs button{flex:1;border:none;background:none;border-radius:999px;padding:8px;font-weight:800;color:var(--ink-soft);cursor:pointer}
+.tabs button[aria-pressed=true]{background:var(--ink);color:#fff}
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.plan{background:var(--card);border:3px solid var(--line);border-radius:18px;padding:14px 10px;text-align:center;display:flex;flex-direction:column;gap:2px}
+.plan b{font-family:var(--display);font-size:26px}
+.plan.best{border-color:var(--green)}
+.plan .ptag{font-size:11px;font-weight:800;color:var(--green-deep);text-transform:uppercase;letter-spacing:.05em}
+.perks{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:15px}
+.perks li::before{content:"✓ ";color:var(--green);font-weight:800}
+.ticket .stub{font-size:32px}
+.btn.green{background:var(--green);color:#fff;box-shadow:0 4px 0 var(--green-deep)}
+.linkbtn{background:none;border:none;font-weight:800;color:var(--ink-soft);cursor:pointer;padding:6px}
+.toastx{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;font-weight:800;border-radius:14px;padding:12px 16px;z-index:60;max-width:90vw;text-align:center}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="sitebar" id="sitebar">
+    <div class="row1">
+      <a class="sb-brand" href="/">Nosy<span>Masina</span></a>
+      <div class="lang" role="group" aria-label="Language">
+        <button id="lang-en" aria-pressed="true">EN</button>
+        <button id="lang-fr" aria-pressed="false">FR</button>
+      </div>
+    </div>
+    <nav aria-label="Website"><a href="/" data-t="navHome">Home</a><a href="/blog" data-t="navBlog">Blog</a><a href="/learn" class="active" data-t="navLearn">Learn</a><a href="/shop" data-t="navShop">Shop</a><a href="/cart" data-t="navCart">Cart</a></nav>
+  </header>
+  <div class="top">
+    <div class="brand">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M50 40c6 2 8 12 2 16-4 2.6-3-3-1-6-4 1-8-2-6-6 1-2 3-4 5-4z" fill="#b5651d"/>
+        <circle cx="32" cy="36" r="16" fill="#1f2a44"/><circle cx="18" cy="20" r="7" fill="#1f2a44"/><circle cx="46" cy="20" r="7" fill="#1f2a44"/>
+        <circle cx="18" cy="20" r="3.2" fill="#b5651d"/><circle cx="46" cy="20" r="3.2" fill="#b5651d"/>
+        <rect x="21" y="30" width="22" height="8" rx="4" fill="#3a7ca5"/>
+        <circle cx="26" cy="34" r="2" fill="#1f2a44"/><circle cx="38" cy="34" r="2" fill="#1f2a44"/>
+        <path d="M28.5 43c2 1.6 5 1.6 7 0" stroke="#3e8c63" stroke-width="2" stroke-linecap="round" fill="none"/>
+      </svg>
+      Gidro Everyday
+    </div>
+    <button class="acct" id="acctBtn"></button>
+  </div>
+
+  <!-- HOME -->
+  <div class="screen" id="sHome">
+    <div class="hero">
+      <div class="eyebrow" data-t="eyebrow">Malagasy for grown-ups</div>
+      <h1 data-t="h1">The Malagasy you need, the day you need it</h1>
+      <p data-t="heroP"></p>
+    </div>
+    <div class="modes-row" id="modesRow"></div>
+    <section>
+      <h2 data-t="setsH">Choose a set</h2>
+      <div class="tickets" id="tickets"></div>
+    </section>
+    <section>
+      <div class="facts" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="mini" style="flex-direction:column;align-items:center"><b style="font-family:var(--display);font-size:26px" id="pM"></b><span class="muted" data-t="perMonth"></span></div>
+        <div class="mini" style="flex-direction:column;align-items:center;border-color:var(--green)"><b style="font-family:var(--display);font-size:26px" id="pY"></b><span class="muted" data-t="perYear"></span></div>
+      </div>
+      <p class="lead" style="font-size:14px" data-t="priceP"></p>
+    </section>
+    <div class="kids">
+      <div class="eyebrow" data-t="kE">For children</div>
+      <h3 data-t="kH">Gidro School</h3>
+      <p data-t="kP"></p>
+      <a class="btn" href="/learn"><span data-t="kB">Go to Gidro School</span></a>
+    </div>
+  </div>
+
+  <!-- SET -->
+  <div class="screen" id="sSet" hidden>
+    <div class="bar"><button class="icon-btn" id="setBack" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button></div>
+    <div class="set-head"><h2 id="setName"></h2><p id="setSub"></p></div>
+    <div class="mode-grid" id="modeGrid"></div>
+    <section>
+      <div class="q-label" id="termsL"></div>
+      <div class="terms" id="terms"></div>
+      <div class="src" id="setSrc"></div>
+    </section>
+  </div>
+
+  <!-- STUDY -->
+  <div class="screen" id="sStudy" hidden>
+    <div class="bar">
+      <button class="icon-btn" id="studyBack" aria-label="Exit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <div class="count" id="count"></div>
+    </div>
+    <div id="studyBody" style="display:flex;flex-direction:column;gap:16px;"></div>
+  </div>
+
+  <!-- GOODBYE -->
+  <div class="screen bye" id="sBye" hidden>
+    <h2 data-t="byeH">Veloma, come back any time</h2>
+    <p data-t="byeP"></p>
+    <button class="btn" id="byeBack" data-t="byeB">Back to Gidro Everyday</button>
+    <a class="btn ghost" href="https://nosymasina.com/" data-t="byeSite">Visit nosymasina.com</a>
+  </div>
+
+  <div class="confirm" id="exitBox" hidden role="dialog" aria-modal="true" aria-labelledby="exitT">
+    <div class="box">
+      <h3 id="exitT" data-t="exitH">Leave this game?</h3>
+      <p data-t="exitP"></p>
+      <div class="row"><button class="btn ghost" id="exitNo" data-t="exitNo">Keep going</button><button class="btn" id="exitYes" data-t="exitYes">Yes, exit</button></div>
+    </div>
+  </div>
+</div>
+<div class="sheet" id="member" hidden role="dialog" aria-modal="true"><div class="box" id="memberBox"></div></div>
+<script src="/learn/gidro-core.js"></script>
+<script src="/learn/everyday-content.js"></script>
+<script>
+const MODE_ICON = {
+  cards:'<svg viewBox="0 0 24 24" fill="none" stroke="#2d6386" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="14" rx="3"/><path d="M7 3h11a3 3 0 013 3v11"/></svg>',
+  learn:'<svg viewBox="0 0 24 24" fill="none" stroke="#2f6e4c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>',
+  match:'<svg viewBox="0 0 24 24" fill="none" stroke="#94530f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>',
+  write:'<svg viewBox="0 0 24 24" fill="none" stroke="#1f2a44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13 7l4 4"/></svg>'
+};
+const T = {
+  en:{navHome:'Home', navBlog:'Blog', navLearn:'Learn', navShop:'Shop', navCart:'Cart',
+    eyebrow:'Malagasy for grown-ups', h1:'The Malagasy you need, the day you need it',
+    heroP:'Flashcard sets for real life: meeting people, getting around, the market, eating out, money, the doctor, emergencies and more. Study the cards, play the games, then use it on your trip.',
+    setsH:'Choose a set', kE:'For children', kH:'Gidro School', kP:'A full Malagasy school for ages 3 to 8, from Preschool up, with lessons, tests and weekly reports.',
+    kB:'Go to Gidro School', perMonth:'per month', perYear:'per year, best value', priceP:'The first two sets are free. Members open every set, and new sets as they are added. No ads.',
+    byeH:'Veloma, come back any time', byeP:'Your cards will be here when you return.', byeB:'Back to Gidro Everyday', byeSite:'Visit nosymasina.com',
+    exitH:'Leave this game?', exitP:'This round stops here. You can start it again any time.', exitNo:'Keep going', exitYes:'Yes, exit',
+    m:{cards:['Flashcards','Tap to flip'], learn:['Learn','Pick the right meaning'], match:['Match','Race the clock'], write:['Write','Type the Malagasy']},
+    free:'Free', members:'Members', cardsN:n=>n+' cards', terms:'Cards in this set', src:s=>'Malagasy: '+s,
+    mgL:'Malagasy', enL:'English', tapFlip:'Tap to flip', still:'Still learning', know:'I know it',
+    startWith:'Start with:', shuffle:'Shuffle',
+    qMean:'What does this mean?', right:'Correct', wrongT:'Not quite', answer:'Answer: ', cont:'Continue',
+    doneCards:(k,n)=>'You know '+k+' of '+n+' cards', again:'Study again', backSet:'Back to the set', review:'Review the ones I missed',
+    doneLearn:(r,n)=>r+' of '+n+' right the first time', matchGo:'Tap a Malagasy word, then its meaning', matchDone:s=>'Done in '+s+' seconds', best:s=>'Your best: '+s+' s', playAgain:'Play again',
+    writeQ:'Type the Malagasy for:', check:'Check', empty:'Type an answer first', writeDone:(r,n)=>r+' of '+n+' written correctly',
+    login:'Log in', account:'Account',
+    memH:'Join Gidro Everyday', memP:'Open every set and every game.', perks:['All situation sets','Flashcards, Learn, Match and Write','New sets added often','Your progress on every device'],
+    monthly:'per month', yearly:'per year', save:'Best value', choose:'Choose', later:'Not now',
+    accH:'Your Gidro account', accP:'One account works for Gidro Everyday and Gidro School.', accLogin:'Log in', accSignup:'Sign up',
+    email:'Email', password:'Password (6+ characters)', accGo:'Continue', accForgot:'Forgot password?', accSent:'Check your email for a reset link.',
+    accCheck:'Check your email to confirm, then log in here.', accNeed:'Please enter your email and password.',
+    accIn:e=>'Signed in as '+e, plan:ok=>ok?'Membership: active':'Membership: free sets only', manage:'To change or cancel, use the link in your Stripe receipt email.', join:'Become a member', signOut:'Sign out', close:'Close',
+    thanks:'Misaotra! Your membership is active.', waitPay:'Finishing your membership…'},
+  fr:{navHome:'Accueil', navBlog:'Blog', navLearn:'Apprendre', navShop:'Boutique', navCart:'Panier',
+    eyebrow:'Le malgache pour les adultes', h1:'Le malgache utile, le jour où vous en avez besoin',
+    heroP:"Des séries de cartes pour la vraie vie : faire connaissance, se déplacer, le marché, le restaurant, l'argent, le médecin, les urgences et plus encore. Révisez, jouez, puis servez-vous-en en voyage.",
+    setsH:'Choisissez une série', kE:'Pour les enfants', kH:'École Gidro', kP:'Une vraie école de malgache de 3 à 8 ans, dès la petite section, avec leçons, tests et bilans chaque semaine.',
+    kB:"Aller à l'École Gidro", perMonth:'par mois', perYear:'par an, le plus avantageux', priceP:'Les deux premières séries sont gratuites. Les membres ouvrent toutes les séries, et les nouvelles dès leur sortie. Sans publicité.',
+    byeH:'Veloma, revenez quand vous voulez', byeP:'Vos cartes vous attendent.', byeB:'Retour à Gidro Everyday', byeSite:'Visiter nosymasina.com',
+    exitH:'Quitter ce jeu ?', exitP:'Cette partie s’arrête ici. Vous pourrez la reprendre quand vous voulez.', exitNo:'Continuer', exitYes:'Oui, quitter',
+    m:{cards:['Cartes','Touchez pour retourner'], learn:['Apprendre','Choisissez le bon sens'], match:['Associer','Contre la montre'], write:['Écrire','Tapez le malgache']},
+    free:'Gratuit', members:'Membres', cardsN:n=>n+' cartes', terms:'Cartes de cette série', src:s=>'Malgache : '+s,
+    mgL:'Malgache', enL:'Français', tapFlip:'Touchez pour retourner', still:'Encore à revoir', know:'Je sais',
+    startWith:'Commencer par :', shuffle:'Mélanger',
+    qMean:'Que veut dire ceci ?', right:'Correct', wrongT:'Pas tout à fait', answer:'Réponse : ', cont:'Continuer',
+    doneCards:(k,n)=>'Vous connaissez '+k+' cartes sur '+n, again:'Réviser encore', backSet:'Retour à la série', review:'Revoir celles que j’ai ratées',
+    doneLearn:(r,n)=>r+' sur '+n+' justes du premier coup', matchGo:'Touchez un mot malgache, puis son sens', matchDone:s=>'Terminé en '+s+' secondes', best:s=>'Votre record : '+s+' s', playAgain:'Rejouer',
+    writeQ:'Tapez le malgache pour :', check:'Vérifier', empty:'Tapez d’abord une réponse', writeDone:(r,n)=>r+' sur '+n+' bien écrites',
+    login:'Connexion', account:'Compte',
+    memH:'Rejoindre Gidro Everyday', memP:'Ouvrez toutes les séries et tous les jeux.', perks:['Toutes les séries','Cartes, Apprendre, Associer et Écrire','De nouvelles séries souvent','Vos progrès sur tous vos appareils'],
+    monthly:'par mois', yearly:'par an', save:'Le plus avantageux', choose:'Choisir', later:'Plus tard',
+    accH:'Votre compte Gidro', accP:'Un seul compte pour Gidro Everyday et l’École Gidro.', accLogin:'Connexion', accSignup:'Inscription',
+    email:'E-mail', password:'Mot de passe (6 caractères ou plus)', accGo:'Continuer', accForgot:'Mot de passe oublié ?', accSent:'Un lien de réinitialisation a été envoyé par e-mail.',
+    accCheck:'Confirmez votre e-mail, puis connectez-vous ici.', accNeed:'Entrez votre e-mail et votre mot de passe.',
+    accIn:e=>'Connecté : '+e, plan:ok=>ok?'Abonnement : actif':'Abonnement : séries gratuites seulement', manage:'Pour modifier ou résilier, utilisez le lien dans l’e-mail de reçu Stripe.', join:'Devenir membre', signOut:'Se déconnecter', close:'Fermer',
+    thanks:'Misaotra ! Votre abonnement est actif.', waitPay:'Activation de l’abonnement…'}
+};
+let setKey=null, timer=null, frontMg=true;
+const $=id=>document.getElementById(id);
+const L=()=>T[G.lang];
+const mean=c=>G.lang==='fr'?c.fr:c.en;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const open_=k=>SETS[k].free||G.has('everyday');
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const norm=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z ]/g,'').trim();
+
+function show(id){['sHome','sSet','sStudy','sBye'].forEach(s=>$(s).hidden=(s!==id)); $('sitebar').hidden=(id!=='sHome'); clearInterval(timer); window.scrollTo(0,0);}
+function bar(i,n){ $('fill').style.width=(n?Math.round(i/n*100):0)+'%'; $('count').textContent=n?(Math.min(i+1,n)+' / '+n):''; }
+
+/* HOME */
+function renderHome(){
+  $('modesRow').innerHTML=['cards','learn','match','write'].map(m=>`<div class="mini">${MODE_ICON[m]}<span>${L().m[m][0]}</span></div>`).join('');
+  $('tickets').innerHTML=Object.keys(SETS).map(k=>{const s=SETS[k], o=open_(k); return `
+    <button class="ticket" data-k="${k}">
+      <div class="stub">${s.icon}</div>
+      <div class="info"><b>${esc(s[G.lang][0])}</b><span>${esc(s[G.lang][1])}</span><br><span class="tag ${s.free?'ready':o?'ready':'lock'}">${s.free?L().free:o?'':'🔒 '+L().members}${s.free||!o?' · ':''}${L().cardsN(s.cards.length)}</span></div>
+      <div class="go" aria-hidden="true">›</div>
+    </button>`;}).join('');
+  $('tickets').querySelectorAll('.ticket').forEach(b=>b.onclick=()=>{ if(!open_(b.dataset.k)){ openMember(); return; } openSet(b.dataset.k); });
+  $('pM').textContent=G.PAY.everyday.price.monthly; $('pY').textContent=G.PAY.everyday.price.yearly;
+  $('acctBtn').textContent=G.user?L().account:L().login;
+}
+
+/* SET */
+function openSet(k){ setKey=k; show('sSet'); renderSet(); }
+function renderSet(){
+  const s=SETS[setKey];
+  $('setName').textContent=s[G.lang][0]; $('setSub').textContent=s[G.lang][1];
+  $('modeGrid').innerHTML=['cards','learn','match','write'].map(m=>`<button class="mode" data-m="${m}">${MODE_ICON[m]}<b>${L().m[m][0]}</b><span>${L().m[m][1]}</span></button>`).join('');
+  $('modeGrid').querySelectorAll('.mode').forEach(b=>b.onclick=()=>startMode(b.dataset.m));
+  $('termsL').textContent=L().terms;
+  $('terms').innerHTML=s.cards.map(c=>`<div class="term"><div class="m">${esc(c.mg)}</div><div class="e">${esc(mean(c))}</div></div>`).join('');
+  $('setSrc').textContent=s.src==='Nene'?'':L().src(s.src);
+}
+$('setBack').onclick=()=>{show('sHome');};
+$('studyBack').onclick=()=>{ $('exitBox').hidden=false; $('exitNo').focus(); };
+$('exitNo').onclick=()=>{ $('exitBox').hidden=true; };
+$('exitYes').onclick=()=>{ $('exitBox').hidden=true; show('sBye'); };
+$('byeBack').onclick=()=>show('sHome');
+
+function startMode(m, deck){ G.addTag('e:'+setKey, 0); show('sStudy'); ({cards:runCards, learn:runLearn, match:runMatch, write:runWrite})[m](deck); }
+function result(big, line, extra){
+  bar(0,0); $('fill').style.width='100%';
+  $('studyBody').innerHTML=`<div class="result"><div class="big">${big}</div><div style="font-weight:800">${line}</div>${extra||''}</div>
+    <button class="btn ghost" id="toSet">${L().backSet}</button>`;
+  $('toSet').onclick=()=>{show('sSet'); renderSet();};
+}
+
+/* FLASHCARDS */
+function runCards(deck){
+  let cards=deck||SETS[setKey].cards.slice(), i=0, missed=[], known=0;
+  const body=$('studyBody');
+  function draw(){
+    if(i>=cards.length){
+      result(known+' / '+cards.length, L().doneCards(known,cards.length),
+        (missed.length?`<button class="btn coral" id="rev" style="margin-top:8px">${L().review}</button>`:'')+`<button class="btn" id="again" style="margin-top:8px">${L().again}</button>`);
+      if(missed.length) $('rev').onclick=()=>runCards(missed);
+      $('again').onclick=()=>runCards();
+      return;
+    }
+    const c=cards[i]; bar(i,cards.length);
+    const fWord=frontMg?c.mg:mean(c), bWord=frontMg?mean(c):c.mg;
+    const fL=frontMg?L().mgL:L().enL, bL=frontMg?L().enL:L().mgL;
+    body.innerHTML=`
+      <div class="opt-row"><span class="q-label">${L().startWith}</span>
+        <div style="display:flex;gap:6px"><button class="chip-btn" id="side">${frontMg?L().mgL:L().enL}</button><button class="chip-btn" id="shuf">${L().shuffle}</button></div></div>
+      <div class="card-wrap"><button class="flash" id="flash" aria-label="${L().tapFlip}">
+        <div class="face front"><div class="lbl">${fL}</div><div class="word">${esc(fWord)}</div><div class="hint">${L().tapFlip}</div></div>
+        <div class="face back"><div class="lbl">${bL}</div><div class="word">${esc(bWord)}</div></div>
+      </button></div>
+      <div class="row"><button class="btn coral" id="still">${L().still}</button><button class="btn" id="know">${L().know}</button></div>`;
+    $('flash').onclick=()=>$('flash').classList.toggle('flipped');
+    $('still').onclick=()=>{missed.push(c); i++; draw();};
+    $('know').onclick=()=>{known++; i++; draw();};
+    $('side').onclick=()=>{frontMg=!frontMg; draw();};
+    $('shuf').onclick=()=>{cards=shuffle(cards); i=0; missed=[]; known=0; draw();};
+  }
+  draw();
+}
+
+/* LEARN: multiple choice, missed cards come back at the end */
+function runLearn(){
+  const all=SETS[setKey].cards; let queue=shuffle(all), firstTry=0, seen=new Set(), done=0;
+  const body=$('studyBody');
+  function draw(){
+    if(!queue.length){ result(firstTry+' / '+all.length, L().doneLearn(firstTry,all.length), `<button class="btn" id="again" style="margin-top:8px">${L().again}</button>`); $('again').onclick=runLearn; return; }
+    const c=queue[0]; bar(done,all.length);
+    const opts=shuffle([c, ...shuffle(all.filter(x=>x!==c)).slice(0,3)]);
+    body.innerHTML=`<div class="q-label">${L().qMean}</div><div class="q-word">${esc(c.mg)}</div>
+      <div class="options">${opts.map((o,k)=>`<button class="opt" data-k="${k}">${esc(mean(o))}</button>`).join('')}</div>
+      <div class="feedback" id="fb" hidden><div><b id="fbT"></b><div id="fbS" style="font-weight:700;font-size:14px"></div></div><button class="btn" id="cont">${L().cont}</button></div>`;
+    body.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      const ok=opts[b.dataset.k]===c;
+      body.querySelectorAll('.opt').forEach((x,k)=>{x.disabled=true; if(opts[k]===c) x.classList.add('right');});
+      if(!ok) b.classList.add('wrong');
+      const fb=$('fb'); fb.className='feedback '+(ok?'ok':'bad'); fb.hidden=false;
+      $('fbT').textContent=ok?L().right:L().wrongT; $('fbS').textContent=ok?'':L().answer+mean(c);
+      queue.shift();
+      if(ok){ if(!seen.has(c)) firstTry++; done++; } else { seen.add(c); queue.push(c); }
+      $('cont').onclick=draw; $('cont').focus({preventScroll:true});
+    });
+  }
+  draw();
+}
+
+/* MATCH: 6 pairs on a 3-column grid, timed */
+function runMatch(){
+  const pairs=shuffle(SETS[setKey].cards).slice(0,6);
+  const tiles=shuffle([...pairs.map((c,i)=>({id:i,txt:c.mg,mg:true})), ...pairs.map((c,i)=>({id:i,txt:mean(c),mg:false}))]);
+  const body=$('studyBody'); let sel=null, left=pairs.length, t0=Date.now();
+  body.innerHTML=`<div class="opt-row"><span class="q-label">${L().matchGo}</span><span class="timer" id="tm">0.0</span></div>
+    <div class="match-grid">${tiles.map((t,k)=>`<button class="tile ${t.mg?'mg':''}" data-k="${k}">${esc(t.txt)}</button>`).join('')}</div>`;
+  bar(0,0);
+  timer=setInterval(()=>{$('tm').textContent=((Date.now()-t0)/1000).toFixed(1);},100);
+  body.querySelectorAll('.tile').forEach(b=>b.onclick=()=>{
+    const t=tiles[b.dataset.k];
+    if(!sel){ sel={b,t}; b.classList.add('sel'); return; }
+    if(sel.b===b){ b.classList.remove('sel'); sel=null; return; }
+    if(sel.t.id===t.id && sel.t.mg!==t.mg){
+      [sel.b,b].forEach(x=>{x.classList.remove('sel'); x.classList.add('gone');});
+      sel=null; left--; $('fill').style.width=Math.round((pairs.length-left)/pairs.length*100)+'%';
+      if(!left){
+        clearInterval(timer); const s=((Date.now()-t0)/1000).toFixed(1);
+        let best=null; try{best=parseFloat(localStorage.getItem('gidroBest_'+setKey));}catch(e){}
+        if(!best||parseFloat(s)<best){best=parseFloat(s); try{localStorage.setItem('gidroBest_'+setKey,s);}catch(e){}}
+        setTimeout(()=>{result(s+' s', L().matchDone(s), `<div style="color:var(--ink-soft);font-weight:700">${L().best(best)}</div><button class="btn" id="again" style="margin-top:8px">${L().playAgain}</button>`); $('again').onclick=runMatch;},300);
+      }
+    } else {
+      const a=sel.b; a.classList.remove('sel'); a.classList.add('miss'); b.classList.add('miss');
+      setTimeout(()=>{a.classList.remove('miss'); b.classList.remove('miss');},350); sel=null;
+    }
+  });
+}
+
+/* WRITE: type the Malagasy */
+function runWrite(){
+  const all=shuffle(SETS[setKey].cards); let i=0, right=0;
+  const body=$('studyBody');
+  function draw(){
+    if(i>=all.length){ result(right+' / '+all.length, L().writeDone(right,all.length), `<button class="btn" id="again" style="margin-top:8px">${L().again}</button>`); $('again').onclick=runWrite; return; }
+    const c=all[i]; bar(i,all.length);
+    body.innerHTML=`<div class="q-label">${L().writeQ}</div><div class="q-word">${esc(mean(c))}</div>
+      <form id="wf" style="display:flex;flex-direction:column;gap:8px" novalidate>
+        <input class="write-in" id="win" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="${L().mgL}">
+        <div class="err" id="werr"></div>
+        <button class="btn" type="submit">${L().check}</button></form>
+      <div class="feedback" id="fb" hidden><div><b id="fbT"></b><div id="fbS" style="font-weight:700;font-size:14px"></div></div><button class="btn" id="cont">${L().cont}</button></div>`;
+    $('win').focus({preventScroll:true});
+    $('win').oninput=()=>$('werr').textContent='';
+    $('wf').onsubmit=e=>{
+      e.preventDefault(); const v=$('win').value;
+      if(!v.trim()){ $('werr').textContent=L().empty; return; }
+      const ok=norm(v)===norm(c.mg); if(ok) right++;
+      $('wf').querySelector('button').disabled=true; $('win').disabled=true;
+      const fb=$('fb'); fb.className='feedback '+(ok?'ok':'bad'); fb.hidden=false;
+      $('fbT').textContent=ok?L().right:L().wrongT; $('fbS').textContent=ok?c.mg:L().answer+c.mg;
+      $('cont').onclick=()=>{i++; draw();}; $('cont').focus({preventScroll:true});
+    };
+  }
+  draw();
+}
+/* language */
+function apply(l){
+  G.setLang(l);
+  document.querySelectorAll('[data-t]').forEach(el=>{const v=T[l][el.dataset.t]; if(typeof v==='string') el.textContent=v;});
+  $('lang-en').setAttribute('aria-pressed', l==='en'); $('lang-fr').setAttribute('aria-pressed', l==='fr');
+  document.title='Gidro Everyday · Nosymasina';
+  renderHome(); if(!$('sSet').hidden) renderSet();
+  if(!$('sStudy').hidden){ show('sSet'); renderSet(); }
+  $('exitBox').hidden=true;
+}
+$('lang-en').onclick=()=>apply('en'); $('lang-fr').onclick=()=>apply('fr');
+
+/* account and membership */
+function toastx(msg){ const t=document.createElement('div'); t.className='toastx'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2600); }
+function closeMember(){ $('member').hidden=true; }
+$('member').onclick=e=>{ if(e.target.id==='member') closeMember(); };
+function openMember(){
+  const box=$('memberBox'), P=G.PAY.everyday.price;
+  if(!G.user){ accountForm(()=>{ G.has('everyday') ? (closeMember(), renderHome()) : openMember(); }); $('member').hidden=false; return; }
+  if(G.has('everyday')){ closeMember(); return; }
+  box.innerHTML=`<h3>${L().memH}</h3><p style="margin:0;color:var(--ink-soft);font-weight:700">${L().memP}</p>
+    <ul class="perks">${L().perks.map(p=>`<li>${esc(p)}</li>`).join('')}</ul>
+    <div class="plans"><div class="plan"><b>${P.monthly}</b><span style="color:var(--ink-soft)">${L().monthly}</span><button class="btn" style="margin-top:8px;padding:10px" id="pm">${L().choose}</button></div>
+    <div class="plan best"><span class="ptag">${L().save}</span><b>${P.yearly}</b><span style="color:var(--ink-soft)">${L().yearly}</span><button class="btn green" style="margin-top:8px;padding:10px" id="py">${L().choose}</button></div></div>
+    <button class="btn ghost" id="mLater">${L().later}</button>`;
+  $('pm').onclick=()=>G.checkout('everyday','monthly'); $('py').onclick=()=>G.checkout('everyday','yearly');
+  $('mLater').onclick=closeMember; $('member').hidden=false;
+}
+function accountForm(after){
+  const box=$('memberBox'); let mode='signup';
+  const draw=()=>{
+    box.innerHTML=`<h3>${L().accH}</h3><p style="margin:0;color:var(--ink-soft);font-weight:700">${L().accP}</p>
+      <div class="tabs"><button data-m="signup" aria-pressed="${mode==='signup'}">${L().accSignup}</button><button data-m="login" aria-pressed="${mode==='login'}">${L().accLogin}</button></div>
+      <form id="af" novalidate style="display:flex;flex-direction:column;gap:10px">
+        <label class="field">${L().email}<input id="ae" type="email" autocomplete="email"></label>
+        <label class="field">${L().password}<input id="ap" type="password" autocomplete="${mode==='login'?'current-password':'new-password'}"></label>
+        <div class="ferr" id="aerr" aria-live="polite"></div><button class="btn green" type="submit">${L().accGo}</button></form>
+      ${mode==='login'?`<button class="linkbtn" id="afg">${L().accForgot}</button>`:''}
+      <button class="btn ghost" id="aLater">${L().later}</button>`;
+    box.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{mode=b.dataset.m; draw();});
+    $('aLater').onclick=closeMember;
+    if($('afg')) $('afg').onclick=async()=>{const e=$('ae').value.trim(); if(!e){$('aerr').textContent=L().accNeed;return;} await G.resetPassword(e); $('aerr').textContent=L().accSent;};
+    $('af').onsubmit=async ev=>{
+      ev.preventDefault(); const e=$('ae').value.trim(), pw=$('ap').value;
+      if(!e||pw.length<6){ $('aerr').textContent=L().accNeed; return; }
+      const res= mode==='login' ? await G.signIn(e,pw) : await G.signUp(e,pw);
+      if(res.error){ $('aerr').textContent=res.error.message; return; }
+      if(mode==='signup' && !res.data.session){ $('aerr').textContent=L().accCheck; mode='login'; return; }
+      G.user=res.data.user||(res.data.session&&res.data.session.user); await G.loadProfile(); G.emit(); after&&after();
+    };
+  };
+  draw();
+}
+$('acctBtn').onclick=()=>{
+  if(!G.user){ accountForm(()=>{ closeMember(); renderHome(); }); $('member').hidden=false; return; }
+  const box=$('memberBox');
+  box.innerHTML=`<h3>${L().account}</h3><p style="margin:0;font-weight:700">${esc(L().accIn(G.user.email))}</p><p style="margin:0;font-weight:800">${L().plan(G.has('everyday'))}</p>
+    ${G.has('everyday')?`<p style="margin:0;color:var(--ink-soft);font-size:14px;font-weight:700">${L().manage}</p>`:`<button class="btn green" id="aj">${L().join}</button>`}
+    <button class="btn ghost" id="ao">${L().signOut}</button><button class="btn ghost" id="ac">${L().close}</button>`;
+  if($('aj')) $('aj').onclick=openMember;
+  $('ao').onclick=async()=>{ await G.signOut(); closeMember(); renderHome(); };
+  $('ac').onclick=closeMember; $('member').hidden=false;
+};
+
+G.onChange(()=>{ renderHome(); if(new URLSearchParams(location.search).get('upgraded')==='1' && G.has('everyday')) toastx(L().thanks); });
+apply(G.lang);
+G.start().then(()=>{ if(new URLSearchParams(location.search).get('upgraded')==='1' && !G.has('everyday')) toastx(L().waitPay); });
+</script>
+</body>
+</html>

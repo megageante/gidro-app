@@ -1,0 +1,914 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Gidro School</title>
+<meta name="description" content="Gidro School: a full Malagasy school for children, from Preschool up.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='36' r='16' fill='%231f2a44'/%3E%3Ccircle cx='18' cy='20' r='7' fill='%231f2a44'/%3E%3Ccircle cx='46' cy='20' r='7' fill='%231f2a44'/%3E%3Ccircle cx='26' cy='34' r='4' fill='%23faf6ee'/%3E%3Ccircle cx='38' cy='34' r='4' fill='%23faf6ee'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Manrope:wght@500;700;800&display=swap">
+<style>
+:root{
+  --ink:#1f2a44; --paper:#faf6ee; --card:#fff; --soft:#6b6459; --line:#ece6d4;
+  --green:#3e8c63; --green-deep:#2f6e4c; --green-tint:#e1f0e6;
+  --blue:#3a7ca5; --blue-deep:#2d6386; --blue-tint:#e3eef5;
+  --coral:#b5651d; --coral-deep:#94530f; --coral-tint:#f6e6d6;
+  --cta:#f4a940; --cta-deep:#c9831f; --red:#c8483b; --red-tint:#fbe3df;
+  --display:'Fraunces',Georgia,serif; --body:'Manrope','Segoe UI',system-ui,sans-serif;
+  --cls:#e07a3f; --cls-tint:#fde6d6;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45}
+body{padding:0 max(16px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.1;text-wrap:balance}
+.app{max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:18px;padding-top:max(14px,env(safe-area-inset-top))}
+.screen{display:flex;flex-direction:column;gap:18px}
+[hidden]{display:none!important}
+.muted{color:var(--soft)}
+/* header */
+.hdr{display:flex;align-items:center;gap:10px}
+.hdr .brand{display:flex;align-items:center;gap:8px;font-family:var(--display);font-weight:800;font-size:19px;margin-right:auto;min-width:0}
+.hdr .brand svg{width:36px;height:36px;flex-shrink:0}
+.stat{display:flex;align-items:center;gap:4px;font-weight:800;font-size:14px;background:var(--card);border:2px solid var(--line);border-radius:999px;padding:4px 10px;font-variant-numeric:tabular-nums}
+.iconbtn{background:var(--card);border:2px solid var(--line);border-radius:12px;padding:6px 10px;font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px}
+.iconbtn svg{width:18px;height:18px}
+.lang{display:flex;background:var(--card);border:2px solid var(--line);border-radius:999px;padding:2px}
+.lang button{border:none;background:none;border-radius:999px;padding:4px 9px;font-weight:800;font-size:12px;color:var(--soft)}
+.lang button[aria-pressed=true]{background:var(--ink);color:#fff}
+.row2{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+/* hello card */
+.hello{background:var(--cls);color:#fff;border-radius:24px;padding:18px;display:flex;gap:14px;align-items:center;position:relative;overflow:hidden}
+.hello .g{width:72px;height:72px;flex-shrink:0;background:rgba(255,255,255,.18);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.hello .g svg{width:58px;height:58px}
+.hello h2{font-size:24px}
+.hello p{margin:2px 0 0;font-weight:700;opacity:.92;font-size:15px}
+.btn{border:none;border-radius:16px;padding:15px 20px;font-weight:800;font-size:17px;width:100%;background:var(--cta);color:var(--ink);box-shadow:0 4px 0 var(--cta-deep);text-align:center;text-decoration:none;display:block}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--cta-deep)}
+.btn.green{background:var(--green);color:#fff;box-shadow:0 4px 0 var(--green-deep)}
+.btn.blue{background:var(--blue);color:#fff;box-shadow:0 4px 0 var(--blue-deep)}
+.btn.ghost{background:var(--card);border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
+.btn.small{padding:10px 14px;font-size:15px;width:auto}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.btn small{display:block;font-size:13px;font-weight:700;opacity:.8}
+/* class bubbles */
+.classes{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none}
+.classes::-webkit-scrollbar{display:none}
+.cbub{flex:0 0 auto;width:76px;display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;padding:0}
+.cbub .b{width:62px;height:62px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;color:#fff;border:4px solid var(--paper);box-shadow:0 0 0 2px var(--line)}
+.cbub .b small{font-family:var(--body);font-size:9px;letter-spacing:.05em}
+.cbub .b b{font-size:20px;line-height:1}
+.cbub span{font-size:12px;font-weight:800;text-align:center;line-height:1.15}
+.cbub.cur .b{box-shadow:0 0 0 3px var(--ink)}
+.cbub.off .b{filter:grayscale(.6);opacity:.55}
+/* months */
+.sect h3{font-size:22px;margin-bottom:10px}
+.months{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.mon{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;box-shadow:0 3px 0 var(--line);min-height:112px}
+.mon .ic{font-size:28px;line-height:1}
+.mon b{font-size:13px;line-height:1.15}
+.mon small{font-size:11px;font-weight:800;color:var(--soft)}
+.mon.cur{border-color:var(--cls);box-shadow:0 3px 0 var(--cls)}
+.mon.done{background:var(--green-tint);border-color:#bfe0cb;box-shadow:0 3px 0 #bfe0cb}
+.mon.lock{opacity:.55}
+.mon.soon{background:transparent;border-style:dashed;box-shadow:none;opacity:.5}
+.mbar{width:100%;height:6px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:2px}
+.mbar i{display:block;height:100%;background:var(--cls)}
+.banner{border-radius:18px;padding:14px 16px;font-weight:700;background:var(--blue-tint);color:var(--blue-deep);display:flex;flex-direction:column;gap:10px}
+.banner.warm{background:var(--coral-tint);color:var(--coral-deep)}
+.banner b{font-family:var(--display);font-size:18px}
+/* month view: weeks path */
+.back{background:none;border:none;padding:6px 0;font-weight:800;color:var(--soft);display:flex;align-items:center;gap:6px;align-self:flex-start}
+.back svg{width:20px;height:20px}
+.mhead{display:flex;gap:12px;align-items:center}
+.mhead .ic{font-size:40px}
+.mhead h2{font-size:26px}
+.week{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.week .wt{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.week .wt b{font-family:var(--display);font-size:18px}
+.week .wt span{font-size:13px;font-weight:800;color:var(--soft)}
+.days{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.day{aspect-ratio:1;border-radius:50%;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:13px;background:var(--line);color:var(--soft);position:relative}
+.day b{font-family:var(--display);font-size:20px;line-height:1}
+.day.open{background:var(--cls);color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.18);animation:pulse 1.6s ease-in-out infinite}
+.day.done{background:var(--green);color:#fff}
+.day.paid::after{content:"🔒";position:absolute;right:-2px;top:-4px;font-size:13px}
+.day.test{border-radius:14px}
+@keyframes pulse{50%{transform:scale(1.07)}}
+.wlist{font-size:13px;color:var(--soft);font-weight:700}
+/* lesson player */
+.pbar{display:flex;align-items:center;gap:10px}
+.track{flex:1;height:14px;background:var(--line);border-radius:999px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--green);border-radius:999px;transition:width .3s}
+.steps{display:flex;gap:6px;justify-content:center}
+.steps span{font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px;background:var(--line);color:var(--soft)}
+.steps span.on{background:var(--ink);color:#fff}
+.steps span.ok{background:var(--green-tint);color:var(--green-deep)}
+.stage{display:flex;flex-direction:column;gap:16px;min-height:52vh}
+.prompt{font-weight:800;color:var(--soft);font-size:15px;text-align:center}
+.bigcard{background:var(--card);border:2px solid var(--line);border-radius:28px;padding:24px 18px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.pic{font-size:88px;line-height:1.1;display:flex;align-items:center;justify-content:center;min-height:110px}
+.pic svg{width:110px;height:110px}
+.swatch{width:110px;height:110px;border-radius:50%;border:4px solid var(--ink)}
+.dots{display:grid;grid-template-columns:repeat(5,22px);gap:8px;justify-content:center;align-content:center;min-height:110px}
+.dots i{width:22px;height:22px;border-radius:50%;background:var(--cls)}
+.mgword{font-family:var(--display);font-weight:800;font-size:clamp(38px,12vw,54px);line-height:1;color:var(--ink)}
+.meaning{font-weight:800;font-size:18px;color:var(--soft)}
+.tip{font-size:14px;font-weight:700;color:var(--blue-deep);background:var(--blue-tint);border-radius:12px;padding:8px 12px}
+.opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.opts.words{grid-template-columns:1fr}
+.opt{background:var(--card);border:3px solid var(--line);border-radius:20px;padding:10px;min-height:96px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 var(--line);font-family:var(--display);font-weight:800;font-size:24px}
+.opts.words .opt{min-height:60px;font-size:24px}
+.opt .pic{font-size:52px;min-height:70px}
+.opt .pic svg{width:66px;height:66px}
+.opt .swatch{width:62px;height:62px;border-width:3px}
+.opt .dots{grid-template-columns:repeat(5,12px);gap:5px;min-height:60px}
+.opt .dots i{width:12px;height:12px}
+.opt.right{border-color:var(--green);background:var(--green-tint);box-shadow:0 4px 0 #bfe0cb}
+.opt.wrong{border-color:var(--red);background:var(--red-tint);box-shadow:0 4px 0 #f1c3bc}
+.opt[disabled]{cursor:default}
+.fb{border-radius:18px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-weight:800}
+.fb.ok{background:var(--green-tint);color:var(--green-deep)}
+.fb.bad{background:var(--red-tint);color:var(--red)}
+.fb b{font-family:var(--display);font-size:20px;display:block}
+.fb .btn{width:auto;padding:12px 18px;font-size:16px}
+/* match game */
+.mgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.tile{background:var(--card);border:3px solid var(--line);border-radius:18px;min-height:86px;padding:6px;box-shadow:0 4px 0 var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;font-size:19px;transition:opacity .25s,transform .25s}
+.tile .pic{font-size:44px;min-height:0}
+.tile .pic svg{width:52px;height:52px}
+.tile .swatch{width:48px;height:48px;border-width:3px}
+.tile .dots{grid-template-columns:repeat(5,10px);gap:4px;min-height:0}
+.tile .dots i{width:10px;height:10px}
+.tile.sel{border-color:var(--blue);background:var(--blue-tint)}
+.tile.miss{border-color:var(--red);background:var(--red-tint)}
+.tile.gone{opacity:0;transform:scale(.8);pointer-events:none}
+/* paint game */
+.paint svg{width:100%;height:auto;background:var(--card);border:2px solid var(--line);border-radius:22px}
+.paint .lbl{font-family:var(--body);font-weight:800;font-size:15px;pointer-events:none}
+.paint [data-r]{cursor:pointer;stroke:#1f2a44;stroke-width:3}
+.palette{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.palette button{width:54px;height:54px;border-radius:50%;border:3px solid var(--ink);box-shadow:0 3px 0 rgba(0,0,0,.2)}
+.palette button.sel{outline:4px solid var(--blue);outline-offset:3px}
+/* count game */
+.apples{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;background:var(--card);border:2px solid var(--line);border-radius:22px;padding:16px}
+.apples button{font-size:40px;background:none;border:none;padding:2px;filter:grayscale(1);opacity:.45;transition:transform .15s}
+.apples button.on{filter:none;opacity:1;transform:scale(1.12)}
+.counter{font-family:var(--display);font-weight:800;font-size:34px;text-align:center}
+/* story */
+.story{background:var(--card);border:2px solid var(--line);border-radius:24px;overflow:hidden;display:flex;flex-direction:column}
+.story img{width:100%;aspect-ratio:1998/1116;object-fit:cover;background:var(--line);display:block}
+.story .txt{padding:16px;display:flex;flex-direction:column;gap:8px}
+.story .mgline{font-family:var(--display);font-weight:700;font-size:21px;line-height:1.3}
+.story .tr{color:var(--soft);font-weight:700;font-size:15px}
+.story .pg{font-size:12px;font-weight:800;color:var(--soft)}
+/* result */
+.result{background:var(--card);border:2px solid var(--line);border-radius:26px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.stars{font-size:46px;letter-spacing:4px}
+.result h2{font-size:30px}
+.result .xp{font-weight:800;color:var(--coral-deep)}
+/* sheets */
+.sheet{position:fixed;inset:0;background:rgba(31,42,68,.55);display:flex;align-items:flex-end;justify-content:center;z-index:40;padding:max(12px,env(safe-area-inset-top)) 0 0}
+.sheet .box{background:var(--paper);width:100%;max-width:480px;border-radius:26px 26px 0 0;padding:22px max(18px,env(safe-area-inset-left)) max(22px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px;max-height:92vh;overflow-y:auto}
+.sheet.center{align-items:center;padding:16px}
+.sheet.center .box{border-radius:24px;text-align:center}
+.sheet h3{font-size:24px}
+.field{display:flex;flex-direction:column;gap:4px;font-weight:800;font-size:14px}
+.field input{border:2px solid var(--line);border-radius:14px;padding:13px 14px;font-size:17px;background:var(--card);font-weight:700}
+.err{color:var(--red);font-weight:800;font-size:14px;min-height:20px}
+.tabs{display:flex;background:var(--card);border:2px solid var(--line);border-radius:999px;padding:3px}
+.tabs button{flex:1;border:none;background:none;border-radius:999px;padding:8px;font-weight:800;color:var(--soft)}
+.tabs button[aria-pressed=true]{background:var(--ink);color:#fff}
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.plan{background:var(--card);border:3px solid var(--line);border-radius:18px;padding:14px 10px;text-align:center;display:flex;flex-direction:column;gap:2px}
+.plan b{font-family:var(--display);font-size:26px}
+.plan.best{border-color:var(--green)}
+.plan .tag{font-size:11px;font-weight:800;color:var(--green-deep);text-transform:uppercase;letter-spacing:.05em}
+.perks{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:15px}
+.perks li::before{content:"✓ ";color:var(--green);font-weight:800}
+.pin{display:flex;gap:10px;justify-content:center}
+.pin input{width:54px;height:62px;text-align:center;font-family:var(--display);font-size:28px;font-weight:800;border:2px solid var(--line);border-radius:14px;background:var(--card)}
+.report{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.report div{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:12px;text-align:center}
+.report b{display:block;font-family:var(--display);font-size:28px;font-variant-numeric:tabular-nums}
+.report span{font-size:13px;font-weight:700;color:var(--soft)}
+.plist{display:flex;flex-direction:column;background:var(--card);border:2px solid var(--line);border-radius:16px}
+.plist div{display:flex;justify-content:space-between;gap:10px;padding:10px 14px;border-top:2px solid var(--line);font-weight:700;font-size:14px}
+.plist div:first-child{border-top:none}
+.bye{align-items:center;text-align:center;padding-top:10vh}
+.bye h2{font-size:34px}
+.bye .g svg{width:120px;height:120px}
+.toast{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;font-weight:800;border-radius:14px;padding:12px 16px;z-index:60;max-width:90vw;text-align:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- HOME -->
+  <div class="screen" id="sHome">
+    <div class="hdr">
+      <div class="brand"><span class="gsvg"></span><span data-t="brand"></span></div>
+      <div class="lang" role="group" aria-label="Language"><button data-lang="en">EN</button><button data-lang="fr">FR</button></div>
+      <button class="iconbtn" id="exitBtn" aria-label="Exit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span data-t="exit"></span></button>
+    </div>
+    <div class="row2">
+      <span class="stat" title="Streak">🔥 <span id="stStreak">0</span></span>
+      <span class="stat" title="XP">⭐ <span id="stXp">0</span></span>
+      <span style="margin-left:auto"></span>
+      <button class="iconbtn" id="parentsBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><span data-t="parents"></span></button>
+    </div>
+    <div class="hello"><div class="g gsvg"></div><div><h2 id="helloH"></h2><p id="helloP"></p></div></div>
+    <div id="homeCta"></div>
+    <div class="sect"><h3 data-t="classesH"></h3><div class="classes" id="classes"></div></div>
+    <div class="sect"><h3 id="monthsH"></h3><div class="months" id="months"></div></div>
+    <div id="homeNote"></div>
+  </div>
+
+  <!-- MONTH -->
+  <div class="screen" id="sMonth" hidden>
+    <button class="back" id="monthBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg><span data-t="mySchool"></span></button>
+    <div class="mhead"><div class="ic" id="mIc"></div><div><div class="muted" style="font-weight:800" id="mSub"></div><h2 id="mTitle"></h2></div></div>
+    <div id="weeks" style="display:flex;flex-direction:column;gap:12px"></div>
+    <button class="btn ghost" id="testOut"><span data-t="testOut"></span><small data-t="testOutS"></small></button>
+  </div>
+
+  <!-- PLAYER -->
+  <div class="screen" id="sPlay" hidden>
+    <div class="pbar">
+      <button class="iconbtn" id="playExit" aria-label="Leave"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <div class="track"><div class="fill" id="fill"></div></div>
+    </div>
+    <div class="steps" id="steps"></div>
+    <div class="stage" id="stage"></div>
+  </div>
+
+  <!-- GOODBYE -->
+  <div class="screen bye" id="sBye" hidden>
+    <div class="g gsvg"></div>
+    <h2 data-t="byeH"></h2>
+    <p class="muted" style="font-weight:700;margin:0" data-t="byeP"></p>
+    <button class="btn green" id="byeBack" data-t="byeBack"></button>
+    <a class="btn ghost" href="/learn" data-t="byeHome"></a>
+    <a class="btn ghost" href="https://nosymasina.com/" data-t="byeSite"></a>
+  </div>
+</div>
+
+<!-- confirm exit -->
+<div class="sheet center" id="confirm" hidden role="dialog" aria-modal="true">
+  <div class="box"><h3 id="cfH"></h3><p class="muted" style="margin:0;font-weight:700" id="cfP"></p>
+    <div style="display:flex;gap:10px"><button class="btn ghost" id="cfNo"></button><button class="btn" id="cfYes"></button></div></div>
+</div>
+<!-- account + membership -->
+<div class="sheet" id="member" hidden role="dialog" aria-modal="true"><div class="box" id="memberBox"></div></div>
+<!-- parents -->
+<div class="sheet" id="parents" hidden role="dialog" aria-modal="true"><div class="box" id="parentsBox"></div></div>
+
+<script src="/learn/gidro-core.js"></script>
+<script src="/learn/school-content.js"></script>
+<script>
+/* ---------------- words of the interface ---------------- */
+const T = {
+ en:{ brand:'Gidro School', exit:'Exit', parents:'Parents', classesH:'Classes', mySchool:'My school',
+  hello:n=>n?('Salama, '+n+'!'):'Salama!', where:(c,m,w,d)=>c+' · Month '+m+' · Week '+w+' · Day '+d,
+  monthsH:c=>c+': 12 months', month:n=>'Month '+n, week:n=>'Week '+n, day:n=>'Day '+n,
+  soon:'Being prepared', done:'Done', start:'Start', cont:'Continue today’s lesson', contS:w=>w,
+  startFree:'Start Week 1 free', startFreeS:'5 school days · no card needed',
+  placement:'My child already knows some Malagasy', placementS:'Take the placement test (2 minutes)',
+  testOut:'Test out of this month', testOutS:'Pass with 80% to skip ahead',
+  wReview:'Review', wGame:{match:'Match game',paint:'Color by word',count:'Counting game',story:'Story time'},
+  dayKinds:['Lesson','Lesson','Lesson','Game','Week quiz'], testDay:'Level test', reviewDay:n=>'Review week '+n,
+  stepL:'Lesson', stepP:'Practice', stepQ:'Quiz', stepG:'Game', stepT:'Test', stepS:'Story',
+  learnTip:'Say the word out loud together.', next:'Next', gotIt:'I know it, next',
+  qPic:'Which picture is', qWord:'Which word is this?', qMean:'What does it mean?',
+  right:['Tsara be!','Great job!','Mahay be ianao!','Well done!'], wrong:'Not quite', answer:'The answer is', goOn:'Continue',
+  practiceNote:'Practice: mistakes don’t count.', quizNote:'Quiz: missed questions come back at the end.',
+  matchGo:'Tap a picture, then its Malagasy word.', paintGo:'Pick a color, then tap the part that has its name.', paintDone:'Beautiful!',
+  countGo:w=>'Tap '+w+' apples', countCheck:'Check', countWrong:n=>'You tapped '+n+'. Try again!',
+  storyGo:'Read together. Tap the English line to hide it.', storyNext:'Next page', storyDone:'Story questions',
+  longer:'Which one is longer?', longerOf:(a,b)=>'',
+  resH:['Great job!','Tsara be!','Mahay be ianao!'], resXp:n=>'+'+n+' XP', backHome:'Back to my school', nextDay:'Next day',
+  testPass:s=>'Test passed: '+s+'%', testFail:s=>'Score: '+s+'%. You need 80%.', retryTitle:'Let’s look at these again', retry:'Try the test again',
+  testOutPass:'Month passed! On to the next one.', placeTitle:'Placement test', placeIntro:'A few quick questions so your child starts at the right month. Your child can answer with pictures.',
+  placeRes:(c,m)=>'Your child starts in '+c+', Month '+m+'.', placeGo:'Start there',
+  lockedPrev:'Finish the earlier days first.', soonMsg:'This month is being prepared. New months are added often.',
+  allDoneSoon:c=>'You finished every month of '+c+' that is ready. More months are on the way. Meanwhile, a parent can open the next class.',
+  openNext:'Open the next class',
+  cfLeaveH:'Leave this lesson?', cfLeaveP:'Today’s lesson stops here. You can start it again any time.', cfStay:'Keep learning', cfLeave:'Yes, leave',
+  cfExitH:'Leave Gidro School?', cfExitP:'Your progress is saved.', cfExitYes:'Yes, exit',
+  byeH:'Veloma! Come back any time', byeP:'Gidro will be waiting with the next lesson.', byeBack:'Back to Gidro School', byeHome:'Gidro home page', byeSite:'Visit nosymasina.com',
+  /* account and membership */
+  memH:'Join Gidro School', memP:'Week 1 was free. Become a member to keep going.',
+  perks:['Every month of every class','Level tests and report cards','Weekly report for parents','New months added often'],
+  monthly:'per month', yearly:'per year', save:'Best value', choose:'Choose',
+  accH:'Create a parent account', accP:'Progress is saved so you can switch phones or tablets.', accLogin:'Log in', accSignup:'Sign up',
+  email:'Email', password:'Password (6+ characters)', accGo:'Continue', accForgot:'Forgot password?', accSent:'Check your email for a reset link.',
+  accCheck:'Check your email to confirm, then log in here.', accNeed:'Please enter your email and password.',
+  thanks:'Misaotra! Your membership is active.', waitPay:'Finishing your membership…',
+  later:'Not now',
+  /* parents */
+  pinSet:'Choose a 4-digit parent PIN', pinEnter:'Parent PIN', pinWrong:'Wrong PIN', pinForgot:'Forgot PIN?',
+  pinGate:(a,b)=>'To reset, type the answer: '+a+' × '+b, pinMismatch:'Wrong answer',
+  pTabs:['Report','Settings','Account'], close:'Close',
+  rDays:'school days this week', rWords:'words learned', rStreak:'day streak', rXp:'XP',
+  rNow:'Now studying', rLast:'Last school days', rNone:'No school days yet.',
+  childName:'Child’s first name', saveBtn:'Save', saved:'Saved',
+  chClass:'Change class', chClassP:'Use this after the placement test or if your child is ready to move up.',
+  accIn:e=>'Signed in as '+e, accOut:'Not signed in. Progress is saved on this device only.', signOut:'Sign out', signIn:'Log in or sign up',
+  plan:ok=>ok?'Membership: active':'Membership: free Week 1', manage:'To change or cancel, use the link in your Stripe receipt email.', join:'Become a member',
+  newPin:'Change PIN'
+ },
+ fr:{ brand:'École Gidro', exit:'Quitter', parents:'Parents', classesH:'Classes', mySchool:'Mon école',
+  hello:n=>n?('Salama, '+n+' !'):'Salama !', where:(c,m,w,d)=>c+' · Mois '+m+' · Semaine '+w+' · Jour '+d,
+  monthsH:c=>c+' : 12 mois', month:n=>'Mois '+n, week:n=>'Semaine '+n, day:n=>'Jour '+n,
+  soon:'En préparation', done:'Fini', start:'Commencer', cont:'Continuer la leçon du jour', contS:w=>w,
+  startFree:'Commencer la semaine 1 gratuitement', startFreeS:'5 jours d’école · sans carte bancaire',
+  placement:'Mon enfant connaît déjà un peu le malgache', placementS:'Passer le test de niveau (2 minutes)',
+  testOut:'Passer le test du mois', testOutS:'80 % pour avancer directement',
+  wReview:'Révision', wGame:{match:'Jeu des paires',paint:'Coloriage magique',count:'Jeu pour compter',story:'L’heure de l’histoire'},
+  dayKinds:['Leçon','Leçon','Leçon','Jeu','Quiz de la semaine'], testDay:'Test de niveau', reviewDay:n=>'Révision semaine '+n,
+  stepL:'Leçon', stepP:'Exercices', stepQ:'Quiz', stepG:'Jeu', stepT:'Test', stepS:'Histoire',
+  learnTip:'Dites le mot à voix haute ensemble.', next:'Suivant', gotIt:'Je sais, suivant',
+  qPic:'Quelle image est', qWord:'Quel mot est-ce ?', qMean:'Que veut dire ce mot ?',
+  right:['Tsara be !','Bravo !','Mahay be ianao !','Super !'], wrong:'Pas tout à fait', answer:'La réponse est', goOn:'Continuer',
+  practiceNote:'Exercices : les erreurs ne comptent pas.', quizNote:'Quiz : les questions ratées reviennent à la fin.',
+  matchGo:'Touche une image, puis son mot malgache.', paintGo:'Choisis une couleur, puis touche la partie qui porte son nom.', paintDone:'Magnifique !',
+  countGo:w=>'Touche '+w+' pommes', countCheck:'Vérifier', countWrong:n=>'Tu en as touché '+n+'. Essaie encore !',
+  storyGo:'Lisez ensemble. Touchez la traduction pour la cacher.', storyNext:'Page suivante', storyDone:'Questions sur l’histoire',
+  longer:'Lequel est le plus long ?', longerOf:(a,b)=>'',
+  resH:['Bravo !','Tsara be !','Mahay be ianao !'], resXp:n=>'+'+n+' XP', backHome:'Retour à mon école', nextDay:'Jour suivant',
+  testPass:s=>'Test réussi : '+s+' %', testFail:s=>'Score : '+s+' %. Il faut 80 %.', retryTitle:'Revoyons ces mots', retry:'Refaire le test',
+  testOutPass:'Mois réussi ! Au suivant.', placeTitle:'Test de niveau', placeIntro:'Quelques questions rapides pour commencer au bon mois. Votre enfant peut répondre avec les images.',
+  placeRes:(c,m)=>'Votre enfant commence en '+c+', mois '+m+'.', placeGo:'Commencer ici',
+  lockedPrev:'Termine d’abord les jours précédents.', soonMsg:'Ce mois est en préparation. De nouveaux mois arrivent souvent.',
+  allDoneSoon:c=>'Tous les mois prêts de '+c+' sont terminés. D’autres arrivent bientôt. En attendant, un parent peut ouvrir la classe suivante.',
+  openNext:'Ouvrir la classe suivante',
+  cfLeaveH:'Quitter cette leçon ?', cfLeaveP:'La leçon du jour s’arrête ici. Tu pourras la reprendre quand tu veux.', cfStay:'Continuer', cfLeave:'Oui, quitter',
+  cfExitH:'Quitter l’École Gidro ?', cfExitP:'Les progrès sont enregistrés.', cfExitYes:'Oui, quitter',
+  byeH:'Veloma ! Reviens quand tu veux', byeP:'Gidro t’attend avec la prochaine leçon.', byeBack:'Retour à l’École Gidro', byeHome:'Page d’accueil Gidro', byeSite:'Visiter nosymasina.com',
+  memH:'Rejoindre l’École Gidro', memP:'La semaine 1 était gratuite. Devenez membre pour continuer.',
+  perks:['Tous les mois de toutes les classes','Tests de niveau et bulletins','Bilan chaque semaine pour les parents','De nouveaux mois souvent'],
+  monthly:'par mois', yearly:'par an', save:'Le plus avantageux', choose:'Choisir',
+  accH:'Créer un compte parent', accP:'Les progrès sont enregistrés, même en changeant de téléphone ou de tablette.', accLogin:'Connexion', accSignup:'Inscription',
+  email:'E-mail', password:'Mot de passe (6 caractères ou plus)', accGo:'Continuer', accForgot:'Mot de passe oublié ?', accSent:'Un lien de réinitialisation a été envoyé par e-mail.',
+  accCheck:'Confirmez votre e-mail, puis connectez-vous ici.', accNeed:'Entrez votre e-mail et votre mot de passe.',
+  thanks:'Misaotra ! Votre abonnement est actif.', waitPay:'Activation de l’abonnement…',
+  later:'Plus tard',
+  pinSet:'Choisissez un code parent à 4 chiffres', pinEnter:'Code parent', pinWrong:'Code incorrect', pinForgot:'Code oublié ?',
+  pinGate:(a,b)=>'Pour le changer, tapez la réponse : '+a+' × '+b, pinMismatch:'Mauvaise réponse',
+  pTabs:['Bilan','Réglages','Compte'], close:'Fermer',
+  rDays:'jours d’école cette semaine', rWords:'mots appris', rStreak:'jours d’affilée', rXp:'XP',
+  rNow:'En ce moment', rLast:'Derniers jours d’école', rNone:'Pas encore de jour d’école.',
+  childName:'Prénom de l’enfant', saveBtn:'Enregistrer', saved:'Enregistré',
+  chClass:'Changer de classe', chClassP:'Après le test de niveau, ou quand votre enfant est prêt à monter.',
+  accIn:e=>'Connecté : '+e, accOut:'Pas connecté. Les progrès sont gardés sur cet appareil seulement.', signOut:'Se déconnecter', signIn:'Connexion ou inscription',
+  plan:ok=>ok?'Abonnement : actif':'Abonnement : semaine 1 gratuite', manage:'Pour modifier ou résilier, utilisez le lien dans l’e-mail de reçu Stripe.', join:'Devenir membre',
+  newPin:'Changer le code'
+ }
+};
+const L = () => T[G.lang];
+const $ = id => document.getElementById(id);
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const mean = w => WORDS[w][G.lang] || WORDS[w].en;
+const cname = c => c[G.lang];
+
+/* Gidro the lemur */
+const GIDRO = '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M50 40c6 2 8 12 2 16-4 2.6-3-3-1-6-4 1-8-2-6-6 1-2 3-4 5-4z" fill="#b5651d"/><circle cx="32" cy="36" r="16" fill="#1f2a44"/><circle cx="18" cy="20" r="7" fill="#1f2a44"/><circle cx="46" cy="20" r="7" fill="#1f2a44"/><circle cx="18" cy="20" r="3.2" fill="#b5651d"/><circle cx="46" cy="20" r="3.2" fill="#b5651d"/><circle cx="26" cy="34" r="4.4" fill="#faf6ee"/><circle cx="38" cy="34" r="4.4" fill="#faf6ee"/><circle cx="26.6" cy="34.4" r="2.2" fill="#1f2a44"/><circle cx="38.6" cy="34.4" r="2.2" fill="#1f2a44"/><path d="M28.5 42c2 1.6 5 1.6 7 0" stroke="#f4a940" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>';
+document.querySelectorAll('.gsvg').forEach(e => e.innerHTML = GIDRO);
+
+/* picture of a word: emoji, color swatch, dots for numbers, or Gidro */
+function picOf(w){
+  const x = WORDS[w];
+  if (x.color) return `<div class="swatch" style="background:${x.color}" role="img" aria-label="${esc(x.en)}"></div>`;
+  if (x.count) return `<div class="dots" role="img" aria-label="${x.count}">${'<i></i>'.repeat(x.count)}</div>`;
+  if (x.pic === 'gidro') return `<div class="pic">${GIDRO}</div>`;
+  return `<div class="pic" role="img" aria-label="${esc(x.en)}">${x.pic}</div>`;
+}
+
+/* ---------------- sounds (no voices: tones only) ---------------- */
+let actx = null;
+function tone(ok){
+  try{
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const notes = ok ? [523, 659, 784] : [330, 262];
+    notes.forEach((f, i) => { const o = actx.createOscillator(), g = actx.createGain(); o.type = 'sine'; o.frequency.value = f;
+      const t = actx.currentTime + i * 0.09; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.18, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+      o.connect(g).connect(actx.destination); o.start(t); o.stop(t + 0.25); });
+  }catch(e){}
+}
+function toast(msg){ const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 2600); }
+
+/* ---------------- school structure ---------------- */
+const cls = id => CLASSES.find(c => c.id === id);
+const dayId = (c, m, w, d) => `s:${c}:${m}:${w}:${d}`;
+const isDone = id => { for (const t of G.tags) if (t === id || t.startsWith(id + '@')) return true; return false; };
+const isFree = (c, m, w) => c === 'pre' && m === 1 && w === 1;
+const canPlay = (c, m, w) => isFree(c, m, w) || G.has('school');
+let curClass = G.store.get('gidroClass', 'pre');
+if (!cls(curClass)) curClass = 'pre';
+
+function monthWords(c, m){ const mo = cls(c).months[m-1]; return mo.ready ? [...new Set(mo.weeks.flatMap(w => w.words))] : []; }
+function chunks(arr){ const n = Math.ceil(arr.length / 3); return [0,1,2].map(i => arr.slice(i*n, i*n+n)); }
+
+/* what happens on each school day */
+function plan(c, m, w, d){
+  const mo = cls(c).months[m-1], all = monthWords(c, m);
+  if (w <= 3){
+    const W = mo.weeks[w-1].words, g = chunks(W);
+    if (d <= 3){ const teach = g[d-1].length ? g[d-1] : W; return { kind:'learn', teach, pool: all, title: L().dayKinds[d-1] }; }
+    if (d === 4) return { kind:'game', game: mo.weeks[w-1].game, words: W, pool: all, pages: mo.weeks[w-1].pages, story: mo.story, title: L().wGame[mo.weeks[w-1].game] };
+    return { kind:'quiz', words: W, pool: all, title: L().dayKinds[4] };
+  }
+  if (d <= 3) return { kind:'learn', teach: mo.weeks[d-1].words, pool: all, review: true, title: L().reviewDay(d) };
+  if (d === 4) return { kind:'game', game: mo.story ? 'story' : 'match', words: mo.story ? all : shuffle(all).slice(0, 6), pool: all, pages: mo.story ? [0, 12] : null, story: mo.story, title: mo.story ? L().wGame.story : L().wGame.match };
+  return { kind:'test', words: all, pool: all, title: L().testDay };
+}
+function dayList(c){ const out = []; cls(c).months.forEach((mo, i) => { if (!mo.ready) return; for (let w = 1; w <= 4; w++) for (let d = 1; d <= 5; d++) out.push([c, i+1, w, d]); }); return out; }
+function nextDay(c){ return dayList(c).find(([a,m,w,d]) => !isDone(dayId(a,m,w,d))) || null; }
+function monthProgress(c, m){ let n = 0; for (let w = 1; w <= 4; w++) for (let d = 1; d <= 5; d++) if (isDone(dayId(c,m,w,d))) n++; return n; }
+function isUnlocked(c, m, w, d){
+  const list = dayList(c), i = list.findIndex(x => x[1]===m && x[2]===w && x[3]===d);
+  return i === 0 || list.slice(0, i).every(([a,b,e,f]) => isDone(dayId(a,b,e,f)));
+}
+
+/* ---------------- screens ---------------- */
+function show(id){ ['sHome','sMonth','sPlay','sBye'].forEach(s => $(s).hidden = s !== id); window.scrollTo(0, 0); }
+function applyLang(){
+  document.documentElement.lang = G.lang;
+  document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === G.lang));
+  document.querySelectorAll('[data-t]').forEach(el => { const v = L()[el.dataset.t]; if (typeof v === 'string') el.textContent = v; });
+  document.title = L().brand;
+}
+document.querySelectorAll('[data-lang]').forEach(b => b.onclick = () => { G.setLang(b.dataset.lang); applyLang(); refresh(); });
+
+function setClassTheme(){ const c = cls(curClass); document.documentElement.style.setProperty('--cls', c.color); document.documentElement.style.setProperty('--cls-tint', c.tint); }
+
+function renderHome(){
+  setClassTheme();
+  const c = cls(curClass), nd = nextDay(curClass), name = G.store.get('gidroChild', '');
+  $('stStreak').textContent = G.streak; $('stXp').textContent = G.xp;
+  $('helloH').textContent = L().hello(name);
+  $('helloP').textContent = nd ? L().where(cname(c), nd[1], nd[2], nd[3]) : cname(c);
+  const started = [...G.tags].some(t => t.startsWith('s:'));
+  let cta = '';
+  if (!started && curClass === 'pre'){
+    cta = `<div style="display:flex;flex-direction:column;gap:10px"><button class="btn green" id="ctaGo"><span>${L().startFree}</span><small>${L().startFreeS}</small></button>
+      <button class="btn ghost" id="ctaPlace"><span>${L().placement}</span><small>${L().placementS}</small></button></div>`;
+  } else if (nd){
+    cta = `<button class="btn green" id="ctaGo"><span>${L().cont}</span><small>${esc(L().month(nd[1]) + ' · ' + L().week(nd[2]) + ' · ' + L().day(nd[3]))}</small></button>`;
+  }
+  $('homeCta').innerHTML = cta;
+  if ($('ctaGo')) $('ctaGo').onclick = () => openDay(...nd);
+  if ($('ctaPlace')) $('ctaPlace').onclick = startPlacement;
+
+  $('classes').innerHTML = CLASSES.map(k => { const ready = k.months.some(m => m.ready);
+    return `<button class="cbub ${k.id===curClass?'cur':''} ${ready?'':'off'}" data-c="${k.id}"><span class="b" style="background:${k.color}"><small>${G.lang==='fr'?'ÂGE':'AGE'}</small><b>${k.age}</b></span><span>${esc(cname(k))}</span></button>`; }).join('');
+  $('classes').querySelectorAll('.cbub').forEach(b => b.onclick = () => {
+    if (b.dataset.c === curClass) return;
+    const k = cls(b.dataset.c);
+    if (!k.months.some(m => m.ready)) { toast(cname(k) + ': ' + L().soon); return; }
+    parentGate(() => { curClass = k.id; G.store.set('gidroClass', curClass); closeSheet('parents'); refresh(); });
+  });
+
+  $('monthsH').textContent = L().monthsH(cname(c));
+  $('months').innerHTML = c.months.map((mo, i) => {
+    const m = i + 1;
+    if (!mo.ready) return `<button class="mon soon" data-m="${m}"><span class="ic">${mo.icon}</span><b>${esc(L().month(m))}</b><small>${esc(mo[G.lang])}</small></button>`;
+    const p = monthProgress(curClass, m), cur = nd && nd[1] === m;
+    const st = p === 20 ? 'done' : cur ? 'cur' : (isUnlocked(curClass, m, 1, 1) ? '' : 'lock');
+    return `<button class="mon ${st}" data-m="${m}"><span class="ic">${p===20?'✅':mo.icon}</span><b>${esc(L().month(m))}</b><small>${esc(mo[G.lang])}</small><span class="mbar"><i style="width:${p/20*100}%"></i></span></button>`;
+  }).join('');
+  $('months').querySelectorAll('.mon').forEach(b => b.onclick = () => {
+    const m = +b.dataset.m; if (!c.months[m-1].ready) { toast(L().soonMsg); return; } openMonth(m);
+  });
+
+  const readyAll = dayList(curClass).length, idx = CLASSES.findIndex(k => k.id === curClass);
+  $('homeNote').innerHTML = (!nd && readyAll) ? `<div class="banner"><b>🎉</b><span>${esc(L().allDoneSoon(cname(c)))}</span>${CLASSES.slice(idx+1).some(k=>k.months.some(m=>m.ready))?`<button class="btn blue small" id="openNext">${L().openNext}</button>`:''}</div>` : '';
+  if ($('openNext')) $('openNext').onclick = () => { const nx = CLASSES.slice(idx+1).find(k => k.months.some(m => m.ready)); parentGate(() => { curClass = nx.id; G.store.set('gidroClass', curClass); closeSheet('parents'); refresh(); }); };
+}
+
+let openM = 1;
+function openMonth(m){
+  openM = m; const c = cls(curClass), mo = c.months[m-1];
+  $('mIc').textContent = mo.icon; $('mSub').textContent = cname(c) + ' · ' + L().month(m); $('mTitle').textContent = mo[G.lang];
+  $('weeks').innerHTML = [1,2,3,4].map(w => {
+    const words = w <= 3 ? mo.weeks[w-1].words : monthWords(curClass, m);
+    const title = w <= 3 ? L().week(w) : L().week(w) + ' · ' + L().wReview;
+    const n = [1,2,3,4,5].filter(d => isDone(dayId(curClass,m,w,d))).length;
+    return `<div class="week"><div class="wt"><b>${esc(title)}</b><span>${n}/5</span></div>
+      <div class="days">${[1,2,3,4,5].map(d => { const id = dayId(curClass,m,w,d), done = isDone(id), open = !done && isUnlocked(curClass,m,w,d);
+        const label = (w===4&&d===5) ? '🎓' : d;
+        return `<button class="day ${done?'done':''} ${open?'open':''} ${w===4&&d===5?'test':''} ${!canPlay(curClass,m,w)?'paid':''}" data-w="${w}" data-d="${d}" aria-label="${esc(L().week(w)+' '+L().day(d))}"><b>${done?'✓':label}</b></button>`; }).join('')}</div>
+      <div class="wlist">${words.map(x => esc(WORDS[x].mg)).join(' · ')}</div></div>`;
+  }).join('');
+  $('weeks').querySelectorAll('.day').forEach(b => b.onclick = () => openDay(curClass, m, +b.dataset.w, +b.dataset.d));
+  $('testOut').hidden = monthProgress(curClass, m) === 20;
+  show('sMonth');
+}
+$('monthBack').onclick = () => { refresh(); show('sHome'); };
+$('testOut').onclick = () => { if (!G.has('school') && !(curClass==='pre' && openM===1)) { openMember(); return; } startTest(curClass, openM, true); };
+
+/* ---------------- playing a day ---------------- */
+let run = null; // current activity
+function openDay(c, m, w, d){
+  if (!isDone(dayId(c,m,w,d)) && !isUnlocked(c,m,w,d)) { toast(L().lockedPrev); return; }
+  if (!canPlay(c, m, w)) { openMember(); return; }
+  const p = plan(c, m, w, d);
+  run = { c, m, w, d, p, xp: 0, firstTry: 0, total: 0 };
+  show('sPlay');
+  if (p.kind === 'learn') flow([['L', () => lessonStep(p.teach)], ['P', () => qStep(p.teach, p.pool, 'practice')], ['Q', () => qStep(shuffle([...p.teach, ...shuffle(p.pool.filter(x => !p.teach.includes(x))).slice(0, 2)]), p.pool, 'quiz')]]);
+  else if (p.kind === 'game'){
+    const g = p.game === 'paint' ? paintStep : p.game === 'count' ? countStep : p.game === 'story' ? storyStep : matchStep;
+    flow([['G', () => g(p)], ['Q', () => qStep(shuffle(p.words).slice(0, 4), p.pool, 'quiz')]]);
+  }
+  else if (p.kind === 'quiz') flow([['Q', () => qStep(p.words, p.pool, 'quiz')]]);
+  else startTest(c, m, false);
+}
+
+function flow(steps){
+  run.steps = steps; run.si = 0;
+  nextStep();
+}
+function nextStep(){
+  if (run.si >= run.steps.length) { finishDay(); return; }
+  const names = { L:L().stepL, P:L().stepP, Q:L().stepQ, G:L().stepG, T:L().stepT };
+  $('steps').innerHTML = run.steps.map((s, i) => `<span class="${i<run.si?'ok':i===run.si?'on':''}">${i<run.si?'✓ ':''}${names[s[0]]}</span>`).join('');
+  const s = run.steps[run.si++]; s[1]();
+}
+function setBar(i, n){ $('fill').style.width = (n ? Math.round(i / n * 100) : 0) + '%'; }
+
+/* lesson: one card per new word */
+function lessonStep(words){
+  let i = 0;
+  const draw = () => {
+    if (i >= words.length) { nextStep(); return; }
+    setBar(i, words.length); const w = words[i], x = WORDS[w];
+    $('stage').innerHTML = `<div class="bigcard">${picOf(w)}<div class="mgword">${esc(x.mg)}</div><div class="meaning">${esc(mean(w))}</div>
+      ${x.alt ? `<div class="muted" style="font-weight:700">${G.lang==='fr'?'On dit aussi':'Also said'}: <b>${esc(x.alt)}</b></div>` : ''}
+      ${x.note ? `<div class="tip">${esc(x.note[G.lang])}</div>` : ''}</div>
+      <div class="tip" style="text-align:center">${L().learnTip}</div>
+      <button class="btn green" id="nx">${L().next}</button>`;
+    $('nx').onclick = () => { i++; draw(); };
+  };
+  draw();
+}
+
+/* questions; in "quiz" mode missed questions come back at the end */
+function makeQ(w, pool, mode){
+  const x = WORDS[w];
+  const sameKind = v => (!!WORDS[v].color === !!x.color) && (!!WORDS[v].count === !!x.count);
+  let others = shuffle(pool.filter(v => v !== w && WORDS[v].mg !== x.mg && sameKind(v) && !(x.group && WORDS[v].group === x.group)));
+  if (others.length < 2) others = others.concat(shuffle(Object.keys(WORDS).filter(v => v !== w && WORDS[v].mg !== x.mg && sameKind(v) && !others.includes(v))));
+  const opts = shuffle([w, ...others.slice(0, 2)]);
+  const type = run.c === 'pre' ? pick(['pic', 'word']) : pick(['pic', 'word', 'mean']);
+  return { w, opts, type };
+}
+function qStep(words, pool, mode){
+  let queue = shuffle(words.flatMap(w => mode === 'practice' ? [w] : [w, w])).map(w => makeQ(w, pool, mode));
+  // no same word twice in a row
+  for (let k = 1; k < queue.length; k++) if (queue[k].w === queue[k-1].w) { const j = queue.findIndex((q, z) => z > k && q.w !== queue[k].w); if (j > 0) [queue[k], queue[j]] = [queue[j], queue[k]]; }
+  const total = queue.length; let done = 0; const missed = new Set();
+  const draw = () => {
+    if (!queue.length) { if (mode === 'quiz') { run.total += total; run.firstTry += total - missed.size; } nextStep(); return; }
+    setBar(done, total);
+    const q = queue[0], x = WORDS[q.w];
+    const head = q.type === 'pic' ? `<div class="prompt">${L().qPic}</div><div class="mgword" style="text-align:center">${esc(x.mg)}?</div>`
+      : q.type === 'word' ? `<div class="prompt">${L().qWord}</div><div class="bigcard" style="padding:14px">${picOf(q.w)}</div>`
+      : `<div class="prompt">${L().qMean}</div><div class="mgword" style="text-align:center">${esc(x.mg)}</div>`;
+    const optHtml = q.opts.map((o, k) => `<button class="opt" data-k="${k}">${q.type === 'pic' ? picOf(o) : q.type === 'word' ? esc(WORDS[o].mg) : `<span style="font-family:var(--body);font-size:18px">${esc(mean(o))}</span>`}</button>`).join('');
+    $('stage').innerHTML = `<div class="tip" style="text-align:center">${mode === 'practice' ? L().practiceNote : L().quizNote}</div>${head}
+      <div class="opts ${q.type === 'pic' ? '' : 'words'}">${optHtml}</div><div id="fbx"></div>`;
+    $('stage').querySelectorAll('.opt').forEach(b => b.onclick = () => {
+      const ok = q.opts[b.dataset.k] === q.w; tone(ok);
+      $('stage').querySelectorAll('.opt').forEach((y, k) => { y.disabled = true; if (q.opts[k] === q.w) y.classList.add('right'); });
+      if (!ok) b.classList.add('wrong');
+      queue.shift();
+      if (ok) done++; else if (mode === 'quiz') { missed.add(q.w + done); queue.push(makeQ(q.w, pool, mode)); } else done++;
+      $('fbx').innerHTML = `<div class="fb ${ok?'ok':'bad'}"><div><b>${ok ? pick(L().right) : L().wrong}</b>${ok ? '' : `${L().answer}: ${esc(x.mg)} = ${esc(mean(q.w))}`}</div><button class="btn ${ok?'green':''}" id="go">${L().goOn}</button></div>`;
+      $('go').onclick = draw; $('go').focus({ preventScroll:true });
+    });
+  };
+  draw();
+}
+
+/* games */
+function matchStep(p){
+  const words = shuffle(p.words).slice(0, 6), tiles = shuffle([...words.map(w => ({ w, mg:true })), ...words.map(w => ({ w, mg:false }))]);
+  let sel = null, left = words.length; setBar(0, 1);
+  $('stage').innerHTML = `<div class="prompt">${L().matchGo}</div><div class="mgrid">${tiles.map((t, k) => `<button class="tile" data-k="${k}">${t.mg ? esc(WORDS[t.w].mg) : picOf(t.w)}</button>`).join('')}</div>`;
+  $('stage').querySelectorAll('.tile').forEach(b => b.onclick = () => {
+    const t = tiles[b.dataset.k];
+    if (!sel) { sel = { b, t }; b.classList.add('sel'); return; }
+    if (sel.b === b) { b.classList.remove('sel'); sel = null; return; }
+    if (sel.t.w === t.w && sel.t.mg !== t.mg) {
+      tone(true); [sel.b, b].forEach(y => { y.classList.remove('sel'); y.classList.add('gone'); }); sel = null; left--; setBar(words.length - left, words.length);
+      if (!left) { run.xp += 5; setTimeout(nextStep, 500); }
+    } else { tone(false); const a = sel.b; a.classList.remove('sel'); a.classList.add('miss'); b.classList.add('miss'); setTimeout(() => { a.classList.remove('miss'); b.classList.remove('miss'); }, 400); sel = null; }
+  });
+}
+
+/* color by word: each part of the picture shows a Malagasy color name */
+function paintStep(p){
+  const cols = p.words;
+  const parts = [ // a house in the sun: [shape, label x, label y, small label]
+    ['M40 150 L150 62 L260 150 Z',150,128,0], ['M60 150 H240 V255 H60 Z',96,246,0], ['M126 180 H174 V255 H126 Z',150,222,1],
+    ['M184 166 H234 V208 H184 Z',209,192,1], ['M66 166 H116 V208 H66 Z',91,192,1], ['M227 48 a30 30 0 1 0 60 0 a30 30 0 1 0 -60 0',257,53,0],
+    ['M0 255 H300 V300 H0 Z',150,284,0], ['M24 74 a16 16 0 0 1 22 -20 a20 20 0 0 1 38 4 a15 15 0 0 1 2 30 H32 a14 14 0 0 1 -8 -14 z',62,74,0]
+  ];
+  const assign = parts.map((_, i) => cols[i % cols.length]);
+  const dark = c => ['mena','maitso','manga','mainty'].includes(WORDS[c].mg);
+  let chosen = null, filled = 0;
+  const svg = `<svg viewBox="0 0 300 300" role="img" aria-label="picture">${parts.map((d, i) => `<path d="${d[0]}" data-r="${i}" fill="#fff"/>`).join('')}
+    ${parts.map((d, i) => `<text class="lbl" data-l="${i}" x="${d[1]}" y="${d[2]}" text-anchor="middle" fill="#1f2a44" style="font-size:${d[3]?11:15}px">${esc(WORDS[assign[i]].mg)}</text>`).join('')}</svg>`;
+  $('stage').innerHTML = `<div class="prompt">${L().paintGo}</div><div class="paint">${svg}</div>
+    <div class="palette">${shuffle(cols).map(c => `<button data-c="${c}" style="background:${WORDS[c].color}" aria-label="color"></button>`).join('')}</div>`;
+  setBar(0, parts.length);
+  $('stage').querySelectorAll('.palette button').forEach(b => b.onclick = () => { chosen = b.dataset.c; $('stage').querySelectorAll('.palette button').forEach(y => y.classList.toggle('sel', y === b)); });
+  $('stage').querySelectorAll('[data-r]').forEach(r => r.onclick = () => {
+    const i = +r.dataset.r; if (r.dataset.ok) return;
+    if (!chosen) { toast(L().paintGo); return; }
+    if (chosen === assign[i]) { tone(true); r.setAttribute('fill', WORDS[chosen].color); r.dataset.ok = 1; const l = $('stage').querySelector(`[data-l="${i}"]`); if (dark(chosen)) l.setAttribute('fill', '#fff'); filled++; setBar(filled, parts.length);
+      if (filled === parts.length) { run.xp += 5; $('stage').insertAdjacentHTML('beforeend', `<div class="fb ok"><b>${L().paintDone}</b><button class="btn green" id="go">${L().goOn}</button></div>`); $('go').onclick = nextStep; } }
+    else { tone(false); r.setAttribute('fill', WORDS[chosen].color); setTimeout(() => r.setAttribute('fill', '#fff'), 450); }
+  });
+}
+
+/* counting: tap the right number of apples */
+function countStep(p){
+  const words = shuffle(p.words).slice(0, 3); let i = 0;
+  const draw = () => {
+    if (i >= words.length) { run.xp += 5; nextStep(); return; }
+    setBar(i, words.length); const w = words[i], n = WORDS[w].count; let on = new Set();
+    $('stage').innerHTML = `<div class="prompt">${L().countGo('')}</div><div class="mgword" style="text-align:center">${esc(WORDS[w].mg)}</div>
+      <div class="apples">${Array.from({ length: 10 }, (_, k) => `<button data-k="${k}" aria-label="apple ${k+1}">🍎</button>`).join('')}</div>
+      <div class="counter" id="cnt">0</div><button class="btn green" id="chk">${L().countCheck}</button><div id="fbx"></div>`;
+    $('stage').querySelectorAll('.apples button').forEach(b => b.onclick = () => { const k = +b.dataset.k; on.has(k) ? on.delete(k) : on.add(k); b.classList.toggle('on'); $('cnt').textContent = on.size; });
+    $('chk').onclick = () => {
+      if (on.size === n) { tone(true); $('fbx').innerHTML = `<div class="fb ok"><b>${pick(L().right)}</b><button class="btn green" id="go">${L().goOn}</button></div>`; $('chk').hidden = true; $('go').onclick = () => { i++; draw(); }; }
+      else { tone(false); toast(L().countWrong(on.size)); }
+    };
+  };
+  draw();
+}
+
+/* story time: Nene's book with her pictures, then "which one is longer?" questions */
+function storyStep(p){
+  const S = STORIES[p.story], [a, b] = p.pages || [0, S.pages.length]; let i = a, showTr = true;
+  const draw = () => {
+    if (i >= b) { storyQuestions(S, p); return; }
+    setBar(i - a, b - a); const pg = S.pages[i];
+    $('stage').innerHTML = `<div class="tip" style="text-align:center">${L().storyGo}</div>
+      <div class="story"><img src="/learn/stories/raha-manakaiky-ny-vitsika/${String(i+1).padStart(2,'0')}.jpg" alt="" onerror="this.style.display='none'">
+      <div class="txt"><div class="pg">${esc(S.title)} · ${i+1}/${S.pages.length}</div><div class="mgline">${esc(pg.mg)}</div><div class="tr" id="tr" role="button" tabindex="0" ${showTr?'':'style="opacity:.15"'}>${esc(pg[G.lang])}</div></div></div>
+      <button class="btn green" id="nx">${i + 1 < b ? L().storyNext : L().storyDone}</button>`;
+    $('tr').onclick = () => { showTr = !showTr; $('tr').style.opacity = showTr ? 1 : .15; };
+    $('nx').onclick = () => { i++; draw(); };
+  };
+  draw();
+}
+function storyQuestions(S, p){
+  const ord = S.order;
+  let pairs = ord.slice(0, -1).map((w, k) => [w, ord[k+1]]).filter(([a, b]) => p.words.includes(a) && p.words.includes(b));
+  if (pairs.length < 2) pairs = ord.slice(0, -1).map((w, k) => [w, ord[k+1]]);
+  const qs = shuffle(pairs).slice(0, 4);
+  let i = 0;
+  const draw = () => {
+    if (i >= qs.length) { run.xp += 5; nextStep(); return; }
+    setBar(i, qs.length); const [small, big] = qs[i], opts = shuffle([small, big]);
+    $('stage').innerHTML = `<div class="prompt">${L().longer}</div><div class="opts" style="grid-template-columns:1fr 1fr">${opts.map(o => `<button class="opt" data-w="${o}" style="flex-direction:column;gap:6px">${picOf(o)}<span>${esc(WORDS[o].mg)}</span></button>`).join('')}</div><div id="fbx"></div>`;
+    $('stage').querySelectorAll('.opt').forEach(btn => btn.onclick = () => {
+      const ok = btn.dataset.w === big; tone(ok);
+      $('stage').querySelectorAll('.opt').forEach(y => { y.disabled = true; if (y.dataset.w === big) y.classList.add('right'); }); if (!ok) btn.classList.add('wrong');
+      $('fbx').innerHTML = `<div class="fb ${ok?'ok':'bad'}"><div><b>${ok ? pick(L().right) : L().wrong}</b>${esc(WORDS[big].mg)} > ${esc(WORDS[small].mg)}</div><button class="btn ${ok?'green':''}" id="go">${L().goOn}</button></div>`;
+      $('go').onclick = () => { i++; draw(); };
+    });
+  };
+  draw();
+}
+
+/* level test: 80% to pass; if not, re-teach the missed words and try again */
+function startTest(c, m, testOut){
+  const words = monthWords(c, m);
+  run = run && run.c === c && run.m === m && !testOut ? run : { c, m, w:4, d:5, p:{ kind:'test' }, xp:0, firstTry:0, total:0 };
+  run.testOut = testOut;
+  show('sPlay');
+  $('steps').innerHTML = `<span class="on">${L().stepT}</span>`;
+  const qs = shuffle(words.flatMap(w => [w, w])).map(w => makeQ(w, words, 'test'));
+  let i = 0, right = 0; const missed = new Set();
+  const draw = () => {
+    if (i >= qs.length) { testResult(Math.round(right / qs.length * 100), [...missed]); return; }
+    setBar(i, qs.length); const q = qs[i], x = WORDS[q.w];
+    const head = q.type === 'pic' ? `<div class="prompt">${L().qPic}</div><div class="mgword" style="text-align:center">${esc(x.mg)}?</div>`
+      : q.type === 'word' ? `<div class="prompt">${L().qWord}</div><div class="bigcard" style="padding:14px">${picOf(q.w)}</div>`
+      : `<div class="prompt">${L().qMean}</div><div class="mgword" style="text-align:center">${esc(x.mg)}</div>`;
+    $('stage').innerHTML = head + `<div class="opts ${q.type === 'pic' ? '' : 'words'}">${q.opts.map((o, k) => `<button class="opt" data-k="${k}">${q.type === 'pic' ? picOf(o) : q.type === 'word' ? esc(WORDS[o].mg) : `<span style="font-family:var(--body);font-size:18px">${esc(mean(o))}</span>`}</button>`).join('')}</div>`;
+    $('stage').querySelectorAll('.opt').forEach(b => b.onclick = () => { if (q.opts[b.dataset.k] === q.w) right++; else missed.add(q.w); i++; draw(); });
+  };
+  draw();
+}
+async function testResult(score, missed){
+  setBar(1, 1);
+  if (score >= 80){
+    tone(true);
+    const r = run;
+    if (r.testOut){ for (let w = 1; w <= 4; w++) for (let d = 1; d <= 5; d++) G.tags.add(dayId(r.c, r.m, w, d) + '@' + G.today()); await G.addTag(dayId(r.c, r.m, 4, 5) + '@' + G.today(), 30); }
+    else await G.addTag(dayId(r.c, r.m, 4, 5) + '@' + G.today(), 30);
+    $('stage').innerHTML = `<div class="result"><div class="stars">🎓</div><h2>${L().testPass(score)}</h2><div class="xp">${L().resXp(30)}</div>${r.testOut ? `<p class="muted" style="margin:0;font-weight:700">${L().testOutPass}</p>` : ''}</div>
+      ${nextAfter(r) ? `<button class="btn green" id="nd">${L().nextDay}</button>` : ''}<button class="btn ghost" id="bh">${L().backHome}</button>`;
+    wireResult();
+  } else {
+    tone(false);
+    $('stage').innerHTML = `<div class="result"><div class="stars">💪</div><h2>${L().testFail(score)}</h2></div><h3 style="font-size:20px">${L().retryTitle}</h3>
+      <div style="display:flex;flex-direction:column;gap:10px">${missed.map(w => `<div class="bigcard" style="flex-direction:row;padding:12px 16px;gap:16px;justify-content:flex-start;text-align:left"><div style="transform:scale(.6);transform-origin:left center;width:70px">${picOf(w)}</div><div><div class="mgword" style="font-size:30px">${esc(WORDS[w].mg)}</div><div class="meaning" style="font-size:15px">${esc(mean(w))}</div></div></div>`).join('')}</div>
+      <button class="btn green" id="again">${L().retry}</button><button class="btn ghost" id="bh">${L().backHome}</button>`;
+    $('again').onclick = () => startTest(run.c, run.m, run.testOut);
+    $('bh').onclick = () => { refresh(); show('sHome'); };
+  }
+}
+function nextAfter(r){ const n = nextDay(r.c); return n && canPlay(n[0], n[1], n[2]) ? n : null; }
+function wireResult(){
+  if ($('nd')) $('nd').onclick = () => { const n = nextDay(run.c); n ? openDay(...n) : (refresh(), show('sHome')); };
+  $('bh').onclick = () => { refresh(); show('sHome'); };
+}
+
+async function finishDay(){
+  const r = run, ratio = r.total ? r.firstTry / r.total : 1, stars = ratio >= .9 ? 3 : ratio >= .7 ? 2 : 1, xp = 10 + stars * 2 + r.xp;
+  setBar(1, 1); $('steps').innerHTML = '';
+  const id = dayId(r.c, r.m, r.w, r.d);
+  [...G.tags].filter(t => t.startsWith(id + '@')).forEach(t => G.tags.delete(t));
+  await G.addTag(id + '@' + G.today(), xp);
+  tone(true);
+  const n = nextAfter(r);
+  $('stage').innerHTML = `<div class="result"><div class="gsvg" style="width:90px">${GIDRO}</div><div class="stars">${'⭐'.repeat(stars)}${'☆'.repeat(3 - stars)}</div><h2>${pick(L().resH)}</h2><div class="xp">${L().resXp(xp)}</div></div>
+    ${n ? `<button class="btn green" id="nd">${L().nextDay}</button>` : (!G.has('school') && isFree(r.c, r.m, r.w) && r.d === 5 ? `<button class="btn green" id="joinNow">${L().join}</button>` : '')}
+    <button class="btn ghost" id="bh">${L().backHome}</button>`;
+  wireResult();
+  if ($('joinNow')) $('joinNow').onclick = openMember;
+}
+
+/* ---------------- placement test ---------------- */
+function startPlacement(){
+  const months = cls('pre').months.map((m, i) => m.ready ? i + 1 : 0).filter(Boolean);
+  run = { c:'pre', m:1, w:1, d:1, xp:0, firstTry:0, total:0 };
+  show('sPlay'); $('steps').innerHTML = `<span class="on">${L().placeTitle}</span>`;
+  $('stage').innerHTML = `<div class="bigcard"><div class="gsvg" style="width:96px">${GIDRO}</div><h2>${L().placeTitle}</h2><p class="muted" style="margin:0;font-weight:700">${L().placeIntro}</p></div><button class="btn green" id="pgo">${L().start}</button>`;
+  $('pgo').onclick = () => placeMonth(months, 0);
+}
+function placeMonth(months, k){
+  if (k >= months.length) { placeDone('k', 1); return; }
+  const m = months[k], words = shuffle(monthWords('pre', m)).slice(0, 4); let i = 0, right = 0;
+  const draw = () => {
+    if (i >= words.length) { if (right >= 3) placeMonth(months, k + 1); else placeDone('pre', m); return; }
+    setBar(k * 4 + i, months.length * 4);
+    const q = makeQ(words[i], monthWords('pre', m), 'test'); q.type = 'pic';
+    $('stage').innerHTML = `<div class="prompt">${L().qPic}</div><div class="mgword" style="text-align:center">${esc(WORDS[q.w].mg)}?</div>
+      <div class="opts">${q.opts.map((o, z) => `<button class="opt" data-k="${z}">${picOf(o)}</button>`).join('')}</div>`;
+    $('stage').querySelectorAll('.opt').forEach(b => b.onclick = () => { if (q.opts[b.dataset.k] === q.w) right++; i++; draw(); });
+  };
+  draw();
+}
+async function placeDone(c, m){
+  const days = dayList(c).filter(([a, mm]) => mm < m);
+  days.forEach(([a, mm, w, d]) => G.tags.add(dayId(a, mm, w, d) + '@' + G.today()));
+  curClass = c; G.store.set('gidroClass', c);
+  // a placement start keeps Week 1 of Preschool open for free only if it is where the child lands
+  await G.save();
+  $('stage').innerHTML = `<div class="result"><div class="stars">🎒</div><h2>${L().placeRes(cname(cls(c)), m)}</h2></div><button class="btn green" id="pgo">${L().placeGo}</button>`;
+  $('pgo').onclick = () => { refresh(); const n = nextDay(c); n ? openDay(...n) : show('sHome'); };
+}
+
+/* ---------------- leaving ---------------- */
+let cfYes = null;
+function confirmBox(h, p, no, yes, fn){ $('cfH').textContent = h; $('cfP').textContent = p; $('cfNo').textContent = no; $('cfYes').textContent = yes; cfYes = fn; $('confirm').hidden = false; $('cfNo').focus(); }
+$('cfNo').onclick = () => $('confirm').hidden = true;
+$('cfYes').onclick = () => { $('confirm').hidden = true; cfYes && cfYes(); };
+$('playExit').onclick = () => confirmBox(L().cfLeaveH, L().cfLeaveP, L().cfStay, L().cfLeave, () => { refresh(); show('sHome'); });
+$('exitBtn').onclick = () => confirmBox(L().cfExitH, L().cfExitP, L().cfStay, L().cfExitYes, () => show('sBye'));
+$('byeBack').onclick = () => { refresh(); show('sHome'); };
+
+/* ---------------- account and membership ---------------- */
+function closeSheet(id){ $(id).hidden = true; }
+function openMember(){
+  const box = $('memberBox'), P = G.PAY.school.price;
+  if (!G.user) { accountForm(box, () => { if (G.has('school')) { closeSheet('member'); refresh(); } else openMember(); }, true); $('member').hidden = false; return; }
+  if (G.has('school')) { closeSheet('member'); return; }
+  box.innerHTML = `<h3>${L().memH}</h3><p class="muted" style="margin:0;font-weight:700">${L().memP}</p>
+    <ul class="perks">${L().perks.map(p => `<li>${esc(p)}</li>`).join('')}</ul>
+    <div class="plans"><div class="plan"><b>${P.monthly}</b><span class="muted">${L().monthly}</span><button class="btn small" style="margin-top:8px;width:100%" id="pm">${L().choose}</button></div>
+    <div class="plan best"><span class="tag">${L().save}</span><b>${P.yearly}</b><span class="muted">${L().yearly}</span><button class="btn green small" style="margin-top:8px;width:100%" id="py">${L().choose}</button></div></div>
+    <button class="btn ghost" id="mLater">${L().later}</button>`;
+  $('pm').onclick = () => G.checkout('school', 'monthly'); $('py').onclick = () => G.checkout('school', 'yearly');
+  $('mLater').onclick = () => closeSheet('member');
+  $('member').hidden = false;
+}
+$('member').onclick = e => { if (e.target.id === 'member') closeSheet('member'); };
+
+function accountForm(box, after, withPitch){
+  let mode = 'signup';
+  const draw = () => {
+    box.innerHTML = `<h3>${L().accH}</h3><p class="muted" style="margin:0;font-weight:700">${L().accP}</p>
+      <div class="tabs"><button data-m="signup" aria-pressed="${mode==='signup'}">${L().accSignup}</button><button data-m="login" aria-pressed="${mode==='login'}">${L().accLogin}</button></div>
+      <form id="af" novalidate style="display:flex;flex-direction:column;gap:10px">
+        <label class="field">${L().email}<input id="ae" type="email" autocomplete="email" required></label>
+        <label class="field">${L().password}<input id="ap" type="password" autocomplete="${mode==='login'?'current-password':'new-password'}" minlength="6" required></label>
+        <div class="err" id="aerr" aria-live="polite"></div>
+        <button class="btn green" type="submit">${L().accGo}</button></form>
+      ${mode === 'login' ? `<button class="back" id="afg" style="align-self:center">${L().accForgot}</button>` : ''}
+      <button class="btn ghost" id="aLater">${L().later}</button>`;
+    box.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { mode = b.dataset.m; draw(); });
+    $('aLater').onclick = () => { box.closest('.sheet').hidden = true; };
+    if ($('afg')) $('afg').onclick = async () => { const e = $('ae').value.trim(); if (!e) { $('aerr').textContent = L().accNeed; return; } await G.resetPassword(e); $('aerr').textContent = L().accSent; };
+    $('af').onsubmit = async ev => {
+      ev.preventDefault(); const e = $('ae').value.trim(), pw = $('ap').value;
+      if (!e || pw.length < 6) { $('aerr').textContent = L().accNeed; return; }
+      const res = mode === 'login' ? await G.signIn(e, pw) : await G.signUp(e, pw);
+      if (res.error) { $('aerr').textContent = res.error.message; return; }
+      if (mode === 'signup' && !res.data.session) { $('aerr').textContent = L().accCheck; mode = 'login'; return; }
+      G.user = res.data.user || (res.data.session && res.data.session.user); await G.loadProfile(); G.emit(); after && after();
+    };
+  };
+  draw();
+}
+
+/* ---------------- parents ---------------- */
+function parentGate(fn){
+  const box = $('parentsBox'), pin = G.store.get('gidroPin', null);
+  const draw = (msg, setting) => {
+    box.innerHTML = `<h3 style="text-align:center">${setting ? L().pinSet : L().pinEnter}</h3>
+      <div class="pin">${[0,1,2,3].map(k => `<input inputmode="numeric" maxlength="1" pattern="[0-9]" aria-label="digit ${k+1}" data-k="${k}">`).join('')}</div>
+      <div class="err" style="text-align:center" id="perr">${msg || ''}</div>
+      ${!setting ? `<button class="back" id="pf" style="align-self:center">${L().pinForgot}</button>` : ''}
+      <button class="btn ghost" id="pclose">${L().close}</button>`;
+    const ins = [...box.querySelectorAll('.pin input')]; ins[0].focus();
+    ins.forEach((inp, k) => {
+      inp.oninput = () => { inp.value = inp.value.replace(/\D/g, '').slice(-1); if (inp.value && k < 3) ins[k+1].focus(); if (ins.every(x => x.value)) { const v = ins.map(x => x.value).join('');
+        if (setting) { G.store.set('gidroPin', v); fn(); } else if (v === pin) fn(); else { draw(L().pinWrong, false); } } };
+      inp.onkeydown = e => { if (e.key === 'Backspace' && !inp.value && k > 0) ins[k-1].focus(); };
+    });
+    $('pclose').onclick = () => closeSheet('parents');
+    if ($('pf')) $('pf').onclick = () => { const a = 6 + Math.floor(Math.random() * 4), b = 6 + Math.floor(Math.random() * 4);
+      box.innerHTML = `<h3>${L().pinForgot}</h3><label class="field">${L().pinGate(a, b)}<input id="pg" inputmode="numeric"></label><div class="err" id="pge"></div><button class="btn green" id="pgo">${L().accGo}</button><button class="btn ghost" id="pclose">${L().close}</button>`;
+      $('pclose').onclick = () => closeSheet('parents');
+      $('pgo').onclick = () => { if (+$('pg').value === a * b) draw('', true); else $('pge').textContent = L().pinMismatch; }; };
+  };
+  draw('', !pin);
+  $('parents').hidden = false;
+}
+$('parentsBtn').onclick = () => parentGate(() => parentArea(0));
+
+function parentArea(tab){
+  const box = $('parentsBox');
+  const tabs = `<div class="tabs">${L().pTabs.map((t, i) => `<button data-i="${i}" aria-pressed="${i===tab}">${t}</button>`).join('')}</div>`;
+  let body = '';
+  if (tab === 0){
+    const week = new Date(); week.setDate(week.getDate() - 6); const wk = week.toISOString().slice(0, 10);
+    const days = [...G.tags].filter(t => t.startsWith('s:') && t.includes('@')).map(t => { const [id, date] = t.split('@'); const [, c, m, w, d] = id.split(':'); return { c, m:+m, w:+w, d:+d, date }; });
+    const thisWeek = days.filter(x => x.date >= wk).length;
+    const learned = new Set(); days.forEach(x => { const k = cls(x.c); if (!k || !k.months[x.m-1] || !k.months[x.m-1].ready) return; const p = plan(x.c, x.m, x.w, x.d); (p.teach || p.words || []).forEach(w => learned.add(WORDS[w].mg)); });
+    const nd = nextDay(curClass);
+    const last = days.sort((a, b) => (b.date + b.m + b.w + b.d).localeCompare(a.date + a.m + a.w + a.d)).slice(0, 6);
+    body = `<div class="report"><div><b>${thisWeek}</b><span>${L().rDays}</span></div><div><b>${learned.size}</b><span>${L().rWords}</span></div><div><b>${G.streak}</b><span>${L().rStreak}</span></div><div><b>${G.xp}</b><span>${L().rXp}</span></div></div>
+      <div><b>${L().rNow}:</b> ${esc(cname(cls(curClass)))}${nd ? ' · ' + esc(L().month(nd[1]) + ' · ' + L().week(nd[2]) + ' · ' + L().day(nd[3])) : ''}</div>
+      <div><b>${L().rLast}</b></div><div class="plist">${last.length ? last.map(x => `<div><span>${esc(cname(cls(x.c)))} · ${L().month(x.m)} · ${L().week(x.w)} · ${L().day(x.d)}</span><span class="muted">${x.date}</span></div>`).join('') : `<div>${L().rNone}</div>`}</div>`;
+  } else if (tab === 1){
+    body = `<label class="field">${L().childName}<input id="cn" value="${esc(G.store.get('gidroChild', ''))}" maxlength="20" autocomplete="off"></label><button class="btn green small" id="cns">${L().saveBtn}</button>
+      <div><b>${L().chClass}</b><p class="muted" style="margin:4px 0 8px;font-weight:700;font-size:14px">${L().chClassP}</p>
+      <div style="display:flex;flex-direction:column;gap:8px">${CLASSES.filter(k => k.months.some(m => m.ready)).map(k => `<button class="btn ${k.id===curClass?'green':'ghost'} small" style="width:100%" data-c="${k.id}">${esc(cname(k))}</button>`).join('')}</div></div>
+      <button class="btn ghost small" id="newpin">${L().newPin}</button>`;
+  } else {
+    body = `<p style="margin:0;font-weight:700">${G.user ? esc(L().accIn(G.user.email)) : L().accOut}</p>
+      <p style="margin:0;font-weight:800">${L().plan(G.has('school'))}</p>
+      ${G.has('school') ? `<p class="muted" style="margin:0;font-size:14px;font-weight:700">${L().manage}</p>` : `<button class="btn green" id="pjoin">${L().join}</button>`}
+      ${G.user ? `<button class="btn ghost" id="pout">${L().signOut}</button>` : `<button class="btn ghost" id="pin">${L().signIn}</button>`}`;
+  }
+  box.innerHTML = tabs + body + `<button class="btn ghost" id="pclose">${L().close}</button>`;
+  box.querySelectorAll('.tabs button').forEach(b => b.onclick = () => parentArea(+b.dataset.i));
+  $('pclose').onclick = () => { closeSheet('parents'); refresh(); };
+  if ($('cns')) $('cns').onclick = () => { G.store.set('gidroChild', $('cn').value.trim()); toast(L().saved); renderHome(); };
+  box.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { curClass = b.dataset.c; G.store.set('gidroClass', curClass); parentArea(1); renderHome(); });
+  if ($('newpin')) $('newpin').onclick = () => { G.store.set('gidroPin', null); parentGate(() => parentArea(1)); };
+  if ($('pjoin')) $('pjoin').onclick = () => { closeSheet('parents'); openMember(); };
+  if ($('pout')) $('pout').onclick = async () => { await G.signOut(); parentArea(2); refresh(); };
+  if ($('pin')) $('pin').onclick = () => { accountForm(box, () => parentArea(2)); };
+  $('parents').hidden = false;
+}
+
+/* ---------------- start ---------------- */
+function refresh(){ applyLang(); if (!$('sHome').hidden || $('sMonth').hidden) renderHome(); if (!$('sMonth').hidden) openMonth(openM); }
+G.onChange(() => { refresh(); if (new URLSearchParams(location.search).get('upgraded') === '1' && G.has('school')) toast(L().thanks); });
+applyLang(); renderHome();
+G.start().then(() => {
+  const q = new URLSearchParams(location.search);
+  if (q.get('upgraded') === '1' && !G.has('school')) toast(L().waitPay);
+  if (q.get('placement') === '1' && ![...G.tags].some(t => t.startsWith('s:'))) startPlacement();
+  if (q.get('start') === '1' && ![...G.tags].some(t => t.startsWith('s:'))) openDay('pre', 1, 1, 1);
+});
+</script>
+</body>
+</html>
