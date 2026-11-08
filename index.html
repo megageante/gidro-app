@@ -113,6 +113,11 @@ section h2{font-size:26px;}
 
 .note{font-size:12px;color:var(--ink-soft);text-align:center;}
 @media (max-width:360px){.facts{grid-template-columns:1fr 1fr;}}
+.fact.price{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:inherit;box-shadow:0 4px 0 var(--line);}
+.fact.price.best{border-color:var(--green);box-shadow:0 4px 0 var(--green-deep);}
+.fact.price:active{transform:translateY(3px);}
+.fact.price .join{margin-top:6px;background:var(--cta);color:var(--ink);font-weight:800;font-size:14px;border-radius:12px;padding:8px 14px;}
+.fact.price.best .join{background:var(--green);color:#fff;}
 </style>
 </head>
 <body>
@@ -205,8 +210,8 @@ section h2{font-size:26px;}
   <section>
     <h2 data-t="priceH">Membership</h2>
     <div class="facts" style="grid-template-columns:1fr 1fr">
-      <div class="fact"><b>$7.99</b><span data-t="perMonth">per month</span></div>
-      <div class="fact" style="border-color:var(--green)"><b>$59.99</b><span data-t="perYear">per year, best value</span></div>
+      <a class="fact price" href="/learn/school?join=monthly"><b>$7.99</b><span data-t="perMonth">per month</span><span class="join" data-t="joinBtn">Join now</span></a>
+      <a class="fact price best" href="/learn/school?join=yearly"><b>$59.99</b><span data-t="perYear">per year, best value</span><span class="join" data-t="joinBtn">Join now</span></a>
     </div>
     <p class="lead" style="font-size:14px" data-t="priceP">Week 1 is free, with no card. No ads, ever.</p>
   </section>
@@ -253,7 +258,7 @@ const T = {
     nowH:'Open today', now1:'Preschool, Months 1–6', now1d:'Hello and colors, numbers 1 to 10, family, my body, animals, food.',
     now2:'Kindergarten, story month', now2d:'Read the picture book “Raha manakaiky ny vitsika” and learn to compare sizes.',
     now3:'New months are added often. Members get every new month as soon as it opens.',
-    priceH:'Membership', perMonth:'per month', perYear:'per year, best value', priceP:'Week 1 is free, with no card. No ads, ever.',
+    priceH:'Membership', perMonth:'per month', perYear:'per year, best value', priceP:'Want to try first? Week 1 is free, with no card. No ads, ever.', joinBtn:'Join now',
     cta1:'Start Week 1 free', cta1s:'Preschool · 5 school days · no card needed',
     cta2:'My child already knows some Malagasy', cta2s:'Take the placement test',
     cta3:'Already a student? Go to my school',
@@ -286,7 +291,7 @@ const T = {
     nowH:"Ouvert aujourd'hui", now1:'Petite section, mois 1 à 6', now1d:'Bonjour et couleurs, les nombres de 1 à 10, la famille, mon corps, les animaux, la nourriture.',
     now2:"Grande section, le mois de l'histoire", now2d:'Lire l’album « Raha manakaiky ny vitsika » et apprendre à comparer les tailles.',
     now3:'De nouveaux mois arrivent souvent. Les membres reçoivent chaque nouveau mois dès son ouverture.',
-    priceH:'Abonnement', perMonth:'par mois', perYear:'par an, le plus avantageux', priceP:'La semaine 1 est gratuite, sans carte bancaire. Jamais de publicité.',
+    priceH:'Abonnement', perMonth:'par mois', perYear:'par an, le plus avantageux', priceP:'Envie d’essayer d’abord ? La semaine 1 est gratuite, sans carte bancaire. Jamais de publicité.', joinBtn:'S’abonner',
     cta1:'Commencer la semaine 1 gratuitement', cta1s:"Petite section · 5 jours d'école · sans carte bancaire",
     cta2:'Mon enfant connaît déjà un peu le malgache', cta2s:'Passer le test de niveau',
     cta3:'Déjà élève ? Aller à mon école',

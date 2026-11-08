@@ -796,10 +796,11 @@ $('byeBack').onclick = () => { refresh(); show('sHome'); };
 
 /* ---------------- account and membership ---------------- */
 function closeSheet(id){ $(id).hidden = true; }
-function openMember(){
+function openMember(period){
   const box = $('memberBox'), P = G.PAY.school.price;
-  if (!G.user) { accountForm(box, () => { if (G.has('school')) { closeSheet('member'); refresh(); } else openMember(); }, true); $('member').hidden = false; return; }
+  if (!G.user) { accountForm(box, () => { if (G.has('school')) { closeSheet('member'); refresh(); } else openMember(period); }, true); $('member').hidden = false; return; }
   if (G.has('school')) { closeSheet('member'); return; }
+  if (period === 'monthly' || period === 'yearly') { G.checkout('school', period); return; }
   box.innerHTML = `<h3>${L().memH}</h3><p class="muted" style="margin:0;font-weight:700">${L().memP}</p>
     <ul class="perks">${L().perks.map(p => `<li>${esc(p)}</li>`).join('')}</ul>
     <div class="plans"><div class="plan"><b>${P.monthly}</b><span class="muted">${L().monthly}</span><button class="btn small" style="margin-top:8px;width:100%" id="pm">${L().choose}</button></div>
@@ -909,6 +910,7 @@ G.start().then(() => {
   const q = new URLSearchParams(location.search);
   if (q.get('upgraded') === '1' && !G.has('school')) toast(L().waitPay);
   if (q.get('placement') === '1' && ![...G.tags].some(t => t.startsWith('s:'))) startPlacement();
+  if (q.get('join')) openMember(q.get('join'));
   if (q.get('start') === '1' && ![...G.tags].some(t => t.startsWith('s:'))) openDay('pre', 1, 1, 1);
 });
 </script>

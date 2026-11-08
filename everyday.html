@@ -229,8 +229,8 @@ section h2{font-size:26px;}
     </section>
     <section>
       <div class="facts" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div class="mini" style="flex-direction:column;align-items:center"><b style="font-family:var(--display);font-size:26px" id="pM"></b><span class="muted" data-t="perMonth"></span></div>
-        <div class="mini" style="flex-direction:column;align-items:center;border-color:var(--green)"><b style="font-family:var(--display);font-size:26px" id="pY"></b><span class="muted" data-t="perYear"></span></div>
+        <button class="mini" id="buyM" style="flex-direction:column;align-items:center;cursor:pointer;box-shadow:0 4px 0 var(--line)"><b style="font-family:var(--display);font-size:26px" id="pM"></b><span class="muted" data-t="perMonth"></span><span class="tag ready" style="margin-top:4px;font-size:13px;padding:6px 12px;background:var(--cta);color:var(--ink)" data-t="joinBtn">Join now</span></button>
+        <button class="mini" id="buyY" style="flex-direction:column;align-items:center;cursor:pointer;border-color:var(--green);box-shadow:0 4px 0 var(--green-deep)"><b style="font-family:var(--display);font-size:26px" id="pY"></b><span class="muted" data-t="perYear"></span><span class="tag ready" style="margin-top:4px;font-size:13px;padding:6px 12px;background:var(--green);color:#fff" data-t="joinBtn">Join now</span></button>
       </div>
       <p class="lead" style="font-size:14px" data-t="priceP"></p>
     </section>
@@ -295,7 +295,7 @@ const T = {
     eyebrow:'Malagasy for grown-ups', h1:'The Malagasy you need, the day you need it',
     heroP:'Flashcard sets for real life: meeting people, getting around, the market, eating out, money, the doctor, emergencies and more. Study the cards, play the games, then use it on your trip.',
     setsH:'Choose a set', kE:'For children', kH:'Gidro School', kP:'A full Malagasy school for ages 3 to 8, from Preschool up, with lessons, tests and weekly reports.',
-    kB:'Go to Gidro School', perMonth:'per month', perYear:'per year, best value', priceP:'The first two sets are free. Members open every set, and new sets as they are added. No ads.',
+    kB:'Go to Gidro School', perMonth:'per month', perYear:'per year, best value', joinBtn:'Join now', priceP:'Want to try first? The first two sets are free. Members open every set, and new sets as they are added. No ads.',
     byeH:'Veloma, come back any time', byeP:'Your cards will be here when you return.', byeB:'Back to Gidro Everyday', byeSite:'Visit nosymasina.com',
     exitH:'Leave this game?', exitP:'This round stops here. You can start it again any time.', exitNo:'Keep going', exitYes:'Yes, exit',
     m:{cards:['Flashcards','Tap to flip'], learn:['Learn','Pick the right meaning'], match:['Match','Race the clock'], write:['Write','Type the Malagasy']},
@@ -318,7 +318,7 @@ const T = {
     eyebrow:'Le malgache pour les adultes', h1:'Le malgache utile, le jour où vous en avez besoin',
     heroP:"Des séries de cartes pour la vraie vie : faire connaissance, se déplacer, le marché, le restaurant, l'argent, le médecin, les urgences et plus encore. Révisez, jouez, puis servez-vous-en en voyage.",
     setsH:'Choisissez une série', kE:'Pour les enfants', kH:'École Gidro', kP:'Une vraie école de malgache de 3 à 8 ans, dès la petite section, avec leçons, tests et bilans chaque semaine.',
-    kB:"Aller à l'École Gidro", perMonth:'par mois', perYear:'par an, le plus avantageux', priceP:'Les deux premières séries sont gratuites. Les membres ouvrent toutes les séries, et les nouvelles dès leur sortie. Sans publicité.',
+    kB:"Aller à l'École Gidro", perMonth:'par mois', perYear:'par an, le plus avantageux', joinBtn:'S’abonner', priceP:'Envie d’essayer d’abord ? Les deux premières séries sont gratuites. Les membres ouvrent toutes les séries, et les nouvelles dès leur sortie. Sans publicité.',
     byeH:'Veloma, revenez quand vous voulez', byeP:'Vos cartes vous attendent.', byeB:'Retour à Gidro Everyday', byeSite:'Visiter nosymasina.com',
     exitH:'Quitter ce jeu ?', exitP:'Cette partie s’arrête ici. Vous pourrez la reprendre quand vous voulez.', exitNo:'Continuer', exitYes:'Oui, quitter',
     m:{cards:['Cartes','Touchez pour retourner'], learn:['Apprendre','Choisissez le bon sens'], match:['Associer','Contre la montre'], write:['Écrire','Tapez le malgache']},
@@ -518,10 +518,11 @@ $('lang-en').onclick=()=>apply('en'); $('lang-fr').onclick=()=>apply('fr');
 function toastx(msg){ const t=document.createElement('div'); t.className='toastx'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2600); }
 function closeMember(){ $('member').hidden=true; }
 $('member').onclick=e=>{ if(e.target.id==='member') closeMember(); };
-function openMember(){
+function openMember(period){
   const box=$('memberBox'), P=G.PAY.everyday.price;
-  if(!G.user){ accountForm(()=>{ G.has('everyday') ? (closeMember(), renderHome()) : openMember(); }); $('member').hidden=false; return; }
+  if(!G.user){ accountForm(()=>{ G.has('everyday') ? (closeMember(), renderHome()) : openMember(period); }); $('member').hidden=false; return; }
   if(G.has('everyday')){ closeMember(); return; }
+  if(period==='monthly'||period==='yearly'){ G.checkout('everyday', period); return; }
   box.innerHTML=`<h3>${L().memH}</h3><p style="margin:0;color:var(--ink-soft);font-weight:700">${L().memP}</p>
     <ul class="perks">${L().perks.map(p=>`<li>${esc(p)}</li>`).join('')}</ul>
     <div class="plans"><div class="plan"><b>${P.monthly}</b><span style="color:var(--ink-soft)">${L().monthly}</span><button class="btn" style="margin-top:8px;padding:10px" id="pm">${L().choose}</button></div>
@@ -555,6 +556,7 @@ function accountForm(after){
   };
   draw();
 }
+$('buyM').onclick=()=>openMember('monthly'); $('buyY').onclick=()=>openMember('yearly');
 $('acctBtn').onclick=()=>{
   if(!G.user){ accountForm(()=>{ closeMember(); renderHome(); }); $('member').hidden=false; return; }
   const box=$('memberBox');
@@ -568,7 +570,7 @@ $('acctBtn').onclick=()=>{
 
 G.onChange(()=>{ renderHome(); if(new URLSearchParams(location.search).get('upgraded')==='1' && G.has('everyday')) toastx(L().thanks); });
 apply(G.lang);
-G.start().then(()=>{ if(new URLSearchParams(location.search).get('upgraded')==='1' && !G.has('everyday')) toastx(L().waitPay); });
+G.start().then(()=>{ const jq=new URLSearchParams(location.search).get('join'); if(jq) openMember(jq); if(new URLSearchParams(location.search).get('upgraded')==='1' && !G.has('everyday')) toastx(L().waitPay); });
 </script>
 </body>
 </html>
