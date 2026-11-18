@@ -278,6 +278,7 @@ button:active,a.btn:active,.btn:active,.opt:active,.tile:active,.mon:active,.tic
 
 <script src="/learn/gidro-core.js"></script>
 <script src="/learn/school-content.js"></script>
+<script src="/learn/school-pics.js"></script>
 <script>
 /* ---------------- words of the interface ---------------- */
 const T = {
@@ -398,6 +399,7 @@ function picOf(w){
   if (x.color) return `<div class="swatch" style="background:${x.color}" role="img" aria-label="${esc(x.en)}"></div>`;
   if (x.count) return `<div class="dots" role="img" aria-label="${x.count}">${'<i></i>'.repeat(x.count)}</div>`;
   if (x.pic === 'gidro') return `<div class="pic">${GIDRO}</div>`;
+  if (typeof PICS !== 'undefined' && PICS[w]) return `<div class="pic" role="img" aria-label="${esc(x.en)}">${PICS[w]}</div>`;
   return `<div class="pic" role="img" aria-label="${esc(x.en)}">${x.pic}</div>`;
 }
 
