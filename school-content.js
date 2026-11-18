@@ -3,6 +3,67 @@
    To add a month: add its words to WORDS, then give the month 3 weeks of word ids and set ready:true. */
 
 const WORDS = {
+  /* ===== Preschool v2 (draft). Source: Nene's books. Tsena 1-4 words read from the book PDFs; Fianakaviako 1-4 read from the pages. ===== */
+  /* Tsena Book 2: market words */
+  harona: { mg:'harona', en:'basket', fr:'panier', pic:'🧺' },
+  voanio: { mg:'voanio', en:'coconut', fr:'noix de coco', pic:'🥥' },
+  voasary_f: { mg:'voasary', en:'orange (the fruit)', fr:'orange (le fruit)', pic:'🍊' },
+  voatabia: { mg:'voatabia', en:'tomato', fr:'tomate', pic:'🍅' },
+  mananasy: { mg:'mananasy', en:'pineapple', fr:'ananas', pic:'🍍' },
+  karaoty: { mg:'karaoty', en:'carrot', fr:'carotte', pic:'🥕' },
+  letisy: { mg:'letisy', en:'lychee', fr:'litchi', pic:'🔴' },
+  lisitra: { mg:'lisitra', en:'list', fr:'liste', pic:'📝' },
+  vola: { mg:'vola', en:'money', fr:'argent', pic:'💰' },
+  /* Tsena Book 3: feelings */
+  faly: { mg:'faly', en:'happy', fr:'content', pic:'😊' },
+  tezitra: { mg:'tezitra', en:'angry', fr:'en colère', pic:'😠' },
+  matahotra: { mg:'matahotra', en:'scared', fr:'effrayé', pic:'😨' },
+  mitomany: { mg:'mitomany', en:'crying', fr:'qui pleure', pic:'😢' },
+  malahelo: { mg:'malahelo', en:'sad', fr:'triste', pic:'😞' },
+  reraka: { mg:'reraka', en:'tired', fr:'fatigué', pic:'😴' },
+  /* Fianakaviako Book 1: numbers 11 to 20 (each shown with dots) */
+  n11: { mg:"iraika ambin'ny folo", en:'eleven', fr:'onze', count:11 },
+  n12: { mg:"roa ambin'ny folo", en:'twelve', fr:'douze', count:12 },
+  n13: { mg:"telo ambin'ny folo", en:'thirteen', fr:'treize', count:13 },
+  n14: { mg:"efatra ambin'ny folo", en:'fourteen', fr:'quatorze', count:14 },
+  n15: { mg:"dimy ambin'ny folo", en:'fifteen', fr:'quinze', count:15 },
+  n16: { mg:"enina ambin'ny folo", en:'sixteen', fr:'seize', count:16 },
+  n17: { mg:"fito ambin'ny folo", en:'seventeen', fr:'dix-sept', count:17 },
+  n18: { mg:"valo ambin'ny folo", en:'eighteen', fr:'dix-huit', count:18 },
+  n19: { mg:"sivy ambin'ny folo", en:'nineteen', fr:'dix-neuf', count:19 },
+  n20: { mg:'roapolo', en:'twenty', fr:'vingt', count:20 },
+  /* Fianakaviako Book 2: family and table words */
+  neny: { mg:'neny', en:'mom', fr:'maman', pic:'👩🏾' },
+  bebe: { mg:'bebe', en:'grandma', fr:'mamie', pic:'👵🏾' },
+  dadabe: { mg:'dadabe', en:'grandpa', fr:'papi', pic:'👴🏾' },
+  dadatoa: { mg:'dadatoa', en:'uncle', fr:'oncle', pic:'👨🏾' },
+  nenitoa: { mg:'nenitoa', en:'aunt', fr:'tante', pic:'👩🏾' },
+  zoky: { mg:'zoky', en:'the older one', fr:'l’aîné(e)', pic:'🧒🏾' },
+  zandry: { mg:'zandry', en:'the younger one', fr:'le/la cadet(te)', pic:'👧🏾' },
+  seza: { mg:'seza', en:'chair', fr:'chaise', pic:'🪑' },
+  vilia: { mg:'vilia', en:'plate', fr:'assiette', pic:'🍽️' },
+  sotro: { mg:'sotro', en:'spoon', fr:'cuillère', pic:'🥄' },
+  vera: { mg:'vera', en:'glass', fr:'verre', pic:'🥛' },
+  /* Fianakaviako Book 3: feelings */
+  menatra: { mg:'menatra', en:'shy', fr:'timide', pic:'🙈' },
+  tia: { mg:'tia', en:'love', fr:'amour', pic:'🥰' },
+  afapo: { mg:'afa-po', en:'proud', fr:'fier', pic:'😌' },
+  saropiaro: { mg:'saro-piaro', en:'jealous', fr:'jaloux', pic:'😒' },
+  gaga: { mg:'gaga', en:'surprised', fr:'surpris', pic:'😲' },
+  manina: { mg:'manina', en:'missing someone', fr:'qui manque quelqu’un', pic:'🥺' },
+  /* Fianakaviako Book 4: shapes (small drawings) */
+  boribory: { mg:'boribory', en:'circle', fr:'cercle', pic:'<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="38" fill="#f4c430"/></svg>' },
+  efamira: { mg:'efamira', en:'square', fr:'carré', pic:'<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="14" y="14" width="72" height="72" fill="#2f6fd0"/></svg>' },
+  telozoro: { mg:'telozoro', en:'triangle', fr:'triangle', pic:'<svg viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,12 90,86 10,86" fill="#d93a3a"/></svg>' },
+  mahitsizoro: { mg:'mahitsizoro', en:'rectangle', fr:'rectangle', pic:'<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="8" y="26" width="84" height="48" fill="#3e9b4f"/></svg>' },
+  /* Ny vatako (prepared for later months; confirmed by Nene) */
+  ratsatanana: { mg:'ratsatanana', en:'finger', fr:'doigt', pic:'☝🏾' },
+  kibo: { mg:'kibo', en:'tummy', fr:'ventre', pic:'🫃🏾' },
+  lohalika: { mg:'lohalika', en:'knee', fr:'genou', pic:'🦵🏾' },
+  nify: { mg:'nify', en:'tooth', fr:'dent', pic:'🦷' },
+  lehibe: { mg:'lehibe', en:'big', fr:'grand', pic:'🐘' },
+  kely: { mg:'kely', en:'small', fr:'petit', pic:'🐭' },
+  fohy: { mg:'fohy', en:'short', fr:'court', pic:'🔹' },
   /* Preschool, Month 1: greetings */
   salama:   { mg:'salama',   en:'hello',               fr:'bonjour',               pic:'👋' },
   veloma:   { mg:'veloma',   en:'goodbye',             fr:'au revoir',             pic:'🚪' },
@@ -13,11 +74,11 @@ const WORDS = {
   /* colors */
   mena:     { mg:'mena',     en:'red',    fr:'rouge',  color:'#d93a3a' },
   mavo:     { mg:'mavo',     en:'yellow', fr:'jaune',  color:'#f5c518' },
-  maitso:   { mg:'maitso',   en:'green',  fr:'vert',   color:'#3e9b4f' },
+  maintso:  { mg:'maintso',  en:'green',  fr:'vert',   color:'#3e9b4f' },
   manga_c:  { mg:'manga',    en:'blue',   fr:'bleu',   color:'#2f6fd0' },
   fotsy:    { mg:'fotsy',    en:'white',  fr:'blanc',  color:'#ffffff' },
   mainty:   { mg:'mainty',   en:'black',  fr:'noir',   color:'#1b1b1b' },
-  voasary:  { mg:'voasary',  en:'orange', fr:'orange', color:'#f28a1e' },
+  volomboasary: { mg:'volomboasary', en:'orange', fr:'orange', color:'#f28a1e' },
   mavokely: { mg:'mavokely', en:'pink',   fr:'rose',   color:'#f29ac0' },
   /* Month 2: numbers */
   iray:   { mg:'iray',   en:'one',   fr:'un',     count:1 },
@@ -109,9 +170,7 @@ const STORIES = {
 };
 
 const SOON = { ready:false };
-const CLASSES = [
-  { id:'pre', age:'3', color:'#e07a3f', tint:'#fde6d6', en:'Preschool', fr:'Petite section',
-    blurb:{ en:'First words with pictures, colors and numbers', fr:'Premiers mots en images, couleurs et chiffres' },
+/* PARKED (old Preschool months, not used): greetings and colors, numbers, family, body, animals, food. Greetings move to the daily routine. Animals and food are not in a series yet.
     months: [
       { ready:true, en:'Hello and colors', fr:'Bonjour et couleurs', icon:'👋',
         weeks:[ { words:['salama','veloma','misaotra','azafady','eny','tsia'], game:'match' },
@@ -143,6 +202,50 @@ const CLASSES = [
       Object.assign({ en:'At school', fr:'À l’école', icon:'🎒' }, SOON),
       Object.assign({ en:'Feelings', fr:'Les émotions', icon:'😊' }, SOON),
       Object.assign({ en:'Big review', fr:'Grande révision', icon:'🎓' }, SOON)
+*/
+const CLASSES = [
+  { id:'pre', age:'3', color:'#e07a3f', tint:'#fde6d6', en:'Preschool', fr:'Petite section',
+    blurb:{ en:'The Tsena and Fianakaviako books, month by month', fr:'Les livres Tsena et Fianakaviako, mois par mois' },
+    months: [
+      /* Season 1: Tsena (the market) */
+      { ready:true, en:'Tsena 1: Market numbers 1 to 10', fr:'Tsena 1 : Les nombres du marché 1 à 10', icon:'🔢',
+        weeks:[ { words:['iray', 'roa', 'telo'], game:'count' },
+                { words:['efatra', 'dimy', 'enina'], game:'count' },
+                { words:['fito', 'valo', 'sivy', 'folo'], game:'count' } ] },
+      { ready:true, en:'Tsena 2: Market words', fr:'Tsena 2 : Les mots du marché', icon:'🧺',
+        weeks:[ { words:['harona', 'voanio', 'manga_f', 'akondro'], game:'match' },
+                { words:['voasary_f', 'atody', 'voatabia', 'mananasy'], game:'match' },
+                { words:['karaoty', 'letisy', 'lisitra', 'vola'], game:'match' } ] },
+      { ready:true, en:'Tsena 3: Feelings', fr:'Tsena 3 : Les émotions', icon:'😊',
+        weeks:[ { words:['faly', 'tezitra'], game:'match' },
+                { words:['matahotra', 'mitomany'], game:'match' },
+                { words:['malahelo', 'reraka'], game:'match' } ] },
+      { ready:true, en:'Tsena 4: Colors', fr:'Tsena 4 : Les couleurs', icon:'🎨',
+        weeks:[ { words:['mena', 'mavo', 'maintso'], game:'paint' },
+                { words:['manga_c', 'volomboasary'], game:'paint' },
+                { words:['fotsy', 'mainty', 'mavokely'], game:'paint' } ] },
+      /* Season 2: Fianakaviako (the family) */
+      { ready:true, en:'Fianakaviako 1: Numbers 11 to 20', fr:'Fianakaviako 1 : Les nombres de 11 à 20', icon:'🍯',
+        weeks:[ { words:['n11', 'n12', 'n13'], game:'match' },
+                { words:['n14', 'n15', 'n16'], game:'match' },
+                { words:['n17', 'n18', 'n19', 'n20'], game:'match' } ] },
+      { ready:true, en:'Fianakaviako 2: Family and table words', fr:'Fianakaviako 2 : La famille et la table', icon:'🏠',
+        weeks:[ { words:['neny', 'bebe', 'dadabe', 'dadatoa'], game:'match' },
+                { words:['nenitoa', 'zazakely', 'zoky', 'zandry'], game:'match' },
+                { words:['seza', 'vilia', 'sotro', 'vera'], game:'match' } ] },
+      { ready:true, en:'Fianakaviako 3: Feelings', fr:'Fianakaviako 3 : Les émotions', icon:'🥰',
+        weeks:[ { words:['menatra', 'tia'], game:'match' },
+                { words:['afapo', 'saropiaro'], game:'match' },
+                { words:['gaga', 'manina'], game:'match' } ] },
+      { ready:true, en:'Fianakaviako 4: Shapes', fr:'Fianakaviako 4 : Les formes', icon:'🔺',
+        weeks:[ { words:['boribory', 'efamira'], game:'match' },
+                { words:['telozoro', 'mahitsizoro'], game:'match' },
+                { words:['boribory', 'efamira', 'telozoro', 'mahitsizoro'], game:'match' } ] },
+      /* Season 3: Ny vatako (my body). Books not written yet, so these stay closed until they are. */
+      Object.assign({ en:'Ny vatako 1: Counting my body', fr:'Ny vatako 1 : Je compte mon corps', icon:'🖐🏾' }, SOON),
+      Object.assign({ en:'Ny vatako 2: Body words', fr:'Ny vatako 2 : Les mots du corps', icon:'🧒🏾' }, SOON),
+      Object.assign({ en:'Ny vatako 3: My day', fr:'Ny vatako 3 : Ma journée', icon:'🌅' }, SOON),
+      Object.assign({ en:'Ny vatako 4: Big and small', fr:'Ny vatako 4 : Grand et petit', icon:'🐘' }, SOON)
     ] },
   { id:'prek', age:'4', color:'#d9a031', tint:'#fbefd2', en:'Pre-K', fr:'Moyenne section',
     blurb:{ en:'Letter, color and number of the week', fr:'La lettre, la couleur et le chiffre de la semaine' }, months:[] },
