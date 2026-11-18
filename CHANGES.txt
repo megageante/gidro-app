@@ -1,0 +1,26 @@
+Gidro School: Preschool v2 DRAFT (not live)
+Changed files: school-content.js, school.html (2 small edits). Everything else is a copy of the current files.
+
+Preschool is now 12 months, built from Nene's books:
+ 1-4  Tsena (Isa 1-10, Teny, Fihetseham-po, Ny tontoloko: colors)
+ 5-8  Fianakaviako (Isa 11-20, Teny, Fihetseham-po, Ny tontoloko: shapes)
+ 9-12 Ny vatako: titles only, closed ("coming soon") until the books are written
+
+Spelling decisions applied: mavokely (pink, added to Tsena 4 by Nene), maintso (green), volomboasary (orange color), voasary (orange fruit),
+ratsatanana (finger), Neny / Bebe / Dadabe / Dadatoa / Nenitoa / zazakely / zoky / zandry.
+
+school.html edits: 'maitso' -> 'maintso' in the paint game's dark-color list; long color labels shrink to fit.
+Old Preschool months (greetings, numbers, family, body, animals, food) are kept in a comment in school-content.js.
+Temporary pictures are emoji (letisy uses a red dot). Real photos come later.
+To try it: upload these files to megageante/gidro-app only when Nene says so.
+
+VOICE (added 2026-11-18)
+audio/ folder: 68 mp3 files, Nene's voice, one per word id (manga_f and manga_c share one recording). 1.2 MB total.
+school-content.js: new VOICE set listing the ids that have a recording.
+school.html: lesson cards show a speaker button and play the word when the card opens. Words without a recording show no button.
+Upload: school-content.js, school.html, and the whole audio folder.
+
+PHOTOS (new)
+- New folder pics/ (50 webp, about 600 KB): the same photos as the books. Tsena 1 objects, Tsena 2 lisitra and vola, Tsena 3 feelings faces, Fianakaviako 2 family and table words, Fianakaviako 3 feelings faces. Shapes use the book object photos (plate, napkin, sambos, book). Numbers 1 to 10 show the book's fruit (1 basket ... 10 lychees).
+- school-content.js: new list PHOTO. school.html: picOf shows the photo, and falls back to the old picture if a file is missing.
+- Upload: pics folder + school-content.js + school.html (plus audio folder if the voice is not live yet).

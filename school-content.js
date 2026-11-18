@@ -169,6 +169,9 @@ const STORIES = {
   }
 };
 
+/* words that have a recording in /learn/audio/<id>.mp3 (Nene's voice) */
+const PHOTO = new Set(["boribory", "efamira", "telozoro", "mahitsizoro", "afapo", "akondro", "atody", "bebe", "dadabe", "dadatoa", "dimy", "efatra", "enina", "faly", "fito", "folo", "gaga", "harona", "iray", "karaoty", "letisy", "lisitra", "malahelo", "mananasy", "manga_f", "manina", "matahotra", "menatra", "mitomany", "nenitoa", "neny", "reraka", "roa", "saropiaro", "seza", "sivy", "sotro", "telo", "tezitra", "tia", "valo", "vera", "vilia", "voanio", "voasary_f", "voatabia", "vola", "zandry", "zazakely", "zoky"]);
+const VOICE = new Set(["afapo", "akondro", "atody", "bebe", "boribory", "dadabe", "dadatoa", "dimy", "efamira", "efatra", "enina", "faly", "fito", "folo", "fotsy", "gaga", "harona", "iray", "karaoty", "letisy", "lisitra", "mahitsizoro", "maintso", "mainty", "malahelo", "mananasy", "manga_c", "manga_f", "manina", "matahotra", "mavo", "mavokely", "mena", "menatra", "mitomany", "n11", "n12", "n13", "n14", "n15", "n16", "n17", "n18", "n19", "n20", "nenitoa", "neny", "reraka", "roa", "saropiaro", "seza", "sivy", "sotro", "telo", "telozoro", "tezitra", "tia", "valo", "vera", "vilia", "voanio", "voasary_f", "voatabia", "vola", "volomboasary", "zandry", "zazakely", "zoky"]);
 const SOON = { ready:false };
 /* PARKED (old Preschool months, not used): greetings and colors, numbers, family, body, animals, food. Greetings move to the daily routine. Animals and food are not in a series yet.
     months: [

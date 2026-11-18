@@ -111,9 +111,15 @@ h1,h2,h3{font-family:var(--display);margin:0;line-height:1.1;text-wrap:balance}
 .steps span.ok{background:var(--green-tint);color:var(--green-deep)}
 .stage{display:flex;flex-direction:column;gap:16px;min-height:52vh}
 .prompt{font-weight:800;color:var(--soft);font-size:15px;text-align:center}
+.speak{width:56px;height:56px;border-radius:50%;border:2px solid var(--line);background:#fff;font-size:26px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 3px 0 var(--line)}
+.speak:active{transform:translateY(2px);box-shadow:none}.speak.on{background:#fde6d6;border-color:#e07a3f}
 .bigcard{background:var(--card);border:2px solid var(--line);border-radius:28px;padding:24px 18px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
 .pic{font-size:88px;line-height:1.1;display:flex;align-items:center;justify-content:center;min-height:110px}
 .pic svg{width:110px;height:110px}
+.pic.photo{min-height:0}
+.pic.photo img{display:block;width:190px;height:190px;object-fit:cover;border-radius:18px;background:#fff}
+.opt .pic.photo img{width:100px;height:100px;border-radius:12px}
+.tile .pic.photo img{width:78px;height:78px;border-radius:10px}
 .swatch{width:110px;height:110px;border-radius:50%;border:4px solid var(--ink)}
 .dots{display:grid;grid-template-columns:repeat(5,22px);gap:8px;justify-content:center;align-content:center;min-height:110px}
 .dots i{width:22px;height:22px;border-radius:50%;background:var(--cls)}
@@ -394,8 +400,9 @@ const GIDRO = '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M50 40c6 2 8
 document.querySelectorAll('.gsvg').forEach(e => e.innerHTML = GIDRO);
 
 /* picture of a word: emoji, color swatch, dots for numbers, or Gidro */
-function picOf(w){
+function picOf(w, nophoto){
   const x = WORDS[w];
+  if (!nophoto && typeof PHOTO !== 'undefined' && PHOTO.has(w)) return `<div class="pic photo"><img src="/learn/pics/${w}.webp" alt="${esc(x.en)}" onerror="this.parentNode.outerHTML=picOf('${w}',true)"></div>`;
   if (x.color) return `<div class="swatch" style="background:${x.color}" role="img" aria-label="${esc(x.en)}"></div>`;
   if (x.count) return `<div class="dots" role="img" aria-label="${x.count}">${'<i></i>'.repeat(x.count)}</div>`;
   if (x.pic === 'gidro') return `<div class="pic">${GIDRO}</div>`;
@@ -556,18 +563,32 @@ function nextStep(){
 }
 function setBar(i, n){ $('fill').style.width = (n ? Math.round(i / n * 100) : 0) + '%'; }
 
+/* Nene's voice: plays /learn/audio/<id>.mp3 when a recording exists */
+let _say = null;
+function hasVoice(id){ return typeof VOICE !== 'undefined' && VOICE.has(id); }
+function sayWord(id, btn){
+  try {
+    if (_say) { _say.pause(); _say = null; }
+    if (!hasVoice(id)) return;
+    const a = new Audio('/learn/audio/' + id + '.mp3'); _say = a;
+    if (btn) { btn.classList.add('on'); a.onended = a.onerror = () => btn.classList.remove('on'); }
+    const p = a.play(); if (p && p.catch) p.catch(() => { if (btn) btn.classList.remove('on'); });
+  } catch (e) {}
+}
+
 /* lesson: one card per new word */
 function lessonStep(words){
   let i = 0;
   const draw = () => {
     if (i >= words.length) { nextStep(); return; }
     setBar(i, words.length); const w = words[i], x = WORDS[w];
-    $('stage').innerHTML = `<div class="bigcard">${picOf(w)}<div class="mgword">${esc(x.mg)}</div><div class="meaning">${esc(mean(w))}</div>
+    $('stage').innerHTML = `<div class="bigcard">${picOf(w)}<div class="mgword">${esc(x.mg)}</div>${hasVoice(w) ? `<button class="speak" id="spk" aria-label="${G.lang==='fr'?'Écouter':'Listen'}">🔊</button>` : ''}<div class="meaning">${esc(mean(w))}</div>
       ${x.alt ? `<div class="muted" style="font-weight:700">${G.lang==='fr'?'On dit aussi':'Also said'}: <b>${esc(x.alt)}</b></div>` : ''}
       ${x.note ? `<div class="tip">${esc(x.note[G.lang])}</div>` : ''}</div>
       <div class="tip" style="text-align:center">${L().learnTip}</div>
       <button class="btn green" id="nx">${L().next}</button>`;
     $('nx').onclick = () => { i++; draw(); };
+    if ($('spk')) { $('spk').onclick = () => sayWord(w, $('spk')); setTimeout(() => sayWord(w, $('spk')), 250); }
   };
   draw();
 }
@@ -626,6 +647,11 @@ function matchStep(p){
   });
 }
 
+/* shrink a color label so long names (maintso, volomboasary) stay inside their shape */
+function fitFont(txt, base, i){
+  const maxW = [110,130,44,46,46,54,280,56][i] || 60, est = txt.length * 0.6 * base;
+  return est > maxW ? Math.max(7, Math.floor(maxW / (txt.length * 0.6))) : base;
+}
 /* color by word: each part of the picture shows a Malagasy color name */
 function paintStep(p){
   const cols = p.words;
@@ -635,10 +661,10 @@ function paintStep(p){
     ['M0 255 H300 V300 H0 Z',150,284,0], ['M24 74 a16 16 0 0 1 22 -20 a20 20 0 0 1 38 4 a15 15 0 0 1 2 30 H32 a14 14 0 0 1 -8 -14 z',62,74,0]
   ];
   const assign = parts.map((_, i) => cols[i % cols.length]);
-  const dark = c => ['mena','maitso','manga','mainty'].includes(WORDS[c].mg);
+  const dark = c => ['mena','maintso','manga','mainty'].includes(WORDS[c].mg);
   let chosen = null, filled = 0;
   const svg = `<svg viewBox="0 0 300 300" role="img" aria-label="picture">${parts.map((d, i) => `<path d="${d[0]}" data-r="${i}" fill="#fff"/>`).join('')}
-    ${parts.map((d, i) => `<text class="lbl" data-l="${i}" x="${d[1]}" y="${d[2]}" text-anchor="middle" fill="#1f2a44" style="font-size:${d[3]?11:15}px">${esc(WORDS[assign[i]].mg)}</text>`).join('')}</svg>`;
+    ${parts.map((d, i) => `<text class="lbl" data-l="${i}" x="${d[1]}" y="${d[2]}" text-anchor="middle" fill="#1f2a44" style="font-size:${fitFont(WORDS[assign[i]].mg, d[3]?11:15, i)}px">${esc(WORDS[assign[i]].mg)}</text>`).join('')}</svg>`;
   $('stage').innerHTML = `<div class="prompt">${L().paintGo}</div><div class="paint">${svg}</div>
     <div class="palette">${shuffle(cols).map(c => `<button data-c="${c}" style="background:${WORDS[c].color}" aria-label="color"></button>`).join('')}</div>`;
   setBar(0, parts.length);
