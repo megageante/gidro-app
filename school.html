@@ -111,7 +111,7 @@ h1,h2,h3{font-family:var(--display);margin:0;line-height:1.1;text-wrap:balance}
 .steps span.ok{background:var(--green-tint);color:var(--green-deep)}
 .stage{display:flex;flex-direction:column;gap:16px;min-height:52vh;padding-bottom:calc(96px + env(safe-area-inset-bottom))}
 #nx{position:sticky;bottom:max(16px,env(safe-area-inset-bottom));z-index:6;box-shadow:0 4px 0 var(--green-deep),0 -16px 16px 8px var(--paper)}
-@media (max-height:760px){.bigcard{padding:14px 12px;gap:6px}.bigcard .pic.photo img{width:150px;height:150px}.bigcard .pic svg{width:90px;height:90px}.echo{min-height:48px}}
+@media (max-height:760px){.tour .tsay img{width:52px;height:52px}.tour .tsay p{font-size:17px}.tour .tbar{gap:8px;padding-top:10px}.bigcard{padding:14px 12px;gap:6px}.bigcard .pic.photo img{width:150px;height:150px}.bigcard .pic svg{width:90px;height:90px}.echo{min-height:48px}}
 .prompt{font-weight:800;color:var(--soft);font-size:15px;text-align:center}
 .speak{width:56px;height:56px;border-radius:50%;border:2px solid var(--line);background:#fff;font-size:26px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 3px 0 var(--line)}
 .greet{width:100%;border:3px solid var(--ink);border-radius:22px;background:#fff7e0;padding:14px 16px;display:flex;align-items:center;gap:14px;font-family:var(--display);font-weight:800;font-size:22px;cursor:pointer;box-shadow:0 4px 0 var(--ink);text-align:left;color:var(--ink)}
@@ -200,22 +200,22 @@ h1,h2,h3{font-family:var(--display);margin:0;line-height:1.1;text-wrap:balance}
 .result .xp{font-weight:800;color:var(--coral-deep)}
 /* sheets */
 /* classroom tour (plays once, like a little video) */
-.tour{position:fixed;inset:0;z-index:60;background:#1f2a44;display:flex;flex-direction:column;align-items:center}
+.tour{position:fixed;top:0;left:0;right:0;height:100vh;height:100dvh;z-index:60;background:#1f2a44;display:flex;flex-direction:column;align-items:center}
 .tour .tin{width:100%;max-width:480px;height:100%;display:flex;flex-direction:column;position:relative}
 .tour .tpic{flex:1;min-height:0;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--bg,#f4a940)}
 .tour .tpic img.scene{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .tour .tpic .temo{font-size:min(34vh,160px);line-height:1;filter:drop-shadow(0 6px 0 rgba(0,0,0,.12))}
 .tour .tchip{position:absolute;top:max(14px,env(safe-area-inset-top));left:14px;background:#faf6ee;color:#1f2a44;font:800 17px/1.1 Fraunces,Georgia,serif;padding:9px 14px;border-radius:14px;box-shadow:0 3px 0 rgba(0,0,0,.18);max-width:60%}
 .tour .tskip{position:absolute;top:max(14px,env(safe-area-inset-top));right:14px;background:rgba(250,246,238,.92);color:#1f2a44;border:0;border-radius:14px;padding:10px 14px;font:800 15px Manrope,system-ui,sans-serif;cursor:pointer}
-.tour .tbar{background:#faf6ee;padding:14px 16px max(16px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px}
+.tour .tbar{background:#faf6ee;padding:14px 16px calc(40px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px}
 .tour .tsay{display:flex;gap:12px;align-items:center}
-.tour .tsay img{width:68px;height:68px;border-radius:50%;object-fit:cover;border:3px solid #f4a940;flex:none}
+.tour .tsay img{width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid #f4a940;flex:none}
 .tour .tsay p{margin:0;font:800 19px/1.3 Manrope,system-ui,sans-serif;color:#1f2a44}
 .tour .tdots{display:flex;gap:6px;justify-content:center}
 .tour .tdots i{width:9px;height:9px;border-radius:50%;background:#d9d2c3}
 .tour .tdots i.on{background:#f4a940;width:22px;border-radius:6px}
 .sheet{position:fixed;inset:0;background:rgba(31,42,68,.55);display:flex;align-items:flex-end;justify-content:center;z-index:40;padding:max(12px,env(safe-area-inset-top)) 0 0}
-.sheet .box{background:var(--paper);width:100%;max-width:480px;border-radius:26px 26px 0 0;padding:22px max(18px,env(safe-area-inset-left)) max(22px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px;max-height:92vh;overflow-y:auto}
+.sheet .box{background:var(--paper);width:100%;max-width:480px;border-radius:26px 26px 0 0;padding:22px max(18px,env(safe-area-inset-left)) calc(36px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px;max-height:92vh;max-height:92dvh;overflow-y:auto}
 .sheet.center{align-items:center;padding:16px}
 .sheet.center .box{border-radius:24px;text-align:center}
 .sheet h3{font-size:24px}
@@ -695,7 +695,7 @@ async function openTour(onDone){
     if (my !== _tourTok) return;
     const [key, em, bg, chipEn, chipFr, en, frt] = TOUR[n], last = n === TOUR.length - 1;
     box.innerHTML = `<div class="tin"><div class="tpic" style="--bg:${bg}"><span class="temo">${em}</span>
-        <img class="scene" src="/learn/tour-${key}.webp" alt="" onerror="this.remove()">
+        <img class="scene" src="/learn/tour-${key}.webp" alt="" style="object-position:${key === 'door' ? '6%' : key === 'end' ? '30%' : '50%'} 50%" onerror="this.remove()">
         <div class="tchip">${esc(fr ? chipFr : chipEn)}</div>
         <button class="tskip" id="tskip">${L().tourSkip} ⏭</button></div>
       <div class="tbar"><div class="tsay"><img src="/learn/teacher.webp" alt="" onerror="this.onerror=null;this.src='/learn/neny.webp'"><p>${esc(fr ? frt : en)}</p></div>
