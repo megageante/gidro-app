@@ -718,7 +718,7 @@ async function openTour(onDone){
 function openIntro(){ openTour(() => { G.store.set('gidroIntro', '1'); finishMorning(); }); }
 function finishMorning(){ G.store.set('gidroGreetDay', G.today()); if (!G.store.get('gidroIntro', '')) { openIntro(); return; } const go = !!_afterGreet; closeSheet('greetSheet'); if (!go) sayEn('letslearn'); }
 const FEELS = [['tsara', 'great'], ['faly', 'happy'], ['reraka', 'tired']];
-const fPic = id => id === 'tsara' ? '<span class="em" style="font-size:84px;line-height:1">🌟</span>' : picOf(id);
+const fPic = id => id === 'tsara' ? `<div class="pic photo"><img src="/learn/zoky.webp" alt="great" onerror="this.parentNode.outerHTML='<span class=&quot;em&quot; style=&quot;font-size:84px;line-height:1&quot;>🌟</span>'"></div>` : picOf(id);
 const fMean = id => id === 'tsara' ? (G.lang === 'fr' ? 'super' : 'great') : mean(id);
 const fMg = id => id === 'tsara' ? 'tsara be' : WORDS[id].mg;
 function openFeel(){
