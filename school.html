@@ -109,9 +109,29 @@ h1,h2,h3{font-family:var(--display);margin:0;line-height:1.1;text-wrap:balance}
 .steps span{font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px;background:var(--line);color:var(--soft)}
 .steps span.on{background:var(--ink);color:#fff}
 .steps span.ok{background:var(--green-tint);color:var(--green-deep)}
-.stage{display:flex;flex-direction:column;gap:16px;min-height:52vh}
+.stage{display:flex;flex-direction:column;gap:16px;min-height:52vh;padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+#nx{position:sticky;bottom:max(16px,env(safe-area-inset-bottom));z-index:6;box-shadow:0 4px 0 var(--green-deep),0 -16px 16px 8px var(--paper)}
+@media (max-height:760px){.bigcard{padding:14px 12px;gap:6px}.bigcard .pic.photo img{width:150px;height:150px}.bigcard .pic svg{width:90px;height:90px}.echo{min-height:48px}}
 .prompt{font-weight:800;color:var(--soft);font-size:15px;text-align:center}
 .speak{width:56px;height:56px;border-radius:50%;border:2px solid var(--line);background:#fff;font-size:26px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 3px 0 var(--line)}
+.greet{width:100%;border:3px solid var(--ink);border-radius:22px;background:#fff7e0;padding:14px 16px;display:flex;align-items:center;gap:14px;font-family:var(--display);font-weight:800;font-size:22px;cursor:pointer;box-shadow:0 4px 0 var(--ink);text-align:left;color:var(--ink)}
+.greet:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.greet small{display:block;font-family:var(--body);font-size:13px;font-weight:700;color:var(--soft)}
+.greet .big{font-size:34px}
+.echo{display:flex;align-items:center;justify-content:center;gap:12px;min-height:64px;font-weight:800;font-size:20px;color:var(--blue-deep)}
+.echo .ring{width:44px;height:44px;border-radius:50%;background:#fde6d6;border:3px solid #e07a3f;display:inline-flex;align-items:center;justify-content:center;font-size:22px}
+.echo.turn .ring{animation:pulse 1s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(224,122,63,.55)}100%{box-shadow:0 0 0 18px rgba(224,122,63,0)}}
+.row3{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.gpick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.gpick button{border:3px solid var(--ink);border-radius:20px;background:#fff;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 4px 0 var(--ink)}
+.gpick button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.gpick .pic{min-height:0}.gpick .pic.photo img{width:100%;height:auto;aspect-ratio:1}
+.gpick img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px}
+.gpick .em{font-size:52px;line-height:1.2}
+.gbig{display:flex;flex-direction:column;align-items:center;gap:8px}.gbig img{width:min(260px,70vw);aspect-ratio:1;object-fit:cover;border-radius:22px}.gbig .em{font-size:110px;line-height:1.1}
+.micbtn{border:2px solid var(--line);background:#fff;border-radius:999px;padding:12px 18px;font-weight:800;font-size:17px;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.micbtn.rec{background:#ffe0e0;border-color:#d9534f;animation:pulse 1s infinite}
 .speak:active{transform:translateY(2px);box-shadow:none}.speak.on{background:#fde6d6;border-color:#e07a3f}
 .bigcard{background:var(--card);border:2px solid var(--line);border-radius:28px;padding:24px 18px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
 .pic{font-size:88px;line-height:1.1;display:flex;align-items:center;justify-content:center;min-height:110px}
@@ -236,7 +256,8 @@ button:active,a.btn:active,.btn:active,.opt:active,.tile:active,.mon:active,.tic
       <span style="margin-left:auto"></span>
       <button class="iconbtn" id="parentsBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><span data-t="parents"></span></button>
     </div>
-    <div class="hello"><div class="g gsvg"></div><div><h2 id="helloH"></h2><p id="helloP"></p></div></div>
+    <div class="hello" id="helloBox" style="cursor:pointer"><div class="g gsvg"></div><div><h2 id="helloH"></h2><p id="helloP"></p></div></div>
+    <div id="greetCard"></div>
     <div id="homeCta"></div>
     <div class="sect"><h3 data-t="classesH"></h3><div class="classes" id="classes"></div></div>
     <div class="sect"><h3 id="monthsH"></h3><div class="months" id="months"></div></div>
@@ -281,6 +302,8 @@ button:active,a.btn:active,.btn:active,.opt:active,.tile:active,.mon:active,.tic
 <div class="sheet" id="member" hidden role="dialog" aria-modal="true"><div class="box" id="memberBox"></div></div>
 <!-- parents -->
 <div class="sheet" id="parents" hidden role="dialog" aria-modal="true"><div class="box" id="parentsBox"></div></div>
+<div class="sheet" id="greetSheet" hidden role="dialog" aria-modal="true"><div class="box" id="greetBox"></div></div>
+<div class="sheet" id="nameSheet" hidden role="dialog" aria-modal="true"><div class="box" id="nameBox"></div></div>
 
 <script src="/learn/gidro-core.js"></script>
 <script src="/learn/school-content.js"></script>
@@ -332,6 +355,7 @@ const T = {
   pTabs:['Report','Settings','Account'], close:'Close',
   rDays:'school days this week', rWords:'words learned', rStreak:'day streak', rXp:'XP',
   rNow:'Now studying', rLast:'Last school days', rNone:'No school days yet.',
+  nameH:'What is your name?', nameP:'A grown-up can type it. Then say your name into the microphone, so the app can say it back. It stays on this device.', nameType:'First name', nameRec:'Tap and say your name', nameStop:'Tap to stop', namePlay:'Hear it', nameRedo:'Record again', nameSave:'Save', nameSkip:'Not now', micNo:'The microphone is not available. A grown-up can allow it in the browser settings.', greetM:'Good morning', greetA:'Good afternoon', greetE:'Good evening', greetTap:'Tap to say hello', yourTurn:'Your turn!', listenL:'Listen…', sayIt:'Say it', again:'Again', hearYou:'Now listen to you!', changeName:'Change name', howFeel:'How are you feeling today?', howGreet:'How would you like to be greeted today?', gHug:'A hug', gFive:'A high five', gShake:'A handshake', letsGo:'Let’s learn!',
   childName:'Child’s first name', saveBtn:'Save', saved:'Saved',
   chClass:'Change class', chClassP:'Use this after the placement test or if your child is ready to move up.',
   accIn:e=>'Signed in as '+e, accOut:'Not signed in. Progress is saved on this device only.', signOut:'Sign out', signIn:'Log in or sign up',
@@ -380,6 +404,7 @@ const T = {
   pTabs:['Bilan','Réglages','Compte'], close:'Fermer',
   rDays:'jours d’école cette semaine', rWords:'mots appris', rStreak:'jours d’affilée', rXp:'XP',
   rNow:'En ce moment', rLast:'Derniers jours d’école', rNone:'Pas encore de jour d’école.',
+  nameH:'Comment t’appelles-tu ?', nameP:'Un adulte peut écrire le prénom. Ensuite, dis ton prénom dans le micro, pour que l’application puisse le répéter. Il reste sur cet appareil.', nameType:'Prénom', nameRec:'Touche et dis ton prénom', nameStop:'Touche pour arrêter', namePlay:'Écouter', nameRedo:'Réenregistrer', nameSave:'Enregistrer', nameSkip:'Plus tard', micNo:'Le micro n’est pas disponible. Un adulte peut l’autoriser dans les réglages du navigateur.', greetM:'Good morning', greetA:'Good afternoon', greetE:'Good evening', greetTap:'Touche pour dire bonjour', yourTurn:'À toi !', listenL:'Écoute…', sayIt:'Dis-le', again:'Encore', hearYou:'Écoute-toi !', changeName:'Changer le prénom', howFeel:'Comment te sens-tu aujourd’hui ?', howGreet:'Comment veux-tu être salué aujourd’hui ?', gHug:'Un câlin', gFive:'Un high five', gShake:'Une poignée de main', letsGo:'Apprenons !',
   childName:'Prénom de l’enfant', saveBtn:'Enregistrer', saved:'Enregistré',
   chClass:'Changer de classe', chClassP:'Après le test de niveau, ou quand votre enfant est prêt à monter.',
   accIn:e=>'Connecté : '+e, accOut:'Pas connecté. Les progrès sont gardés sur cet appareil seulement.', signOut:'Se déconnecter', signIn:'Connexion ou inscription',
@@ -475,6 +500,8 @@ function renderHome(){
   $('stStreak').textContent = G.streak; $('stXp').textContent = G.xp;
   $('helloH').textContent = L().hello(name);
   $('helloP').textContent = nd ? L().where(cname(c), nd[1], nd[2], nd[3]) : cname(c);
+  renderGreet(name); $('helloBox').onclick = openName;
+  if (!name && !G.store.get('gidroNameAsked')) setTimeout(openName, 500);
   const started = [...G.tags].some(t => t.startsWith('s:'));
   let cta = '';
   if (!started && curClass === 'pre'){
@@ -576,7 +603,111 @@ function sayWord(id, btn){
   } catch (e) {}
 }
 
-/* lesson: one card per new word */
+/* ---------- English instructions (Nene uploads /learn/en-<id>.mp3) and the child's own voice ---------- */
+function playFile(url, maxMs){
+  return new Promise(res => {
+    let done = false; const fin = () => { if (!done) { done = true; res(); } };
+    try { const a = new Audio(url); _say = a; a.onended = fin; a.onerror = fin; const pr = a.play(); if (pr && pr.catch) pr.catch(fin); setTimeout(fin, maxMs || 7000); } catch (e) { fin(); }
+  });
+}
+const sayEn = id => playFile('/learn/en-' + id + '.mp3');
+const sayWordP = id => hasVoice(id) ? playFile('/learn/' + id + '.mp3') : Promise.resolve();
+const wait = ms => new Promise(r => setTimeout(r, ms));
+function stopAudio(){ try { if (_say) { _say.pause(); _say = null; } } catch (e) {} }
+function cheer(ok){ sayEn(ok ? pick(['greatjob', 'welldone']) : 'tryagain'); }
+
+/* the child's name is kept on this device only (IndexedDB), never uploaded */
+function idb(){ return new Promise((res, rej) => { const r = indexedDB.open('gidro-voice', 1); r.onupgradeneeded = () => r.result.createObjectStore('v'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
+async function nvGet(){ try { const db = await idb(); return await new Promise(res => { const q = db.transaction('v').objectStore('v').get('name'); q.onsuccess = () => res(q.result || null); q.onerror = () => res(null); }); } catch (e) { return null; } }
+async function nvSet(blob){ try { const db = await idb(); await new Promise(res => { const t = db.transaction('v', 'readwrite'); if (blob) t.objectStore('v').put(blob, 'name'); else t.objectStore('v').delete('name'); t.oncomplete = res; t.onerror = res; }); } catch (e) {} }
+async function playBlob(b){ if (!b) return; const u = URL.createObjectURL(b); await playFile(u, 9000); URL.revokeObjectURL(u); }
+async function playName(){ await playBlob(await nvGet()); }
+async function recStart(){
+  const st = await navigator.mediaDevices.getUserMedia({ audio: true });
+  const mr = new MediaRecorder(st), ch = [];
+  mr.ondataavailable = e => ch.push(e.data);
+  const done = new Promise(res => mr.onstop = () => { st.getTracks().forEach(t => t.stop()); res(new Blob(ch, { type: mr.mimeType || 'audio/webm' })); });
+  mr.start();
+  const auto = setTimeout(() => { if (mr.state !== 'inactive') mr.stop(); }, 5000);
+  return { stop: () => { clearTimeout(auto); if (mr.state !== 'inactive') mr.stop(); }, done };
+}
+
+/* greeting on the home screen: Good morning + the child's name + Let's learn */
+function greetKind(){ const h = new Date().getHours(); return h < 12 ? ['goodmorning', 'greetM', '🌅'] : h < 18 ? ['goodafternoon', 'greetA', '☀️'] : ['goodevening', 'greetE', '🌙']; }
+function renderGreet(name){
+  const [id, key, ic] = greetKind();
+  $('greetCard').innerHTML = `<button class="greet" id="greetBtn"><span class="big">${ic}</span><span>${esc(L()[key])}${name ? ', ' + esc(name) : ''}!<small>${L().greetTap} 🔊</small></span></button>`;
+  $('greetBtn').onclick = async () => {
+    stopAudio();
+    if (G.store.get('gidroGreetDay', '') === G.today()) { await sayEn('welcomeback'); await playName(); return; }
+    await sayEn(id); await playName(); openFeel();
+  };
+}
+const FEELS = [['faly', 'happy'], ['tezitra', 'angry'], ['matahotra', 'scared'], ['malahelo', 'sad'], ['mitomany', 'crying'], ['reraka', 'tired']];
+function openFeel(){
+  const box = $('greetBox');
+  box.innerHTML = `<h3 style="text-align:center">${L().howFeel} <button class="speak" id="fsp" style="width:40px;height:40px;font-size:20px;vertical-align:middle">🔊</button></h3>
+    <div class="gpick">${FEELS.map(f => `<button data-f="${f[0]}">${picOf(f[0])}<span>${esc(mean(f[0]))}</span></button>`).join('')}</div>
+    <button class="btn ghost" id="fskip">${L().nameSkip}</button>`;
+  $('greetSheet').hidden = false; sayEn('howfeel');
+  $('fsp').onclick = () => { stopAudio(); sayEn('howfeel'); };
+  $('fskip').onclick = () => { stopAudio(); openGreetPick(); };
+  box.querySelectorAll('.gpick button').forEach(b => b.onclick = async () => {
+    const f = FEELS.find(x => x[0] === b.dataset.f); stopAudio(); G.store.set('gidroMood', f[1] + '@' + G.today());
+    box.innerHTML = `<div class="gbig">${picOf(f[0])}<h2 style="margin:0">${esc(mean(f[0]))}</h2><div class="mgword" style="font-size:34px">${esc(WORDS[f[0]].mg)}</div></div><button class="btn green" id="fnext">${L().next}</button>`;
+    $('fnext').onclick = () => { stopAudio(); openGreetPick(); };
+    await sayEn('feel' + f[1]); await sayWordP(f[0]); await sayEn(f[1] === 'happy' ? 'wonderful' : 'okay');
+  });
+}
+const GREETS = [['hug', 'gHug', '🤗', 'hug'], ['highfive', 'gFive', '🙌', 'highfive'], ['handshake', 'gShake', '🤝', 'handshake']];
+function gImg(id, em){ return `<img src="/learn/greet-${id}.webp" alt="" onerror="this.outerHTML='<span class=&quot;em&quot;>${em}</span>'">`; }
+function openGreetPick(){
+  const box = $('greetBox');
+  box.innerHTML = `<h3 style="text-align:center">${L().howGreet} <button class="speak" id="gsp" style="width:40px;height:40px;font-size:20px;vertical-align:middle">🔊</button></h3>
+    <div class="gpick">${GREETS.map(g => `<button data-g="${g[0]}">${gImg(g[0], g[2])}<span>${L()[g[1]]}</span></button>`).join('')}</div>
+    <button class="btn ghost" id="gskip">${L().nameSkip}</button>`;
+  $('greetSheet').hidden = false; sayEn('howgreet');
+  $('gsp').onclick = () => { stopAudio(); sayEn('howgreet'); };
+  $('gskip').onclick = () => { stopAudio(); closeSheet('greetSheet'); };
+  box.querySelectorAll('.gpick button').forEach(b => b.onclick = async () => {
+    const g = GREETS.find(x => x[0] === b.dataset.g); stopAudio(); G.store.set('gidroGreetDay', G.today());
+    box.innerHTML = `<div class="gbig">${gImg(g[0], g[2])}<h2 style="margin:0">${L()[g[1]]}!</h2></div><button class="btn green" id="glet">${L().letsGo}</button>`;
+    $('glet').onclick = () => { stopAudio(); closeSheet('greetSheet'); sayEn('letslearn'); };
+    await sayEn(g[3]); await sayEn('do' + g[3]);
+  });
+}
+function openName(){
+  G.store.set('gidroNameAsked', '1');
+  let blob = null, rec = null, changed = false, nameVal = G.store.get('gidroChild', '');
+  const box = $('nameBox');
+  const draw = () => {
+    box.innerHTML = `<h3 style="text-align:center">${L().nameH}</h3><p class="muted" style="margin:0;font-weight:700;text-align:center">${L().nameP}</p>
+      <label class="field">${L().nameType}<input id="nm" value="${esc(nameVal)}" maxlength="20" autocomplete="off"></label>
+      <div class="row3"><button class="micbtn ${rec ? 'rec' : ''}" id="nmRec">🎤 ${rec ? L().nameStop : (blob || changed ? L().nameRedo : L().nameRec)}</button>
+      <button class="micbtn" id="nmPlay" ${blob ? '' : 'disabled style="opacity:.45"'}>🔊 ${L().namePlay}</button></div>
+      <div class="err" id="nmErr"></div>
+      <button class="btn green" id="nmSave">${L().nameSave}</button><button class="btn ghost" id="nmSkip">${L().nameSkip}</button>`;
+    $('nm').oninput = () => { nameVal = $('nm').value; };
+    $('nmRec').onclick = async () => {
+      if (rec) { rec.stop(); return; }
+      try { stopAudio(); rec = await recStart(); draw(); const b = await rec.done; rec = null; blob = b.size > 800 ? b : null; changed = true; draw(); if (blob) playBlob(blob); }
+      catch (e) { rec = null; draw(); $('nmErr').textContent = L().micNo; }
+    };
+    $('nmPlay').onclick = () => playBlob(blob);
+    $('nmSkip').onclick = () => { closeSheet('nameSheet'); renderHome(); };
+    $('nmSave').onclick = async () => {
+      const v = $('nm').value.trim(); if (v) G.store.set('gidroChild', v);
+      if (changed) await nvSet(blob);
+      closeSheet('nameSheet'); renderHome(); toast(L().saved);
+      if (v || blob) { await sayEn('nicetomeet'); await playName(); }
+    };
+  };
+  nvGet().then(b => { blob = b; draw(); });
+  draw(); $('nameSheet').hidden = false;
+}
+
+/* lesson: one card per new word. Listen, your turn, listen again, cheer */
+let _tok = 0, _mic = null;
 function lessonStep(words){
   let i = 0;
   const draw = () => {
@@ -585,10 +716,31 @@ function lessonStep(words){
     $('stage').innerHTML = `<div class="bigcard">${picOf(w)}<div class="mgword">${esc(x.mg)}</div>${hasVoice(w) ? `<button class="speak" id="spk" aria-label="${G.lang==='fr'?'Écouter':'Listen'}">🔊</button>` : ''}<div class="meaning">${esc(mean(w))}</div>
       ${x.alt ? `<div class="muted" style="font-weight:700">${G.lang==='fr'?'On dit aussi':'Also said'}: <b>${esc(x.alt)}</b></div>` : ''}
       ${x.note ? `<div class="tip">${esc(x.note[G.lang])}</div>` : ''}</div>
-      <div class="tip" style="text-align:center">${L().learnTip}</div>
+      <div class="echo" id="echo"></div>
+      <div class="row3"><button class="micbtn" id="again">🔁 ${L().again}</button><button class="micbtn" id="mic">🎤 ${L().sayIt}</button></div>
+      <div class="err" id="micErr" style="text-align:center"></div>
       <button class="btn green" id="nx">${L().next}</button>`;
-    $('nx').onclick = () => { i++; draw(); };
-    if ($('spk')) { $('spk').onclick = () => sayWord(w, $('spk')); setTimeout(() => sayWord(w, $('spk')), 250); }
+    const setE = (k) => { const e = $('echo'); if (!e) return; e.className = 'echo' + (k === 'turn' ? ' turn' : ''); e.innerHTML = k === 'listen' ? `<span class="ring">🔊</span>${L().listenL}` : k === 'turn' ? `<span class="ring">🗣️</span>${L().yourTurn}` : k === 'you' ? `<span class="ring">🎧</span>${L().hearYou}` : `<span class="ring">⭐</span>`; };
+    const echo = async () => {
+      const t = ++_tok, alive = () => t === _tok && !!$('echo');
+      stopAudio(); setE('listen'); await sayWordP(w); if (!alive()) return;
+      setE('turn'); await sayEn('yourturn'); if (!alive()) return;
+      await wait(3300); if (!alive()) return;
+      setE('listen'); await sayWordP(w); if (!alive()) return;
+      setE('done'); await sayEn(pick(['greatjob', 'welldone']));
+    };
+    $('nx').onclick = () => { _tok++; stopAudio(); if (_mic) { _mic.stop(); _mic = null; } i++; draw(); };
+    $('again').onclick = echo;
+    if ($('spk')) $('spk').onclick = () => { _tok++; sayWord(w, $('spk')); };
+    $('mic').onclick = async () => {
+      if (_mic) { _mic.stop(); return; }
+      try {
+        _tok++; stopAudio(); _mic = await recStart(); setE('turn'); $('mic').classList.add('rec'); $('mic').textContent = '⏹ ' + L().nameStop;
+        const b = await _mic.done; _mic = null; if (!$('mic')) return; $('mic').classList.remove('rec'); $('mic').textContent = '🎤 ' + L().sayIt;
+        if (b.size > 800) { setE('you'); await playBlob(b); setE('listen'); await sayWordP(w); setE('done'); await sayEn(pick(['greatjob', 'welldone'])); } else setE('done');
+      } catch (e) { _mic = null; if ($('micErr')) $('micErr').textContent = L().micNo; }
+    };
+    setTimeout(echo, 250);
   };
   draw();
 }
@@ -619,7 +771,7 @@ function qStep(words, pool, mode){
     $('stage').innerHTML = `<div class="tip" style="text-align:center">${mode === 'practice' ? L().practiceNote : L().quizNote}</div>${head}
       <div class="opts ${q.type === 'pic' ? '' : 'words'}">${optHtml}</div><div id="fbx"></div>`;
     $('stage').querySelectorAll('.opt').forEach(b => b.onclick = () => {
-      const ok = q.opts[b.dataset.k] === q.w; tone(ok);
+      const ok = q.opts[b.dataset.k] === q.w; tone(ok); setTimeout(() => cheer(ok), 350);
       $('stage').querySelectorAll('.opt').forEach((y, k) => { y.disabled = true; if (q.opts[k] === q.w) y.classList.add('right'); });
       if (!ok) b.classList.add('wrong');
       queue.shift();
@@ -633,6 +785,7 @@ function qStep(words, pool, mode){
 
 /* games */
 function matchStep(p){
+  sayEn('matchpairs');
   const words = shuffle(p.words).slice(0, 6), tiles = shuffle([...words.map(w => ({ w, mg:true })), ...words.map(w => ({ w, mg:false }))]);
   let sel = null, left = words.length; setBar(0, 1);
   $('stage').innerHTML = `<div class="prompt">${L().matchGo}</div><div class="mgrid">${tiles.map((t, k) => `<button class="tile" data-k="${k}">${t.mg ? esc(WORDS[t.w].mg) : picOf(t.w)}</button>`).join('')}</div>`;
