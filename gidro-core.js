@@ -6,8 +6,8 @@
 
   /* Stripe payment links (live). Change prices in Stripe, then paste the new links here. */
   const PAY = {
-    school:   { monthly: "https://buy.stripe.com/4gM6oI14bdL78KM2rYeME0C", yearly: "https://buy.stripe.com/bJe6oI4gndL7gde5EaeME0D",
-                price: { monthly: "$7.99", yearly: "$59.99" } },
+    school:   { monthly: "https://buy.stripe.com/9B6cN69AHgXj6CEgiOeME0Q", yearly: "https://buy.stripe.com/fZu14obIP36tf9a0jQeME0R",
+                price: { monthly: "$12.99", yearly: "$89.99" } },
     everyday: { monthly: "https://buy.stripe.com/bJe3cw8wD8qNaSU7MieME0E", yearly: "https://buy.stripe.com/9B63cwfZ5bCZaSUd6CeME0F",
                 price: { monthly: "$4.99", yearly: "$39.99" } }
   };
