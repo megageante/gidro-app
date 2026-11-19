@@ -355,7 +355,7 @@ const T = {
   pTabs:['Report','Settings','Account'], close:'Close',
   rDays:'school days this week', rWords:'words learned', rStreak:'day streak', rXp:'XP',
   rNow:'Now studying', rLast:'Last school days', rNone:'No school days yet.',
-  nameH:'What is your name?', nameP:'A grown-up can type it. Then say your name into the microphone, so the app can say it back. It stays on this device.', nameType:'First name', nameRec:'Tap and say your name', nameStop:'Tap to stop', namePlay:'Hear it', nameRedo:'Record again', nameSave:'Save', nameSkip:'Not now', micNo:'The microphone is not available. A grown-up can allow it in the browser settings.', greetM:'Good morning', greetA:'Good afternoon', greetE:'Good evening', greetTap:'Tap to say hello', yourTurn:'Your turn!', listenL:'Listen…', sayIt:'Say it', again:'Again', hearYou:'Now listen to you!', changeName:'Change name', howFeel:'How are you feeling today?', howGreet:'How would you like to be greeted today?', gHug:'A hug', gFive:'A high five', gShake:'A handshake', letsGo:'Let’s learn!',
+  nameH:'What is your name?', nameP:'A grown-up can type it. Then say your name into the microphone, so the app can say it back. It stays on this device.', nameType:'First name', nameRec:'Tap and say your name', nameStop:'Tap to stop', namePlay:'Hear it', nameRedo:'Record again', nameSave:'Save', nameSkip:'Not now', micNo:'The microphone is not available. A grown-up can allow it in the browser settings.', greetM:'Good morning', greetA:'Good afternoon', greetE:'Good evening', greetTap:'Tap to say hello', yourTurn:'Your turn!', listenL:'Listen…', sayIt:'Say it', again:'Again', hearYou:'Now listen to you!', changeName:'Change name', welcomeH:'Hello! Welcome to class!', tapHello:'Tap to say hello', howFeel:'How are you feeling today?', howGreet:'How would you like to be greeted today?', gHug:'A hug', gFive:'A high five', gShake:'A handshake', letsGo:'Let’s learn!',
   childName:'Child’s first name', saveBtn:'Save', saved:'Saved',
   chClass:'Change class', chClassP:'Use this after the placement test or if your child is ready to move up.',
   accIn:e=>'Signed in as '+e, accOut:'Not signed in. Progress is saved on this device only.', signOut:'Sign out', signIn:'Log in or sign up',
@@ -404,7 +404,7 @@ const T = {
   pTabs:['Bilan','Réglages','Compte'], close:'Fermer',
   rDays:'jours d’école cette semaine', rWords:'mots appris', rStreak:'jours d’affilée', rXp:'XP',
   rNow:'En ce moment', rLast:'Derniers jours d’école', rNone:'Pas encore de jour d’école.',
-  nameH:'Comment t’appelles-tu ?', nameP:'Un adulte peut écrire le prénom. Ensuite, dis ton prénom dans le micro, pour que l’application puisse le répéter. Il reste sur cet appareil.', nameType:'Prénom', nameRec:'Touche et dis ton prénom', nameStop:'Touche pour arrêter', namePlay:'Écouter', nameRedo:'Réenregistrer', nameSave:'Enregistrer', nameSkip:'Plus tard', micNo:'Le micro n’est pas disponible. Un adulte peut l’autoriser dans les réglages du navigateur.', greetM:'Good morning', greetA:'Good afternoon', greetE:'Good evening', greetTap:'Touche pour dire bonjour', yourTurn:'À toi !', listenL:'Écoute…', sayIt:'Dis-le', again:'Encore', hearYou:'Écoute-toi !', changeName:'Changer le prénom', howFeel:'Comment te sens-tu aujourd’hui ?', howGreet:'Comment veux-tu être salué aujourd’hui ?', gHug:'Un câlin', gFive:'Un high five', gShake:'Une poignée de main', letsGo:'Apprenons !',
+  nameH:'Comment t’appelles-tu ?', nameP:'Un adulte peut écrire le prénom. Ensuite, dis ton prénom dans le micro, pour que l’application puisse le répéter. Il reste sur cet appareil.', nameType:'Prénom', nameRec:'Touche et dis ton prénom', nameStop:'Touche pour arrêter', namePlay:'Écouter', nameRedo:'Réenregistrer', nameSave:'Enregistrer', nameSkip:'Plus tard', micNo:'Le micro n’est pas disponible. Un adulte peut l’autoriser dans les réglages du navigateur.', greetM:'Good morning', greetA:'Good afternoon', greetE:'Good evening', greetTap:'Touche pour dire bonjour', yourTurn:'À toi !', listenL:'Écoute…', sayIt:'Dis-le', again:'Encore', hearYou:'Écoute-toi !', changeName:'Changer le prénom', welcomeH:'Bonjour ! Bienvenue en classe !', tapHello:'Touche pour dire bonjour', howFeel:'Comment te sens-tu aujourd’hui ?', howGreet:'Comment veux-tu être salué aujourd’hui ?', gHug:'Un câlin', gFive:'Un high five', gShake:'Une poignée de main', letsGo:'Apprenons !',
   childName:'Prénom de l’enfant', saveBtn:'Enregistrer', saved:'Enregistré',
   chClass:'Changer de classe', chClassP:'Après le test de niveau, ou quand votre enfant est prêt à monter.',
   accIn:e=>'Connecté : '+e, accOut:'Pas connecté. Les progrès sont gardés sur cet appareil seulement.', signOut:'Se déconnecter', signIn:'Connexion ou inscription',
@@ -501,7 +501,7 @@ function renderHome(){
   $('helloH').textContent = L().hello(name);
   $('helloP').textContent = nd ? L().where(cname(c), nd[1], nd[2], nd[3]) : cname(c);
   renderGreet(name); $('helloBox').onclick = openName;
-  if (!name && !G.store.get('gidroNameAsked')) setTimeout(openName, 500);
+  if (!_welcomed) { _welcomed = true; setTimeout(maybeWelcome, 400); }
   const started = [...G.tags].some(t => t.startsWith('s:'));
   let cta = '';
   if (!started && curClass === 'pre'){
@@ -637,12 +637,30 @@ function greetKind(){ const h = new Date().getHours(); return h < 12 ? ['goodmor
 function renderGreet(name){
   const [id, key, ic] = greetKind();
   $('greetCard').innerHTML = `<button class="greet" id="greetBtn"><span class="big">${ic}</span><span>${esc(L()[key])}${name ? ', ' + esc(name) : ''}!<small>${L().greetTap} 🔊</small></span></button>`;
-  $('greetBtn').onclick = async () => {
-    stopAudio();
-    if (G.store.get('gidroGreetDay', '') === G.today()) { await sayEn('welcomeback'); await playName(); return; }
-    await sayEn(id); await playName(); openFeel();
-  };
+  $('greetBtn').onclick = startMorning;
 }
+async function startMorning(){
+  stopAudio();
+  const [id] = greetKind();
+  if (G.store.get('gidroGreetDay', '') === G.today()) { await sayEn('welcomeback'); await playName(); return; }
+  if (!G.store.get('gidroChild', '') && !G.store.get('gidroNameAsked')) {   // a new child: welcome, then ask the name
+    await sayEn('welcome'); $('greetSheet').hidden = true; openName(true); return;
+  }
+  await sayEn(id); await playName(); openGreetPick();
+}
+/* opens by itself when the app opens, once a day (the first tap lets the phone play sound) */
+let _welcomed = false, _afterGreet = null;
+function doAfterGreet(){ const f = _afterGreet; _afterGreet = null; if (f) f(); }
+function maybeWelcome(){
+  if (G.store.get('gidroGreetDay', '') === G.today()) { doAfterGreet(); return; }
+  const [id, key, ic] = greetKind(), name = G.store.get('gidroChild', '');
+  $('greetBox').innerHTML = `<div class="gbig" style="padding:10px 0"><span class="em" style="font-size:96px">${name ? ic : '👋'}</span><h2 style="margin:0;text-align:center">${name ? esc(L()[key]) + ', ' + esc(name) + '!' : L().welcomeH}</h2></div>
+    <button class="btn green" id="wgo">🔊 ${L().tapHello}</button><button class="btn ghost" id="wskip">${L().nameSkip}</button>`;
+  $('greetSheet').hidden = false;
+  $('wgo').onclick = () => startMorning();
+  $('wskip').onclick = () => { stopAudio(); closeSheet('greetSheet'); };
+}
+function finishMorning(){ G.store.set('gidroGreetDay', G.today()); const go = !!_afterGreet; closeSheet('greetSheet'); if (!go) sayEn('letslearn'); }
 const FEELS = [['faly', 'happy'], ['tezitra', 'angry'], ['matahotra', 'scared'], ['malahelo', 'sad'], ['mitomany', 'crying'], ['reraka', 'tired']];
 function openFeel(){
   const box = $('greetBox');
@@ -651,11 +669,11 @@ function openFeel(){
     <button class="btn ghost" id="fskip">${L().nameSkip}</button>`;
   $('greetSheet').hidden = false; sayEn('howfeel');
   $('fsp').onclick = () => { stopAudio(); sayEn('howfeel'); };
-  $('fskip').onclick = () => { stopAudio(); openGreetPick(); };
+  $('fskip').onclick = () => { stopAudio(); finishMorning(); };
   box.querySelectorAll('.gpick button').forEach(b => b.onclick = async () => {
     const f = FEELS.find(x => x[0] === b.dataset.f); stopAudio(); G.store.set('gidroMood', f[1] + '@' + G.today());
     box.innerHTML = `<div class="gbig">${picOf(f[0])}<h2 style="margin:0">${esc(mean(f[0]))}</h2><div class="mgword" style="font-size:34px">${esc(WORDS[f[0]].mg)}</div></div><button class="btn green" id="fnext">${L().next}</button>`;
-    $('fnext').onclick = () => { stopAudio(); openGreetPick(); };
+    $('fnext').onclick = () => { stopAudio(); finishMorning(); };
     await sayEn('feel' + f[1]); await sayWordP(f[0]); await sayEn(f[1] === 'happy' ? 'wonderful' : 'okay');
   });
 }
@@ -668,15 +686,15 @@ function openGreetPick(){
     <button class="btn ghost" id="gskip">${L().nameSkip}</button>`;
   $('greetSheet').hidden = false; sayEn('howgreet');
   $('gsp').onclick = () => { stopAudio(); sayEn('howgreet'); };
-  $('gskip').onclick = () => { stopAudio(); closeSheet('greetSheet'); };
+  $('gskip').onclick = () => { stopAudio(); openFeel(); };
   box.querySelectorAll('.gpick button').forEach(b => b.onclick = async () => {
     const g = GREETS.find(x => x[0] === b.dataset.g); stopAudio(); G.store.set('gidroGreetDay', G.today());
-    box.innerHTML = `<div class="gbig">${gImg(g[0], g[2])}<h2 style="margin:0">${L()[g[1]]}!</h2></div><button class="btn green" id="glet">${L().letsGo}</button>`;
-    $('glet').onclick = () => { stopAudio(); closeSheet('greetSheet'); sayEn('letslearn'); };
+    box.innerHTML = `<div class="gbig">${gImg(g[0], g[2])}<h2 style="margin:0">${L()[g[1]]}!</h2></div><button class="btn green" id="glet">${L().next}</button>`;
+    $('glet').onclick = () => { stopAudio(); openFeel(); };
     await sayEn(g[3]); await sayEn('do' + g[3]);
   });
 }
-function openName(){
+function openName(flow){
   G.store.set('gidroNameAsked', '1');
   let blob = null, rec = null, changed = false, nameVal = G.store.get('gidroChild', '');
   const box = $('nameBox');
@@ -694,16 +712,18 @@ function openName(){
       catch (e) { rec = null; draw(); $('nmErr').textContent = L().micNo; }
     };
     $('nmPlay').onclick = () => playBlob(blob);
-    $('nmSkip').onclick = () => { closeSheet('nameSheet'); renderHome(); };
+    $('nmSkip').onclick = () => { stopAudio(); closeSheet('nameSheet'); renderHome(); if (flow) openGreetPick(); };
     $('nmSave').onclick = async () => {
       const v = $('nm').value.trim(); if (v) G.store.set('gidroChild', v);
       if (changed) await nvSet(blob);
       closeSheet('nameSheet'); renderHome(); toast(L().saved);
-      if (v || blob) { await sayEn('nicetomeet'); await playName(); }
+      if (flow) { await sayEn('nicetomeet'); await playName(); openGreetPick(); }
+      else if (v || blob) { await sayEn('nicetomeet'); await playName(); }
     };
   };
   nvGet().then(b => { blob = b; draw(); });
   draw(); $('nameSheet').hidden = false;
+  if (flow) sayEn('whatsname');
 }
 
 /* lesson: one card per new word. Listen, your turn, listen again, cheer */
@@ -985,7 +1005,7 @@ $('exitBtn').onclick = () => confirmBox(L().cfExitH, L().cfExitP, L().cfStay, L(
 $('byeBack').onclick = () => { refresh(); show('sHome'); };
 
 /* ---------------- account and membership ---------------- */
-function closeSheet(id){ $(id).hidden = true; }
+function closeSheet(id){ $(id).hidden = true; if (id === 'greetSheet') doAfterGreet(); }
 function openMember(period){
   const box = $('memberBox'), P = G.PAY.school.price;
   if (!G.user) { accountForm(box, () => { if (G.has('school')) { closeSheet('member'); refresh(); } else openMember(period); }, true); $('member').hidden = false; return; }
@@ -1106,7 +1126,10 @@ G.start().then(() => {
   if (q.get('upgraded') === '1' && !G.has('school')) toast(L().waitPay);
   if (q.get('placement') === '1' && ![...G.tags].some(t => t.startsWith('s:'))) startPlacement();
   if (q.get('join')) openMember(q.get('join'));
-  if (q.get('start') === '1' && ![...G.tags].some(t => t.startsWith('s:'))) openDay('pre', 1, 1, 1);
+  if (q.get('start') === '1' && ![...G.tags].some(t => t.startsWith('s:'))) {
+    _afterGreet = () => openDay('pre', 1, 1, 1);
+    if (G.store.get('gidroGreetDay', '') === G.today() && $('greetSheet').hidden && $('nameSheet').hidden) doAfterGreet();
+  }
 });
 </script>
 </body>
