@@ -1,0 +1,1000 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Gidro</title>
+<meta name="description" content="Gidro: learn Malagasy with Gidro, Lova and Tiana. Games, books and music for children 2 to 8.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Manrope:wght@600;700;800&display=swap">
+<style>
+:root{
+  --ink:#1f2a44; --paper:#faf6ee; --card:#fff; --soft:#6b6459; --line:#ece6d4;
+  --green:#3e8c63; --green-deep:#2f6e4c; --green-tint:#e1f0e6;
+  --blue:#3a7ca5; --blue-deep:#2d6386; --blue-tint:#e3eef5;
+  --coral:#b5651d; --coral-deep:#94530f; --coral-tint:#f6e6d6;
+  --cta:#f4a940; --cta-deep:#c9831f; --red:#c8483b; --red-tint:#fbe3df;
+  --cls:#e07a3f; --purple:#7a5ea8; --purple-tint:#efe9f7;
+  --display:'Fraunces',Georgia,serif; --body:'Manrope','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.4}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.1}
+[hidden]{display:none!important}
+.app{max-width:520px;margin:0 auto;min-height:100vh;position:relative;padding-bottom:max(20px,env(safe-area-inset-bottom))}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:8px;padding:max(10px,env(safe-area-inset-top)) 14px 10px;background:rgba(250,246,238,.95);backdrop-filter:blur(6px)}
+.who{display:flex;align-items:center;gap:8px;margin-right:auto;border:none;background:none;padding:0;text-align:left;min-width:0}
+.who .av{width:44px;height:44px;border-radius:50%;background:var(--coral-tint);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.who .av svg{width:46px;height:46px;margin-top:6px}
+.who b{font-family:var(--display);font-size:18px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who small{display:block;font-weight:800;font-size:12px;color:var(--soft)}
+.pill{display:flex;align-items:center;gap:5px;font-weight:800;font-size:15px;background:var(--card);border:2px solid var(--line);border-radius:999px;padding:5px 11px;font-variant-numeric:tabular-nums}
+.pill .tk{width:22px;height:16px}
+.navbtn{border:2px solid var(--line);background:var(--card);border-radius:14px;height:40px;min-width:40px;padding:0 9px;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;gap:5px}
+.navbtn svg{width:20px;height:20px}
+
+/* home */
+.stage{position:relative;margin:4px 14px 0;border-radius:30px;overflow:hidden;aspect-ratio:400/290;box-shadow:0 6px 0 #d7ceb6}
+.stage > svg{position:absolute;inset:0;width:100%;height:100%}
+.chr{position:absolute;bottom:17%;transform:translateX(-50%);border:none;background:none;padding:0}
+.chr svg,.chr img{width:100%;height:auto;display:block}
+.chr.lova{left:20%;width:21%}
+.chr.tiana{left:80%;width:21%}
+.chr.gidro{left:50%;width:27%;bottom:15%}
+.chr.hop{animation:hop .5s}
+@keyframes hop{40%{transform:translateX(-50%) translateY(-14px)}}
+.say{position:absolute;top:6%;background:#fff;border-radius:18px;padding:8px 12px;font-weight:800;font-size:14px;line-height:1.25;max-width:62%;box-shadow:0 3px 0 rgba(31,42,68,.15);animation:up .25s}
+.say:after{content:"";position:absolute;bottom:-9px;width:18px;height:18px;background:#fff;transform:rotate(45deg);left:var(--tail,50%)}
+.say small{display:block;color:var(--soft);font-weight:700;font-size:12px}
+.playwrap{display:flex;flex-direction:column;align-items:center;margin-top:-46px;position:relative;z-index:2}
+.play{width:112px;height:112px;border-radius:50%;border:6px solid #fff;background:var(--green);box-shadow:0 7px 0 var(--green-deep);display:flex;align-items:center;justify-content:center;animation:breathe 2.2s ease-in-out infinite}
+.play svg{width:48px;height:48px;margin-left:8px}
+.play:active{transform:translateY(4px);box-shadow:0 3px 0 var(--green-deep)}
+@keyframes breathe{50%{transform:scale(1.05)}}
+.playlbl{margin-top:8px;font-weight:800;text-align:center;line-height:1.2}
+.playlbl small{display:block;color:var(--soft);font-weight:700;font-size:13px}
+.minilink{border:none;background:none;color:var(--blue-deep);font-weight:800;font-size:14px;text-decoration:underline;padding:4px}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:14px}
+.tile{border:none;border-radius:24px;padding:12px;display:flex;align-items:center;gap:10px;text-align:left;color:#fff;box-shadow:0 5px 0 rgba(31,42,68,.25);text-decoration:none}
+.tile .ti{width:52px;height:52px;border-radius:16px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tile .ti svg{width:40px;height:40px}
+.tile b{display:block;font-family:var(--display);font-size:17px;line-height:1.1}
+.tile small{display:block;font-weight:700;font-size:12px;opacity:.9}
+.tile.lib{background:var(--purple)}
+.tile.cls{background:var(--cls)}
+.tile.shp{background:var(--blue)}
+.tile.rm{background:var(--green)}
+
+/* library */
+.sec{padding:4px 14px 30px;display:flex;flex-direction:column;gap:14px}
+.sec h2{font-size:26px}
+.sec h2 span{font-size:17px;color:var(--soft)}
+.shelves{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:none}
+.shelves::-webkit-scrollbar{display:none}
+.shelf{flex-shrink:0;border:2px solid var(--line);background:var(--card);border-radius:18px;padding:8px 12px;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:800;font-size:13px;line-height:1.1;min-width:84px}
+.shelf .se{font-size:26px}
+.shelf small{font-weight:700;font-size:11px;color:var(--soft)}
+.shelf[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.shelf[aria-pressed=true] small{color:#cfd5e2}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.lc{position:relative;border:2px solid var(--line);background:var(--card);border-radius:22px;padding:10px;display:flex;flex-direction:column;gap:8px;text-align:left;box-shadow:0 4px 0 var(--line)}
+.lc .cv{aspect-ratio:1.25;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:52px;overflow:hidden}
+.lc .cv img{width:100%;height:100%;object-fit:cover}
+.lc .cv svg{width:62%;height:auto}
+.lc b{font-size:15px;line-height:1.15}
+.lc small{display:block;color:var(--soft);font-weight:700;font-size:12.5px}
+.lc .lock{position:absolute;top:14px;right:14px;background:var(--ink);color:#fff;border-radius:999px;font-size:12px;font-weight:800;padding:3px 8px}
+.lc .dn{position:absolute;top:14px;left:14px;background:var(--green);color:#fff;border-radius:999px;font-size:12px;font-weight:800;padding:3px 8px}
+
+/* buttons */
+.btn{border:none;border-radius:16px;padding:14px 18px;font-weight:800;font-size:17px;width:100%;background:var(--cta);color:var(--ink);box-shadow:0 4px 0 var(--cta-deep);text-align:center;text-decoration:none;display:block}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--cta-deep)}
+.btn.green{background:var(--green);color:#fff;box-shadow:0 4px 0 var(--green-deep)}
+.btn.blue{background:var(--blue);color:#fff;box-shadow:0 4px 0 var(--blue-deep)}
+.btn.ghost{background:var(--card);border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
+
+/* sheets */
+.veil{position:fixed;inset:0;background:rgba(31,42,68,.45);z-index:60;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--paper);width:100%;max-width:520px;border-radius:28px 28px 0 0;padding:20px 18px max(22px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;animation:up .25s ease-out;max-height:92vh;overflow:auto}
+@keyframes up{from{transform:translateY(30px);opacity:0}}
+.sheet h2{font-size:24px}
+.sheet p{margin:0;font-weight:700}
+.sheet .muted{color:var(--soft)}
+.ages{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ages button{border:3px solid var(--line);background:#fff;border-radius:20px;padding:10px 4px;font-family:var(--display);font-size:30px;font-weight:800;box-shadow:0 4px 0 var(--line)}
+.ages button small{display:block;font-family:var(--body);font-size:11px;font-weight:800;color:var(--soft)}
+.ages button[aria-pressed=true]{border-color:var(--green);background:var(--green-tint)}
+.field{display:flex;flex-direction:column;gap:6px;font-weight:800}
+.field input{border:2px solid var(--line);border-radius:14px;padding:12px;font-size:18px;background:#fff}
+.hold{position:relative;overflow:hidden}
+.hold i{position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(255,255,255,.35)}
+.row{display:flex;gap:10px;align-items:center}
+.guide{display:flex;gap:10px;align-items:flex-end}
+.guide .gp{width:70px;flex-shrink:0}
+.guide .gp svg,.guide .gp img{width:100%;height:auto;display:block}
+
+/* learning path */
+.road{position:relative;background:linear-gradient(#bfe6c9,#e9f3d6);border-radius:28px;overflow:hidden;box-shadow:0 6px 0 #c9d8b2}
+.road > svg{position:absolute;inset:0;width:100%;height:100%}
+.stone{position:absolute;transform:translate(-50%,-50%);width:15%;aspect-ratio:1;border-radius:50%;border:none;font-family:var(--display);font-weight:800;font-size:20px;display:flex;align-items:center;justify-content:center;background:#fff;color:var(--ink);box-shadow:0 5px 0 rgba(31,42,68,.25)}
+.stone .ee{font-size:22px}
+.stone.done{background:var(--green);color:#fff}
+.stone.now{background:var(--cta);animation:pulse 1.6s infinite;width:18%}
+.stone.lock{background:#e9e4d6;color:#b3ab98;box-shadow:0 4px 0 #d3ccb9}
+.stone.chest{border-radius:18px}
+.stone .tag{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-family:var(--body);font-size:11px;font-weight:800;white-space:nowrap;background:rgba(255,255,255,.92);border-radius:8px;padding:1px 6px;color:var(--ink)}
+@keyframes pulse{0%,100%{box-shadow:0 5px 0 rgba(31,42,68,.25),0 0 0 0 rgba(244,169,64,.8)}50%{box-shadow:0 5px 0 rgba(31,42,68,.25),0 0 0 10px rgba(244,169,64,0)}}
+.walker{position:absolute;transform:translate(-50%,-100%);width:16%;pointer-events:none;filter:drop-shadow(0 3px 0 rgba(0,0,0,.15))}
+
+/* game screen */
+.gscr{position:fixed;inset:0;z-index:50;background:var(--paper);overflow:auto}
+.gin{max-width:520px;margin:0 auto;padding:max(12px,env(safe-area-inset-top)) 16px 30px;display:flex;flex-direction:column;gap:14px;min-height:100%}
+.phead{display:flex;align-items:center;gap:10px}
+.x{border:2px solid var(--line);background:var(--card);border-radius:14px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.x svg{width:20px;height:20px}
+.dots{display:flex;gap:6px;margin-right:auto;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--green)}
+.ptitle{text-align:center}
+.ptitle h2{font-size:25px}
+.ptitle p{margin:4px 0 0;color:var(--soft);font-weight:700}
+.spk{align-self:center;border:none;background:var(--blue);color:#fff;border-radius:50%;width:84px;height:84px;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 0 var(--blue-deep)}
+.spk svg{width:40px;height:40px}
+.spk:active{transform:translateY(3px);box-shadow:0 2px 0 var(--blue-deep)}
+.spk.talk{animation:talk .5s ease-in-out infinite alternate}
+@keyframes talk{to{transform:scale(1.07)}}
+.readw{align-self:center;background:#fff;border:3px solid var(--line);border-radius:20px;padding:12px 22px;font-family:var(--display);font-weight:800;font-size:32px;text-align:center;line-height:1.1}
+.readw.small{font-size:22px}
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.opts.c2{grid-template-columns:repeat(2,1fr)}
+.opts.c4{grid-template-columns:repeat(2,1fr)}
+.opt{border:3px solid var(--line);background:var(--card);border-radius:20px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 4px 0 var(--line);justify-content:center}
+.opt .cap{font-weight:800;font-size:14px;min-height:1.2em;text-align:center;line-height:1.15}
+.opt .cap small{display:block;color:var(--soft);font-weight:700;font-size:12px}
+.opt.right{border-color:var(--green);background:var(--green-tint)}
+.wrong{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.pic{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:14px;overflow:hidden;background:#fff}
+.pic img{width:100%;height:100%;object-fit:cover}
+.pic .em{font-size:58px;line-height:1}
+.pic svg{width:86%;height:86%}
+.pic .sw{width:78%;height:78%;border-radius:50%;border:3px solid rgba(0,0,0,.12)}
+.pic .dotsn{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;width:90%}
+.pic .dotsn i{width:13px;height:13px;border-radius:50%;background:var(--cls)}
+.pic .dotsn i:nth-child(n+11){background:var(--blue)}
+.scene{border-radius:24px;padding:14px;position:relative}
+.scene.market{background:repeating-linear-gradient(90deg,#f6e6d6 0 26px,#fbefe3 26px 52px);border:3px solid #e8cfb4;padding-top:26px}
+.scene.market:before{content:"";position:absolute;left:0;right:0;top:-3px;height:18px;border-radius:24px 24px 0 0;background:repeating-linear-gradient(90deg,var(--red) 0 30px,#fff 30px 60px)}
+.scene.house{background:#fde6d6;border:3px solid #f1c9a8}
+.scene.garden{background:linear-gradient(#e1f0e6,#cfe8d6);border:3px solid #b9dcc4}
+.scene.numbers{background:var(--blue-tint);border:3px solid #c5dbe9}
+.scene.mix{background:var(--purple-tint);border:3px solid #ddd0ee}
+.list{background:#fff;border:2px dashed var(--line);border-radius:16px;padding:10px;display:flex;gap:8px;align-items:center}
+.list .lt{font-weight:800;font-size:13px;line-height:1.1;width:54px;flex-shrink:0}
+.list .lt small{display:block;color:var(--soft);font-weight:700}
+.list .it{flex:1;position:relative;border:none;background:none;padding:0}
+.list .it.word{background:var(--paper);border-radius:12px;padding:12px 4px;font-weight:800;text-align:center;font-size:15px}
+.list .it.got:after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:40px;color:#fff;background:rgba(62,140,99,.78);border-radius:14px;font-weight:800}
+.shelfg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.shelfg .opt{padding:6px}
+.shelfg .opt.gone{visibility:hidden}
+.basket{display:flex;align-items:center;gap:10px;justify-content:center;font-weight:800}
+.basket .bk{width:80px;height:80px;border-radius:18px;overflow:hidden;background:#fff;border:2px solid var(--line)}
+.basket .bk img{width:100%;height:100%;object-fit:cover}
+.basket .bk.bump{animation:bump .35s}
+@keyframes bump{50%{transform:scale(1.15)}}
+.canvasbox{background:#fff;border:3px solid var(--line);border-radius:24px;display:flex;align-items:center;justify-content:center;padding:14px}
+.canvasbox svg{width:58%;height:auto}
+.canvasbox svg .fillme{transition:fill .5s}
+.pots{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.pot{width:66px;height:66px;border-radius:50%;border:4px solid #fff;box-shadow:0 4px 0 rgba(31,42,68,.2),0 0 0 2px var(--line)}
+.pot.right{box-shadow:0 0 0 5px var(--green)}
+.mem{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mem.c2{grid-template-columns:repeat(2,1fr);padding:0 8%}
+.mem.c4{grid-template-columns:repeat(4,1fr)}
+.card{aspect-ratio:3/4;border:none;padding:0;background:transparent;perspective:600px}
+.card .f{display:block;position:relative;width:100%;height:100%;transition:transform .4s;transform-style:preserve-3d}
+.card.open .f,.card.ok .f{transform:rotateY(180deg)}
+.card .s{position:absolute;inset:0;border-radius:16px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;align-items:center;justify-content:center;border:3px solid var(--line);overflow:hidden}
+.card .back{background:var(--coral);border-color:#fff;box-shadow:0 4px 0 var(--coral-deep)}
+.card .back svg{width:60%;height:60%;opacity:.9}
+.card .front{background:#fff;transform:rotateY(180deg);padding:6px}
+.card .front .wd{font-family:var(--display);font-weight:800;font-size:17px;text-align:center;line-height:1.1;word-break:break-word}
+.card.ok .front{border-color:var(--green)}
+.mv{display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px 0;text-align:center}
+.mv .big{font-size:110px;line-height:1;animation:bounce .6s ease-in-out infinite alternate}
+@keyframes bounce{to{transform:translateY(-14px) rotate(4deg)}}
+.mv .cnt{font-family:var(--display);font-size:46px;font-weight:800;color:var(--cls)}
+.mv h3{font-size:28px}
+.book{background:#fff;border:3px solid var(--line);border-radius:26px;overflow:hidden;box-shadow:0 5px 0 var(--line)}
+.book .bs{background:linear-gradient(#e3eef5,#fde6d6);display:flex;align-items:flex-end;justify-content:center;gap:10px;padding:18px 10px 14px;min-height:190px;font-size:64px;line-height:1}
+.book .bs .g{width:110px}
+.book .bt{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px}
+.book .mg{font-family:var(--display);font-weight:800;font-size:22px;line-height:1.25}
+.book .en{color:var(--soft);font-weight:700;font-size:16px}
+.yay{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding-top:10px}
+.yay .stk{width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,#ffe7a8,#f4a940);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 8px 0 var(--cta-deep);animation:pop .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{from{transform:scale(.2)}}
+.yay .stk svg{width:86px;height:86px}
+.yay .stk b{font-family:var(--display);font-size:24px}
+.yay h2{font-size:28px}
+.yay .earn{display:flex;align-items:center;gap:8px;font-weight:800;font-size:20px;background:#fff;border:2px solid var(--line);border-radius:999px;padding:8px 16px}
+.yay .earn svg{width:30px;height:22px}
+
+/* shop + room */
+.tabs{display:flex;background:var(--card);border:2px solid var(--line);border-radius:999px;padding:3px}
+.tabs button{flex:1;border:none;background:none;border-radius:999px;padding:8px;font-weight:800;color:var(--soft)}
+.tabs button[aria-pressed=true]{background:var(--ink);color:#fff}
+.items{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.item{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 3px 0 var(--line)}
+.item .iv{width:100%;aspect-ratio:1.3;border-radius:14px;background:var(--paper);display:flex;align-items:center;justify-content:center}
+.item .iv svg{width:70%;height:90%}
+.item b{font-size:15px;text-align:center;line-height:1.15}
+.item b small{display:block;color:var(--soft);font-weight:700;font-size:12px}
+.buy{border:none;border-radius:12px;padding:8px 12px;font-weight:800;background:var(--cta);box-shadow:0 3px 0 var(--cta-deep);display:flex;align-items:center;gap:5px;width:100%;justify-content:center}
+.buy svg{width:22px;height:16px}
+.buy.own{background:var(--green-tint);box-shadow:0 3px 0 #b9dcc4;color:var(--green-deep)}
+.buy.on{background:var(--green);color:#fff;box-shadow:0 3px 0 var(--green-deep)}
+.buy.poor{background:#eee8da;box-shadow:none;color:#a39b88}
+.room{position:relative;border-radius:26px;overflow:hidden;box-shadow:0 6px 0 #d9c3a3;aspect-ratio:360/300;background:#f3d9b5}
+.room > svg{position:absolute;inset:0;width:100%;height:100%}
+.room .gd{position:absolute;left:50%;bottom:6%;width:30%;transform:translateX(-50%);animation:sway 2.4s ease-in-out infinite alternate}
+@keyframes sway{to{transform:translateX(-50%) rotate(3deg)}}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;font-weight:800;border-radius:999px;padding:10px 18px;z-index:90;animation:up .2s;text-align:center;max-width:90vw}
+.conf{position:fixed;z-index:95;pointer-events:none;font-size:26px;animation:fall 1.3s ease-in forwards}
+@keyframes fall{to{transform:translateY(70vh) rotate(360deg);opacity:0}}
+.flyt{position:fixed;z-index:96;pointer-events:none;font-weight:800;color:var(--cta-deep);font-size:22px;animation:flyup 1s ease-out forwards}
+@keyframes flyup{to{transform:translateY(-60px);opacity:0}}
+.note{font-size:13px;color:var(--soft);font-weight:700;text-align:center;margin:4px 14px 10px}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <button class="who" id="whoBtn" aria-label="Child and parents"><span class="av" id="topAv"></span><span><b id="whoName">Gidro</b><small id="whoAge"></small></span></button>
+    <span class="pill" title="Tickets"><span id="tkIcon"></span><span id="tkN">0</span></span>
+    <button class="navbtn" id="homeBtn" hidden aria-label="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></button>
+    <button class="navbtn" id="parentBtn" aria-label="Parents"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></button>
+  </header>
+
+  <!-- HOME -->
+  <main id="scrHome">
+    <div class="stage" id="stage"></div>
+    <div class="playwrap">
+      <button class="play" id="playBtn" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M6 3.5v17l14-8.5z" fill="#fff"/></svg></button>
+      <div class="playlbl" id="playLbl"></div>
+      <button class="minilink" id="pathLink">See my path</button>
+    </div>
+    <div class="tiles">
+      <button class="tile lib" id="tLib"><span class="ti" id="icLib"></span><span><b>Boky sy lalao</b><small>Library</small></span></button>
+      <button class="tile cls" id="tCls"><span class="ti" id="icCls"></span><span><b>Sekoly</b><small>Miss Elisa's class</small></span></button>
+      <button class="tile shp" id="tShop"><span class="ti" id="icShop"></span><span><b>Fivarotana</b><small>Ticket shop</small></span></button>
+      <button class="tile rm" id="tRoom"><span class="ti" id="icRoom"></span><span><b>Tranon'i Gidro</b><small>Gidro's room</small></span></button>
+    </div>
+    <p class="note" id="memberNote"></p>
+  </main>
+
+  <!-- LIBRARY -->
+  <main id="scrLib" hidden>
+    <div class="sec">
+      <h2>Boky sy lalao <span>- Library</span></h2>
+      <div class="shelves" id="shelves"></div>
+      <div class="cards" id="libCards"></div>
+    </div>
+  </main>
+
+  <!-- PATH -->
+  <main id="scrPath" hidden>
+    <div class="sec">
+      <div class="row"><h2 style="margin-right:auto">Lalana <span>- My path</span></h2><span class="pill" id="pathCount"></span></div>
+      <div class="road" id="road"></div>
+    </div>
+  </main>
+
+  <!-- SHOP -->
+  <main id="scrShop" hidden>
+    <div class="sec">
+      <h2>Fivarotana <span>- Ticket shop</span></h2>
+      <div class="guide"><span class="gp" id="shopGuide"></span><p style="margin:0;font-weight:800;background:#fff;border:2px solid var(--line);border-radius:18px;padding:10px 12px">You choose! Spend your tickets on something for Gidro or for his room.</p></div>
+      <div class="tabs"><button id="tabWear" aria-pressed="true">For Gidro</button><button id="tabRoom" aria-pressed="false">For the room</button></div>
+      <div class="items" id="items"></div>
+    </div>
+  </main>
+
+  <!-- ROOM -->
+  <main id="scrRoom" hidden>
+    <div class="sec">
+      <h2>Tranon'i Gidro <span>- Gidro's room</span></h2>
+      <div class="room" id="room"></div>
+      <button class="btn" id="roomShop">Get more things in the shop</button>
+    </div>
+  </main>
+</div>
+
+<div class="veil" id="veil" hidden><div class="sheet" id="sheet"></div></div>
+<div class="gscr" id="gscr" hidden><div class="gin" id="gin"></div></div>
+
+<!-- On nosymasina.com these give accounts and memberships (the same as Gidro School). -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
+<script src="gidro-core.js"></script>
+<!-- Word list, photos and voice list: the same file Gidro School uses -->
+<script src="school-content.js"></script>
+<script>
+/* =====================================================================
+   Gidro: one app for ages 2 to 8, in the style of Khan Academy Kids.
+   Home = Play button (the learning path) + Library + Miss Elisa's class + ticket shop + Gidro's room.
+   Guides: Gidro, Lova and Tiana. Teacher: Miss Elisa (in Gidro School).
+   Pictures for Lova and Tiana: upload lova.webp and tiana.webp to use your own; until then a drawing is shown.
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const W = id => (typeof WORDS !== 'undefined' && WORDS[id]) || { mg:id, en:id };
+const hasPhoto = id => typeof PHOTO !== 'undefined' && PHOTO.has(id);
+const hasVoice = id => typeof VOICE !== 'undefined' && VOICE.has(id);
+
+const KEY = 'gidroWorld.v1';
+const S = Object.assign({ tickets:10, step:0, owned:[], wear:{}, room:[], age:null, name:'', adj:{}, done:[] },
+  (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } })());
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+
+/* ---------- membership (uses gidro-core.js on the website; the preview has everything open) ---------- */
+const LIVE = typeof window.G !== 'undefined' && window.G && typeof window.G.has === 'function';
+const member = () => !LIVE || window.G.has('school');
+const FREE_STEPS = 6;   /* the first 6 steps of the path are free to try */
+const JOIN_URL = 'school?join=monthly';
+
+/* ---------- sound ----------
+   Phones (iPhone especially) only allow sound that starts right after a tap.
+   So one audio player is "unlocked" on the child's first tap and then reused for every voice clip. */
+const AUD = new Audio(); AUD.preload = 'auto';
+const SILENT = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
+let unlocked = false, pend = null, AC = null;
+function unlockAudio(){
+  try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); } catch (e) {}
+  if (unlocked) return; unlocked = true;
+  try { AUD.src = SILENT; const p = AUD.play(); if (p && p.catch) p.catch(() => { unlocked = false; }); } catch (e) { unlocked = false; }
+}
+['pointerdown', 'touchend', 'click', 'keydown'].forEach(ev => document.addEventListener(ev, unlockAudio, true));
+function playFile(src, max = 7000){
+  if (pend) { const f = pend; pend = null; f(); }
+  return new Promise(res => {
+    let done = false; const fin = () => { if (!done) { done = true; if (pend === fin) pend = null; res(); } }; pend = fin;
+    try {
+      AUD.pause(); AUD.onended = fin; AUD.onerror = fin; AUD.src = src;
+      const p = AUD.play(); if (p && p.catch) p.catch(fin);
+      setTimeout(fin, max);
+    } catch (e) { fin(); }
+  });
+}
+const stopAudio = () => { try { AUD.pause(); } catch (e) {} if (pend) { const f = pend; pend = null; f(); } };
+const sayWord = id => hasVoice(id) ? playFile(id + '.mp3') : Promise.resolve();
+const sayEn = name => playFile('en-' + name + '.mp3');
+const PRAISE = ['greatjob', 'wonderful', 'fantastic', 'welldone'];
+function tone(f, t = .18, when = 0, type = 'triangle', vol = .12){
+  try { AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const o = AC.createOscillator(), g = AC.createGain(), s = AC.currentTime + when;
+    o.type = type; o.frequency.value = f; g.gain.setValueAtTime(vol, s); g.gain.exponentialRampToValueAtTime(.001, s + t);
+    o.connect(g); g.connect(AC.destination); o.start(s); o.stop(s + t + .02); } catch (e) {}
+}
+const ding = () => { tone(784, .15); tone(1047, .25, .1); };
+const boop = () => tone(196, .22, 0, 'sine', .15);
+const chaching = () => { [988, 1319, 1568].forEach((f, i) => tone(f, .12, i * .07, 'square', .05)); };
+
+/* ---------- drawings ---------- */
+const TICKET = '<svg class="tk" viewBox="0 0 44 32" aria-hidden="true"><path d="M3 6h38v7a4 4 0 0 0 0 8v7H3v-7a4 4 0 0 0 0-8z" fill="#f4a940" stroke="#c9831f" stroke-width="2"/><path d="M14 8v16" stroke="#c9831f" stroke-width="2" stroke-dasharray="3 3"/><path d="M27 10l2 4.4 4.6.5-3.4 3.1 1 4.6-4.2-2.4-4.2 2.4 1-4.6-3.4-3.1 4.6-.5z" fill="#fff"/></svg>';
+function gidro(wear = S.wear){
+  const w = wear || {}; let front = '';
+  if (w.neck === 'lamba') front += '<path d="M17 47c8 6 22 6 30 0l2 5c-9 7-25 7-34 0z" fill="#c8483b"/><path d="M19 49.5c8 5 18 5 26 0" stroke="#f4a940" stroke-width="1.6" fill="none"/><path d="M41 51l5 9 3-2-3-8z" fill="#c8483b"/>';
+  if (w.neck === 'medal') front += '<path d="M25 46l7 8 7-8" stroke="#3a7ca5" stroke-width="3" fill="none"/><circle cx="32" cy="56" r="5" fill="#f4a940" stroke="#c9831f" stroke-width="1.5"/>';
+  if (w.eyes === 'glasses') front += '<g fill="rgba(31,42,68,.85)" stroke="#f4a940" stroke-width="1.4"><rect x="20" y="29.5" width="11" height="9" rx="3.5"/><rect x="33" y="29.5" width="11" height="9" rx="3.5"/></g><path d="M31 33h2" stroke="#f4a940" stroke-width="1.6"/>';
+  if (w.head === 'hat') front += '<path d="M19 24c1-11 25-11 26 0z" fill="#3e8c63"/><rect x="14" y="22" width="36" height="4.5" rx="2.2" fill="#2f6e4c"/><circle cx="32" cy="14" r="2.4" fill="#f4a940"/>';
+  if (w.head === 'crown') front += '<g><circle cx="20" cy="22" r="3.4" fill="#f29ac0"/><circle cx="26" cy="19.5" r="3.4" fill="#f4a940"/><circle cx="32" cy="18.6" r="3.4" fill="#fff"/><circle cx="38" cy="19.5" r="3.4" fill="#f29ac0"/><circle cx="44" cy="22" r="3.4" fill="#f4a940"/></g>';
+  if (w.head === 'bow') front += '<path d="M44 14l-6-4v8zM44 14l6-4v8z" fill="#f29ac0" stroke="#d76d9a" stroke-width="1"/><circle cx="44" cy="14" r="2.2" fill="#d76d9a"/>';
+  return '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M50 40c6 2 8 12 2 16-4 2.6-3-3-1-6-4 1-8-2-6-6 1-2 3-4 5-4z" fill="#b5651d"/><circle cx="32" cy="36" r="16" fill="#1f2a44"/><circle cx="18" cy="20" r="7" fill="#1f2a44"/><circle cx="46" cy="20" r="7" fill="#1f2a44"/><circle cx="18" cy="20" r="3.2" fill="#b5651d"/><circle cx="46" cy="20" r="3.2" fill="#b5651d"/><circle cx="26" cy="34" r="4.4" fill="#faf6ee"/><circle cx="38" cy="34" r="4.4" fill="#faf6ee"/><circle cx="26.6" cy="34.4" r="2.2" fill="#1f2a44"/><circle cx="38.6" cy="34.4" r="2.2" fill="#1f2a44"/><path d="M28.5 42c2 1.6 5 1.6 7 0" stroke="#f4a940" stroke-width="2.2" stroke-linecap="round" fill="none"/>' + front + '</svg>';
+}
+/* Lova and Tiana: simple drawings until Nene's own pictures (lova.webp, tiana.webp) are uploaded */
+const SKIN = '#8c5430', HAIR = '#231a16';
+const face = '<circle cx="25" cy="33" r="2.1" fill="#231a16"/><circle cx="35" cy="33" r="2.1" fill="#231a16"/><circle cx="21" cy="38" r="2.4" fill="#d9776a" opacity=".55"/><circle cx="39" cy="38" r="2.4" fill="#d9776a" opacity=".55"/><path d="M26 39c2.4 2.2 5.6 2.2 8 0" stroke="#231a16" stroke-width="1.8" stroke-linecap="round" fill="none"/>';
+const LOVA_SVG = `<svg viewBox="0 0 60 100" aria-hidden="true"><path d="M23 80v13M37 80v13" stroke="${SKIN}" stroke-width="5.5" stroke-linecap="round"/><path d="M19 93h8M33 93h8" stroke="#1f2a44" stroke-width="4" stroke-linecap="round"/><path d="M20 50l-8 18M40 50l8 18" stroke="${SKIN}" stroke-width="5" stroke-linecap="round"/><path d="M17 50h26l2 22H15z" fill="#3a7ca5"/><path d="M15 70h30v12H33l-3-5-3 5H15z" fill="#1f2a44"/><rect x="27" y="44" width="6" height="7" fill="${SKIN}"/><circle cx="30" cy="32" r="15" fill="${SKIN}"/><path d="M15 31c0-11 7-16 15-16s15 5 15 16c-3-5-8-8-15-8s-12 3-15 8z" fill="${HAIR}"/>${face}</svg>`;
+const TIANA_SVG = `<svg viewBox="0 0 60 100" aria-hidden="true"><path d="M24 80v13M36 80v13" stroke="${SKIN}" stroke-width="5.5" stroke-linecap="round"/><path d="M20 93h8M32 93h8" stroke="#c8483b" stroke-width="4" stroke-linecap="round"/><path d="M21 52l-8 17M39 52l8 17" stroke="${SKIN}" stroke-width="5" stroke-linecap="round"/><path d="M19 49h22l8 33H11z" fill="#f5c518"/><path d="M14 72h32" stroke="#e0a800" stroke-width="2"/><rect x="27" y="43" width="6" height="7" fill="${SKIN}"/><circle cx="15" cy="17" r="8.5" fill="${HAIR}"/><circle cx="45" cy="17" r="8.5" fill="${HAIR}"/><circle cx="30" cy="32" r="15" fill="${SKIN}"/><path d="M15 30c1-9 7-14 15-14s14 5 15 14c-4-4-9-6-15-6s-11 2-15 6z" fill="${HAIR}"/>${face}</svg>`;
+const OWN = { lova:false, tiana:false };
+['lova', 'tiana'].forEach(n => { const im = new Image(); im.onload = () => { OWN[n] = true; if (screen === 'home') drawHome(); }; im.src = n + '.webp'; });
+const chrPic = n => n === 'gidro' ? gidro() : OWN[n] ? `<img src="${n}.webp" alt="">` : (n === 'lova' ? LOVA_SVG : TIANA_SVG);
+const CHR = { gidro:'Gidro', lova:'Lova', tiana:'Tiana' };
+
+function picOf(id){
+  const x = W(id);
+  if (hasPhoto(id)) return `<div class="pic"><img src="${id}.webp" alt="${esc(x.en)}" onerror="this.parentNode.innerHTML='<span class=&quot;em&quot;>⭐</span>'"></div>`;
+  if (x.color) return `<div class="pic"><span class="sw" style="background:${x.color}"></span></div>`;
+  if (x.count) return `<div class="pic"><span class="dotsn">${'<i></i>'.repeat(x.count)}</span></div>`;
+  if (x.pic && String(x.pic).startsWith('<')) return `<div class="pic">${x.pic}</div>`;
+  return `<div class="pic"><span class="em">${x.pic || '⭐'}</span></div>`;
+}
+const IC = {
+  lib: '<svg viewBox="0 0 48 48"><path d="M6 10c6-2 12-1 18 3 6-4 12-5 18-3v28c-6-2-12-1-18 3-6-4-12-5-18-3z" fill="#fff"/><path d="M24 13v28" stroke="#7a5ea8" stroke-width="2.5"/></svg>',
+  cls: '<svg viewBox="0 0 48 48"><path d="M6 20L24 8l18 12z" fill="#fff"/><rect x="10" y="20" width="28" height="20" fill="#fff"/><rect x="21" y="29" width="6" height="11" fill="#e07a3f"/><rect x="13" y="24" width="5" height="5" fill="#e07a3f"/><rect x="30" y="24" width="5" height="5" fill="#e07a3f"/></svg>',
+  shop: '<svg viewBox="0 0 48 48"><path d="M8 18h32l-3 24H11z" fill="#fff"/><path d="M17 18v-4a7 7 0 0 1 14 0v4" stroke="#fff" stroke-width="3" fill="none"/><path d="M24 24l1.6 3.4 3.7.4-2.8 2.5.8 3.6-3.3-1.9-3.3 1.9.8-3.6-2.8-2.5 3.7-.4z" fill="#3a7ca5"/></svg>',
+  room: '<svg viewBox="0 0 48 48"><path d="M24 4C12 4 6 12 8 20c2 6 10 7 16 6 6 1 14 0 16-6 2-8-4-16-16-16z" fill="#fff"/><rect x="21" y="26" width="6" height="18" fill="#fff"/><rect x="15" y="16" width="18" height="11" rx="2" fill="#3e8c63"/><rect x="21" y="20" width="5" height="7" fill="#fff"/></svg>'
+};
+
+/* ---------- activities ---------- */
+/* Words follow the Gidro School months, in book order. */
+const SETS = {
+  fruitA:['harona','voanio','manga_f','akondro'], fruitB:['voasary_f','atody','voatabia','mananasy','karaoty','letisy'],
+  market:['voanio','manga_f','akondro','voasary_f','atody','voatabia','mananasy','karaoty','letisy'],
+  num1:['iray','roa','telo','efatra','dimy'], num2:['enina','fito','valo','sivy','folo'],
+  num3:['n11','n12','n13','n14','n15'], num4:['n16','n17','n18','n19','n20'],
+  colA:['mena','mavo','maintso','manga_c'], colB:['volomboasary','fotsy','mainty','mavokely'],
+  colAll:['mena','mavo','maintso','manga_c','volomboasary','mavokely'],
+  feelA:['faly','tezitra','matahotra','mitomany'], feelB:['malahelo','reraka','faly','mitomany'],
+  feelC:['menatra','tia','afapo','saropiaro','gaga','manina'],
+  famA:['neny','bebe','dadabe','dadatoa'], famB:['nenitoa','zazakely','zoky','zandry'], table:['seza','vilia','sotro','vera'],
+  mixA:['harona','akondro','faly','neny','seza','mananasy'], mixB:['bebe','voatabia','gaga','vilia','karaoty','zazakely']
+};
+const A = {
+  findFruitA:{ k:'find', set:'fruitA', th:'market', t:'Market words', e:'🧺', cv:'harona' },
+  findFruitB:{ k:'find', set:'fruitB', th:'market', t:'More market words', e:'🍍', cv:'mananasy' },
+  shop1:     { k:'market', set:'market', t:'Market shopping', e:'🛒', cv:'vola' },
+  num1:      { k:'find', set:'num1', th:'numbers', t:'Count 1 to 5', e:'🔢', cv:'telo' },
+  num2:      { k:'find', set:'num2', th:'numbers', t:'Count 6 to 10', e:'🔟', cv:'folo' },
+  num3:      { k:'find', set:'num3', th:'numbers', t:'Count 11 to 15', e:'🔢' },
+  num4:      { k:'find', set:'num4', th:'numbers', t:'Count 16 to 20', e:'🔢' },
+  paintA:    { k:'paint', set:'colA', shapes:['boribory'], t:'Paint with colors', e:'🎨' },
+  paintB:    { k:'paint', set:'colB', shapes:['boribory','efamira'], t:'More colors', e:'🖌️' },
+  paintS:    { k:'paint', set:'colAll', shapes:['boribory','efamira','telozoro','mahitsizoro'], sayShape:true, t:'Shapes and colors', e:'🔺' },
+  feelA:     { k:'find', set:'feelA', th:'garden', t:'How do you feel?', e:'😊', cv:'faly' },
+  feelB:     { k:'find', set:'feelB', th:'garden', t:'More feelings', e:'😴', cv:'reraka' },
+  feelC:     { k:'find', set:'feelC', th:'garden', t:'Big feelings', e:'😲', cv:'gaga' },
+  famA:      { k:'find', set:'famA', th:'house', t:'My family', e:'👵🏾', cv:'bebe' },
+  famB:      { k:'find', set:'famB', th:'house', t:'More family', e:'👶🏾', cv:'zazakely' },
+  table:     { k:'find', set:'table', th:'house', t:'At the table', e:'🍽️', cv:'vilia' },
+  memFruit:  { k:'memory', set:'market', t:'Memory: market', e:'🃏', cv:'akondro' },
+  memFeel:   { k:'memory', set:'feelA', t:'Memory: feelings', e:'🃏', cv:'tezitra' },
+  memFam:    { k:'memory', set:'famA', t:'Memory: family', e:'🃏', cv:'neny' },
+  memMix:    { k:'memory', set:'mixA', t:'Memory: mix', e:'🃏', cv:'seza' },
+  move:      { k:'move', t:'Music and movement', e:'💃🏾' },
+  mixA:      { k:'find', set:'mixA', th:'mix', t:'Review game', e:'⭐' },
+  mixB:      { k:'find', set:'mixB', th:'mix', t:'Big review', e:'🌟' },
+  story1:    { k:'story', n:0, t:'Gidro and the Rain', e:'🌧️' },
+  story2:    { k:'story', n:1, t:'Gidro Is Hungry', e:'🍌' },
+  story3:    { k:'story', n:2, t:'Gidro and the Moon', e:'🌙' },
+  story4:    { k:'story', n:3, t:'Gidro’s Big Jump', e:'🦘' },
+  story5:    { k:'story', n:4, t:'Gidro and the Red Ball', e:'🔴' }
+};
+/* Library shelves; the first item on each shelf is free to try */
+const SHELVES = [
+  { id:'teny', mg:'Teny', en:'Words', e:'🧺', items:['findFruitA','findFruitB','shop1','famA','famB','table','memFruit','memFam','mixA','mixB','memMix'] },
+  { id:'isa', mg:'Isa', en:'Numbers', e:'🔢', items:['num1','num2','num3','num4','shop1'] },
+  { id:'feel', mg:'Fihetseham-po', en:'Feelings', e:'😊', items:['feelA','feelB','feelC','memFeel'] },
+  { id:'loko', mg:'Loko sy endrika', en:'Colors, shapes', e:'🎨', items:['paintA','paintB','paintS'] },
+  { id:'boky', mg:'Boky', en:'Books', e:'📚', items:['story1','story2','story3','story4','story5'] },
+  { id:'mozika', mg:'Mozika', en:'Music', e:'🎵', items:['move'] }
+];
+const FREE_LIB = new Set(SHELVES.map(s => s.items[0]));
+
+/* the stories from Gidro School story time (English read by Nene: en-st<story>p<page>.mp3) */
+const GSTORY = [
+  { pages:[ { sc:['G','🌳'], mg:"Gidro dia gidro kely. Mipetraka ao amin'ny hazo lehibe izy.", en:'Gidro is a little lemur. He lives in a big tree.' },
+            { sc:['🌧️','🌧️','G'], mg:'Indray andro, avy ny orana. Tsip, tsip, tsip!', en:'One day, the rain comes. Drip, drip, drip!' },
+            { sc:['🍃','G'], mg:"Gidro dia eo ambanin'ny ravina lehibe. Maina sy faly izy.", en:'Gidro sits under a big green leaf. He is dry and happy.' },
+            { sc:['☀️','G'], mg:'Miposaka ny masoandro. Hoy Gidro: "Salama, masoandro!"', en:'The sun comes out. Gidro says, "Hello, sun!"' } ] },
+  { pages:[ { sc:['G','😋'], mg:'Noana i Gidro. Mitaraina ny kibony.', en:'Gidro is hungry. His tummy says, "Grumble, grumble!"' },
+            { sc:['🍌','G'], mg:'Mahita akondro mavo izy. "Mamy!"', en:'He sees a yellow banana. "Yum!"' },
+            { sc:['🍌','G','🐒'], mg:"Zarain'i Gidro amin'ny namany ny akondro.", en:'Gidro shares the banana with his friend.' },
+            { sc:['G','🐒','💛'], mg:'Faly izy roa izao.', en:'Now they are both happy.' } ] },
+  { pages:[ { sc:['🌙','G'], mg:'Alina izao. Mijery ambony i Gidro.', en:'It is night. Gidro looks up.' },
+            { sc:['🌕'], mg:'Mahita volana lehibe iray izy.', en:'He sees one big moon.' },
+            { sc:['⭐','⭐','⭐','⭐'], mg:'Mahita kintana madinika maro izy.', en:'He sees many little stars.' },
+            { sc:['😴','G','🌙'], mg:'"Mandry soa, volana." Matory i Gidro.', en:'"Good night, moon." Gidro goes to sleep.' } ] },
+  { pages:[ { sc:['🌳','G','🌳'], mg:"Te hitsambikina any amin'ny hazo manaraka i Gidro.", en:'Gidro wants to jump to the next tree.' },
+            { sc:['G','😮'], mg:'Matahotra kely izy.', en:'He feels a little scared. He takes a big breath.' },
+            { sc:['1️⃣','2️⃣','3️⃣','🦘'], mg:'Iray, roa, telo, hitsambikina!', en:'One, two, three, jump!' },
+            { sc:['🎉','G','🌳'], mg:'Vita! Faly be i Gidro.', en:'He did it! Gidro is so proud.' } ] },
+  { pages:[ { sc:['G','🔴'], mg:'Nahita baolina mena i Gidro.', en:'Gidro finds a red ball.' },
+            { sc:['G','🔴','🐒'], mg:"Atosiny any amin'ny namany izany.", en:'He rolls it to his friend.' },
+            { sc:['🐒','🔴','G'], mg:"Averin'ny namany indray. Mihodina, mihodina, mihodina!", en:'His friend rolls it back. Round and round!' },
+            { sc:['G','🐒','☀️'], mg:'Milalao andro be izy roa.', en:'They play all day long.' } ] }
+];
+
+/* ---------- ages 2 to 8: the starting level, then it adapts to how the child is doing ---------- */
+const AGE_BASE = { 2:0, 3:1, 4:2, 5:3, 6:4, 7:4, 8:4 };
+const AGE_CLASS = { 2:'Preschool', 3:'Preschool', 4:'Pre-K', 5:'Kindergarten', 6:'1st grade', 7:'2nd grade', 8:'3rd grade' };
+const lvl = kind => Math.max(0, Math.min(4, (AGE_BASE[S.age] ?? 1) + (S.adj[kind] || 0)));
+function adapt(kind, acc){ let a = S.adj[kind] || 0; if (acc >= .9) a++; else if (acc < .5) a--; S.adj[kind] = Math.max(-2, Math.min(2, a)); save(); }
+function buildPath(){
+  const big = (S.age || 3) >= 5;
+  return ['findFruitA', big ? 'num3' : 'num1', 'story1', 'shop1', 'paintA', 'CHEST',
+          'feelA', big ? 'num4' : 'num2', 'memFruit', 'paintB', 'move', 'CHEST',
+          'findFruitB', 'story2', 'famA', 'famB', 'table', 'CHEST',
+          'feelB', 'memFeel', 'paintS', 'story3', 'move', 'CHEST',
+          'feelC', 'memFam', 'mixA', 'story4', 'shop1', 'CHEST',
+          'mixB', 'memMix', 'story5', 'paintS', 'feelC', 'CHEST'];
+}
+
+/* ================= screens ================= */
+let screen = 'home';
+function show(s){
+  screen = s;
+  ['Home','Lib','Path','Shop','Room'].forEach(n => $('scr' + n).hidden = (n.toLowerCase() !== s));
+  $('homeBtn').hidden = s === 'home';
+  window.scrollTo(0, 0);
+  ({ home:drawHome, lib:drawLib, path:drawPath, shop:drawShop, room:drawRoom })[s]();
+}
+function refreshTop(){
+  $('tkN').textContent = S.tickets;
+  $('topAv').innerHTML = gidro();
+  $('whoName').textContent = S.name || 'Gidro';
+  $('whoAge').textContent = S.age ? `Age ${S.age}` : '';
+}
+function toast(t){ const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2200); }
+function confetti(n = 18){
+  const em = ['⭐','🎉','🌟','🍌','🥭','✨'];
+  for (let i = 0; i < n; i++) { const d = document.createElement('div'); d.className = 'conf'; d.textContent = pick(em); d.style.left = Math.random() * 100 + 'vw'; d.style.top = (-10 + Math.random() * 20) + 'vh'; d.style.animationDelay = Math.random() * .4 + 's'; document.body.appendChild(d); setTimeout(() => d.remove(), 2000); }
+}
+function flyTicket(el, n = 1){
+  const r = el.getBoundingClientRect(); const d = document.createElement('div'); d.className = 'flyt';
+  d.innerHTML = '+' + n + ' 🎟️'; d.style.left = (r.left + r.width / 2 - 20) + 'px'; d.style.top = r.top + 'px';
+  document.body.appendChild(d); setTimeout(() => d.remove(), 1000);
+}
+function addTickets(n){ S.tickets += n; save(); refreshTop(); }
+function sheet(h){ $('sheet').innerHTML = h; $('veil').hidden = false; $('sheet').querySelectorAll('[data-close]').forEach(b => b.onclick = closeSheet); }
+function closeSheet(){ $('veil').hidden = true; }
+$('veil').onclick = e => { if (e.target === $('veil') && S.age) closeSheet(); };
+
+/* ---------- home ---------- */
+const TIPS = [
+  ['gidro', 'Tap Play and let’s learn together!'],
+  ['lova', 'Do you want a story? Look in the Library!'],
+  ['tiana', 'Earn tickets, then choose a gift for Gidro!'],
+  ['gidro', 'Manao ahoana tompoko o!', 'Hello!'],
+  ['lova', 'Miss Elisa is waiting in class!'],
+  ['tiana', 'Let’s count the fruit at the market!']
+];
+let tipI = 0, tipTimer = null;
+function drawHome(){
+  const P = buildPath(), n = P.length, step = Math.min(S.step, n);
+  $('stage').innerHTML = `<svg viewBox="0 0 400 290" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+     <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9edcf0"/><stop offset="1" stop-color="#e3f4f8"/></linearGradient></defs>
+     <rect width="400" height="290" fill="url(#sky)"/><circle cx="350" cy="52" r="26" fill="#ffd166"/>
+     <path d="M0 196c60-30 120-34 200-14s140 10 200-12v120H0z" fill="#9ccb7a"/><path d="M0 228c80-20 160-18 240-4s110 4 160-6v76H0z" fill="#7fb85e"/>
+     <g transform="translate(50 120)"><rect x="-7" y="10" width="14" height="74" fill="#a0724a"/><path d="M-7 14c-14-3-22-14-20-22M7 14c14-3 22-14 20-22M0 10v-20" stroke="#a0724a" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="-27" cy="-10" r="11" fill="#3e8c63"/><circle cx="27" cy="-10" r="11" fill="#3e8c63"/><circle cx="0" cy="-14" r="12" fill="#3e8c63"/></g>
+     <g transform="translate(355 150)" stroke="#2f6e4c" stroke-width="5" stroke-linecap="round" fill="none"><path d="M0 60V0"/><path d="M0 0l-20-20M0 0l-8-26M0 0l8-26M0 0l20-20"/></g>
+     <path d="M120 60q12-8 24 0t24 0" stroke="#fff" stroke-width="4" fill="none" opacity=".8"/></svg>
+     <button class="chr lova" data-c="lova" aria-label="Lova">${chrPic('lova')}</button>
+     <button class="chr gidro" data-c="gidro" aria-label="Gidro">${gidro()}</button>
+     <button class="chr tiana" data-c="tiana" aria-label="Tiana">${chrPic('tiana')}</button>
+     <div class="say" id="say"></div>`;
+  $('stage').querySelectorAll('.chr').forEach(b => b.onclick = () => { b.classList.remove('hop'); void b.offsetWidth; b.classList.add('hop'); tone(660, .1); tone(880, .12, .08); const t = TIPS.filter(x => x[0] === b.dataset.c); speak(pick(t)); });
+  speak(TIPS[tipI % TIPS.length]);
+  clearInterval(tipTimer); tipTimer = setInterval(() => { if (screen === 'home' && $('gscr').hidden) { tipI++; speak(TIPS[tipI % TIPS.length]); } }, 6500);
+  const next = P[step];
+  $('playLbl').innerHTML = step >= n ? `You finished the path!<small>New steps are coming. Play again in the Library.</small>`
+    : `${next === 'CHEST' ? 'A treasure chest!' : esc(A[next].t)}<small>Step ${step + 1} of ${n}</small>`;
+  $('memberNote').textContent = !LIVE ? 'Preview: everything is open here. On nosymasina.com, the first steps are free and members get everything.' :
+    member() ? 'Member: everything is open.' : `The first ${FREE_STEPS} steps and one game on each Library shelf are free. Members get everything.`;
+}
+function speak(t){
+  const el = $('say'); if (!el) return;
+  const pos = { lova:'4%', gidro:'26%', tiana:'34%' }[t[0]], tail = { lova:'22%', gidro:'45%', tiana:'78%' }[t[0]];
+  el.style.left = pos; el.style.setProperty('--tail', tail);
+  el.innerHTML = `${esc(t[1])}${t[2] ? `<small>${esc(t[2])}</small>` : ''}`;
+  el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+}
+$('playBtn').onclick = () => {
+  const P = buildPath();
+  if (S.step >= P.length) { toast('You finished the whole path! Mahay ianao!'); show('lib'); return; }
+  openStep(S.step);
+};
+$('pathLink').onclick = () => show('path');
+$('tLib').onclick = () => show('lib');
+$('tCls').onclick = () => sheet(`<div class="guide"><span class="gp">${chrPic('tiana')}</span><div><h2>Miss Elisa's class</h2><p class="muted">Sekoly · Gidro School</p></div></div>
+   <p>Today's class day with Miss Elisa: circle time, the lesson, practice, story time, music and recess.</p>
+   <a class="btn green" href="school">Go to class</a><button class="btn ghost" data-close>Stay here</button>`);
+$('tShop').onclick = () => show('shop');
+$('tRoom').onclick = () => show('room');
+$('roomShop').onclick = () => { shopTab = 'room'; show('shop'); };
+$('homeBtn').onclick = () => show('home');
+
+/* ---------- membership checks ---------- */
+function allowed(aid, pathIndex){
+  if (member()) return true;
+  if (pathIndex !== null && pathIndex !== undefined) return pathIndex < FREE_STEPS;
+  return FREE_LIB.has(aid);
+}
+function membersOnly(){
+  sheet(`<div class="guide"><span class="gp">${gidro()}</span><div><h2>This one is for members</h2><p class="muted">Ask a grown-up</p></div></div>
+    <p>Members get the whole path for ages 2 to 8, every Library game and book, and Miss Elisa's class every day.</p>
+    ${grownUpBtn('Grown-ups: hold to see the plans')}
+    <button class="btn ghost" data-close>Back</button>`);
+  bindHold(() => { location.href = JOIN_URL; });
+}
+function grownUpBtn(label){ return `<button class="btn blue hold" id="holdB"><i></i>${esc(label)}</button><p class="muted" style="text-align:center;font-size:13px">Press and hold for 3 seconds</p>`; }
+function bindHold(fn){
+  const b = $('holdB'); if (!b) return; let t = null, st = 0, raf = null; const bar = b.querySelector('i');
+  const tick = () => { const p = Math.min(1, (Date.now() - st) / 3000); bar.style.width = p * 100 + '%'; if (p >= 1) { end(); fn(); } else raf = requestAnimationFrame(tick); };
+  const startH = e => { e.preventDefault(); st = Date.now(); raf = requestAnimationFrame(tick); };
+  const end = () => { cancelAnimationFrame(raf); bar.style.width = '0'; };
+  b.addEventListener('pointerdown', startH); ['pointerup','pointerleave','pointercancel'].forEach(ev => b.addEventListener(ev, end));
+  b.addEventListener('contextmenu', e => e.preventDefault());
+}
+
+/* ---------- first time: who is learning? ---------- */
+function askAge(first){
+  const ages = [2,3,4,5,6,7,8];
+  sheet(`<div class="guide"><span class="gp">${gidro()}</span><div><h2>${first ? 'Tongasoa! Welcome!' : 'Who is learning?'}</h2><p class="muted">A grown-up can help with this part.</p></div></div>
+    <label class="field">Child's name (optional)<input id="nmI" maxlength="20" value="${esc(S.name)}" autocomplete="off"></label>
+    <p>How old is the child?</p>
+    <div class="ages">${ages.map(a => `<button data-age="${a}" aria-pressed="${S.age === a}">${a}<small>${esc(AGE_CLASS[a])}</small></button>`).join('')}</div>
+    <p class="muted" style="font-size:13px">The games start at the right level for this age and get easier or harder as the child plays.</p>
+    <button class="btn green" id="ageOk" ${S.age ? '' : 'disabled style="opacity:.45"'}>Let's go!</button>`);
+  let chosen = S.age;
+  $('sheet').querySelectorAll('[data-age]').forEach(b => b.onclick = () => { chosen = +b.dataset.age; $('sheet').querySelectorAll('[data-age]').forEach(x => x.setAttribute('aria-pressed', x === b)); $('ageOk').disabled = false; $('ageOk').style.opacity = 1; });
+  $('ageOk').onclick = () => {
+    if (!chosen) return;
+    if (S.age && S.age !== chosen) S.adj = {};
+    S.age = chosen; S.name = $('nmI').value.trim(); save(); closeSheet(); refreshTop(); show(screen);
+    if (first) { confetti(12); sayEn('welcome'); }
+  };
+}
+function parents(){
+  sheet(`<h2>For grown-ups</h2><p class="muted">Change the child's age or name, or see the plans.</p>${grownUpBtn('Hold to open')}<button class="btn ghost" data-close>Back</button>`);
+  bindHold(() => {
+    const P = buildPath();
+    sheet(`<h2>For grown-ups</h2>
+      <p>${esc(S.name || 'Your child')} · age ${S.age} · step ${Math.min(S.step, P.length)} of ${P.length} · ${S.tickets} tickets</p>
+      <p class="muted" style="font-size:14px">Gidro adapts: when the child gets everything right, the next game has more pictures or reading; when it is hard, it gets easier. From age 5, some rounds show the Malagasy word to read.</p>
+      <button class="btn" id="pAge">Change name or age</button>
+      ${LIVE && !member() ? `<a class="btn green" href="${JOIN_URL}">See the plans</a>` : ''}
+      <a class="btn ghost" href="school">Miss Elisa's class (Gidro School)</a>
+      <button class="btn ghost" id="pReset">Start the path over</button>
+      <button class="btn ghost" data-close>Close</button>`);
+    $('pAge').onclick = () => askAge(false);
+    $('pReset').onclick = () => { S.step = 0; S.adj = {}; save(); closeSheet(); toast('The path starts again from step 1'); show(screen); };
+  });
+}
+$('parentBtn').onclick = parents;
+$('whoBtn').onclick = parents;
+
+/* ---------- library ---------- */
+let shelfId = 'teny';
+function drawLib(){
+  $('shelves').innerHTML = SHELVES.map(s => `<button class="shelf" data-s="${s.id}" aria-pressed="${s.id === shelfId}"><span class="se">${s.e}</span>${esc(s.mg)}<small>${esc(s.en)}</small></button>`).join('');
+  $('shelves').querySelectorAll('.shelf').forEach(b => b.onclick = () => { shelfId = b.dataset.s; drawLib(); });
+  const sh = SHELVES.find(s => s.id === shelfId);
+  const bg = { teny:'#fde6d6', isa:'#e3eef5', feel:'#e1f0e6', loko:'#fbefd2', boky:'#efe9f7', mozika:'#fbe3df' }[sh.id];
+  $('libCards').innerHTML = sh.items.map(aid => {
+    const a = A[aid], ok = allowed(aid, null), done = S.done.includes(aid);
+    const cv = a.k === 'story' ? `<span style="display:flex;align-items:flex-end;gap:4px"><span style="width:70px;display:block">${gidro({})}</span><span>${a.e}</span></span>`
+      : a.cv && hasPhoto(a.cv) ? `<img src="${a.cv}.webp" alt="">` : a.e;
+    return `<button class="lc" data-a="${aid}"><span class="cv" style="background:${bg}">${cv}</span>${ok ? '' : '<span class="lock">🔒 Members</span>'}${done ? '<span class="dn">✓</span>' : ''}<b>${esc(a.t)}<small>${actSub(a)}</small></b></button>`;
+  }).join('');
+  $('libCards').querySelectorAll('.lc').forEach(b => b.onclick = () => { const aid = b.dataset.a; if (!allowed(aid, null)) return membersOnly(); startAct(aid, null); });
+}
+const actSub = a => ({ find:'Listen and tap', market:'Fill the basket', paint:'Listen and paint', memory:'Find the pairs', move:'Jump, clap and dance', story:'Story with Gidro' })[a.k];
+
+/* ---------- path ---------- */
+function stonePos(i, n){ const rowH = 100 / (n + 1); return { x: 50 + 30 * Math.sin(i * .9), y: 100 - (i + 1) * rowH }; }
+function drawPath(){
+  const P = buildPath(), n = P.length, H = n * 92 + 80;
+  $('road').style.height = H + 'px';
+  $('pathCount').textContent = `${Math.min(S.step, n)} / ${n}`;
+  let d = ''; for (let i = 0; i < n; i++) { const p = stonePos(i, n); d += (i ? ' L ' : 'M ') + (p.x * 4) + ' ' + (p.y * H / 100); }
+  let h = `<svg viewBox="0 0 400 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" stroke="#e8cf98" stroke-width="26" fill="none" stroke-linejoin="round" stroke-linecap="round"/><path d="${d}" stroke="#fff6dc" stroke-width="3" stroke-dasharray="8 10" fill="none"/></svg>`;
+  P.forEach((a, i) => {
+    const p = stonePos(i, n), cls = i < S.step ? 'done' : i === S.step ? 'now' : 'lock', chest = a === 'CHEST';
+    const lock = !allowed(a, i) && i >= S.step;
+    const label = chest ? '🎁' : i < S.step ? '★' : i === S.step ? `<span class="ee">${A[a].e}</span>` : (lock ? '🔒' : i + 1);
+    h += `<button class="stone ${cls}${chest ? ' chest' : ''}" style="left:${p.x}%;top:${p.y}%" data-i="${i}" aria-label="Step ${i + 1}">${label}${i === S.step ? `<span class="tag">${chest ? 'Treasure!' : esc(A[a].t)}</span>` : ''}</button>`;
+  });
+  const wp = stonePos(Math.min(S.step, n - 1), n);
+  h += `<div class="walker" style="left:${wp.x}%;top:calc(${wp.y}% - 22px)">${gidro()}</div>`;
+  $('road').innerHTML = h;
+  $('road').querySelectorAll('.stone').forEach(b => b.onclick = () => {
+    const i = +b.dataset.i;
+    if (i > S.step) { boop(); toast('Finish the glowing step first'); return; }
+    if (P[i] === 'CHEST') { if (i === S.step) openStep(i); else toast('You opened this chest already'); return; }
+    if (i < S.step) startAct(P[i], null); else openStep(i);
+  });
+  setTimeout(() => { const now = $('road').querySelector('.stone.now'); if (now) now.scrollIntoView({ block:'center', behavior:'smooth' }); }, 80);
+}
+function openStep(i){
+  const P = buildPath(), a = P[i];
+  if (!allowed(a, i)) return membersOnly();
+  if (a === 'CHEST') return openChest();
+  startAct(a, i);
+}
+function openChest(){
+  confetti(26); chaching(); addTickets(15); S.step++; save();
+  sheet(`<div style="text-align:center;font-size:90px;line-height:1">🎁</div><h2 style="text-align:center">Treasure chest!</h2>
+    <p style="text-align:center;display:flex;gap:6px;justify-content:center;align-items:center">You found 15 ${TICKET.replace('class="tk"', 'style="width:30px;height:22px"')}</p>
+    <button class="btn green" data-close>Keep going</button>`);
+  if (screen === 'path') drawPath(); else drawHome();
+}
+
+/* ================= game engine ================= */
+let playing = null;
+function startAct(aid, pathIndex){
+  const a = A[aid];
+  playing = { aid, a, pathIndex, earned:0, right:0, total:0, L: lvl(a.k) };
+  $('gscr').hidden = false; document.body.style.overflow = 'hidden';
+  ({ find:playFind, market:playMarket, paint:playPaint, memory:playMemory, move:playMove, story:playStory })[a.k](a, playing.L);
+}
+function stopPlay(){ stopAudio(); mvStop = true; $('gscr').hidden = true; document.body.style.overflow = ''; playing = null; }
+function phead(total, doneN){
+  let dots = ''; for (let i = 0; i < total; i++) dots += `<i class="${i < doneN ? 'on' : ''}"></i>`;
+  return `<div class="phead"><button class="x" id="px" aria-label="Leave"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="dots">${dots}</div><span class="pill">${TICKET}<span>${S.tickets}</span></span></div>`;
+}
+function bindX(){ $('px').onclick = () => { stopPlay(); show(screen); }; }
+const SPEAK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/></svg>';
+function talk(btn, p){ if (btn) btn.classList.add('talk'); return p.then(() => btn && btn.classList.remove('talk')); }
+function score(firstTry){ if (!playing) return; playing.total++; if (firstTry) playing.right++; }
+function rightAnswer(el, firstTry){
+  ding(); const n = firstTry ? 2 : 1; playing.earned += n; addTickets(n); flyTicket(el, n);
+  return playFile('en-' + pick(PRAISE) + '.mp3', 2500);
+}
+function wrongAnswer(el){ boop(); el.classList.remove('wrong'); void el.offsetWidth; el.classList.add('wrong'); }
+function finish(){
+  const p = playing; if (!p) return;
+  addTickets(3); p.earned += 3;
+  if (p.total) adapt(p.a.k, p.right / p.total);
+  if (!S.done.includes(p.aid)) S.done.push(p.aid);
+  const onPath = p.pathIndex !== null && p.pathIndex === S.step;
+  if (onPath) S.step++;
+  save(); confetti();
+  const who = pick(['gidro', 'lova', 'tiana']);
+  $('gin').innerHTML = `<div class="yay">
+    <div class="stk">${gidro()}<b>Mahay ianao!</b></div>
+    <div class="guide" style="justify-content:center"><span class="gp" style="width:56px">${chrPic(who)}</span><p style="margin:0;font-weight:800;background:#fff;border:2px solid var(--line);border-radius:16px;padding:8px 12px">${esc(CHR[who])}: Outstanding${S.name ? ', ' + esc(S.name) : ''}!</p></div>
+    <div class="earn">${TICKET.replace('class="tk"', '')} +${p.earned} tickets</div>
+    <button class="btn green" id="yNext">${onPath ? 'Keep playing' : 'Play again'}</button>
+    <button class="btn ghost" id="yHome">Home</button></div>`;
+  sayEn('outstanding');
+  $('yNext').onclick = () => { stopPlay(); if (onPath) { const P = buildPath(); if (S.step < P.length) openStep(S.step); else show('home'); } else startAct(p.aid, null); };
+  $('yHome').onclick = () => { stopPlay(); show('home'); };
+}
+
+/* 1. listen and tap (from age 5: some rounds are "read and tap") */
+function playFind(a, L){
+  const set = SETS[a.set], nOpt = Math.min(set.length, [2,3,3,4,4][L]), rounds = [4,5,5,6,6][L];
+  let r = 0, last = null;
+  const round = () => {
+    if (!playing) return;
+    if (r >= rounds) return finish();
+    let target; do { target = pick(set); } while (target === last && set.length > 1); last = target;
+    const opts = shuffle([target, ...shuffle(set.filter(w => w !== target)).slice(0, nOpt - 1)]);
+    const voiced = hasVoice(target), read = L >= 3 && r % 2 === 1;
+    const x = W(target);
+    $('gin').innerHTML = phead(rounds, r) + `
+      <div class="ptitle"><h2>${esc(a.t)}</h2><p>${read ? 'Read the word and tap the picture' : voiced ? 'Listen and tap the picture' : 'Find: ' + esc(x.en)}</p></div>
+      ${read ? `<div class="readw${x.mg.length > 12 ? ' small' : ''}">${esc(x.mg)}</div>` : ''}
+      <button class="spk" id="sayB" aria-label="Listen" ${read ? 'style="width:56px;height:56px"' : ''}>${SPEAK}</button>
+      <div class="scene ${a.th}"><div class="opts${nOpt === 2 ? ' c2' : nOpt === 4 ? ' c4' : ''}">${opts.map(w => `<button class="opt" data-w="${w}">${picOf(w)}<span class="cap"></span></button>`).join('')}</div></div>`;
+    bindX();
+    const sayB = $('sayB'), sayIt = () => talk(sayB, voiced ? sayWord(target) : sayEn('yourturn'));
+    sayB.onclick = sayIt;
+    let missed = false, locked = false;
+    $('gin').querySelectorAll('.opt').forEach(b => b.onclick = () => {
+      if (locked) return;
+      const w = b.dataset.w, y = W(w);
+      b.querySelector('.cap').innerHTML = `${esc(y.mg)}<small>${esc(y.en)}</small>`;
+      if (w === target) { locked = true; b.classList.add('right'); score(!missed);
+        rightAnswer(b, !missed).then(() => sayWord(target)).then(() => { r++; setTimeout(round, 400); });
+      } else { missed = true; wrongAnswer(b); setTimeout(sayIt, 450); }
+    });
+    if (!read) setTimeout(sayIt, 300);
+  };
+  if (a.th === 'garden') sayEn('howfeel').then(round); else round();
+}
+
+/* 2. market shopping (from age 5 the list is written, not pictures) */
+function playMarket(a, L){
+  const lists = 2, listN = [2,3,3,4,4][L], readList = L >= 3; let li = 0;
+  const one = () => {
+    if (!playing) return;
+    if (li >= lists) return finish();
+    const shelf = shuffle(SETS[a.set]).slice(0, listN <= 2 ? 4 : 6), need = shuffle(shelf).slice(0, listN), got = new Set();
+    let missed = false;
+    $('gin').innerHTML = phead(lists, li) + `
+      <div class="ptitle"><h2>Market shopping</h2><p>${readList ? 'Read the lisitra (list).' : 'Look at the lisitra (list).'} Put those things in the harona (basket).</p></div>
+      <div class="list"><span class="lt">lisitra<small>list</small></span>${need.map(w => readList ? `<button class="it word" data-l="${w}">${esc(W(w).mg)}</button>` : `<button class="it" data-l="${w}">${picOf(w)}</button>`).join('')}</div>
+      <div class="scene market"><div class="shelfg">${shelf.map(w => `<button class="opt" data-w="${w}">${picOf(w)}</button>`).join('')}</div></div>
+      <div class="basket"><span class="bk" id="bk">${hasPhoto('harona') ? '<img src="harona.webp" alt="basket">' : '<span style="font-size:60px">🧺</span>'}</span><span id="bkN">0 / ${need.length}</span></div>`;
+    bindX();
+    $('gin').querySelectorAll('.list .it').forEach(s => s.onclick = () => sayWord(s.dataset.l));
+    $('gin').querySelectorAll('.shelfg .opt').forEach(b => b.onclick = () => {
+      const w = b.dataset.w;
+      if (need.includes(w) && !got.has(w)) {
+        got.add(w); ding(); addTickets(1); playing.earned++; flyTicket(b); sayWord(w); score(true);
+        b.classList.add('gone'); const bk = $('bk'); bk.classList.remove('bump'); void bk.offsetWidth; bk.classList.add('bump');
+        $('bkN').textContent = `${got.size} / ${need.length}`;
+        $('gin').querySelector(`.it[data-l="${w}"]`).classList.add('got');
+        if (got.size === need.length) setTimeout(pay, 900);
+      } else if (!got.has(w)) { missed = true; score(false); wrongAnswer(b); sayWord(w); }
+    });
+    sayWord('lisitra');
+    const pay = () => {
+      if (!playing) return;
+      $('gin').innerHTML = phead(lists, li) + `<div class="ptitle"><h2>Time to pay!</h2><p>Tap the vola (money) to pay for your basket.</p></div>
+        <button class="opt" id="payB" style="width:58%;align-self:center">${picOf('vola')}<span class="cap">vola<small>money</small></span></button>`;
+      bindX(); sayWord('vola');
+      $('payB').onclick = () => { chaching(); $('payB').classList.add('right'); playFile('en-' + pick(PRAISE) + '.mp3', 2500).then(() => { li++; one(); }); };
+    };
+  };
+  one();
+}
+
+/* 3. listen and paint */
+const SHAPE_SVG = { boribory:'<circle class="fillme" cx="50" cy="50" r="40"/>', efamira:'<rect class="fillme" x="12" y="12" width="76" height="76" rx="4"/>', telozoro:'<path class="fillme" d="M50 8L92 88H8z"/>', mahitsizoro:'<rect class="fillme" x="4" y="24" width="92" height="52" rx="4"/>' };
+function playPaint(a, L){
+  const all = SETS[a.set], nPot = Math.min(all.length, [2,3,4,4,5][L]), rounds = 4, sayShape = a.sayShape || L >= 2, read = L >= 3;
+  let r = 0, lastC = null;
+  const round = () => {
+    if (!playing) return;
+    if (r >= rounds) return finish();
+    let c; do { c = pick(all); } while (c === lastC && all.length > 1); lastC = c;
+    const shape = a.shapes[r % a.shapes.length];
+    const pots = shuffle([c, ...shuffle(all.filter(x => x !== c)).slice(0, nPot - 1)]);
+    $('gin').innerHTML = phead(rounds, r) + `
+      <div class="ptitle"><h2>${esc(a.t)}</h2><p>${read ? 'Read or listen, then tap the paint' : 'Listen to the color, then tap the paint'}</p></div>
+      ${read ? `<div class="readw small">${esc(W(shape).mg)} ${esc(W(c).mg)}</div>` : ''}
+      <button class="spk" id="sayB" aria-label="Listen">${SPEAK}</button>
+      <div class="canvasbox"><svg viewBox="0 0 100 100"><g fill="#fff" stroke="#1f2a44" stroke-width="3" stroke-dasharray="6 5">${SHAPE_SVG[shape]}</g></svg></div>
+      <p id="shapeCap" style="text-align:center;margin:-4px 0 0;font-weight:800;min-height:1.3em"></p>
+      <div class="pots">${pots.map(p => `<button class="pot" data-c="${p}" style="background:${W(p).color}" aria-label="paint"></button>`).join('')}</div>`;
+    bindX();
+    const sayB = $('sayB'), sayIt = () => talk(sayB, (sayShape ? sayWord(shape) : Promise.resolve()).then(() => sayWord(c)));
+    sayB.onclick = sayIt;
+    let missed = false, locked = false;
+    $('gin').querySelectorAll('.pot').forEach(b => b.onclick = () => {
+      if (locked) return;
+      if (b.dataset.c === c) {
+        locked = true; b.classList.add('right'); score(!missed);
+        const f = $('gin').querySelector('.fillme'); f.style.fill = W(c).color; f.parentNode.setAttribute('stroke-dasharray', '0');
+        $('shapeCap').innerHTML = `${esc(W(shape).mg)} ${esc(W(c).mg)} <span style="color:var(--soft)">- ${esc(W(c).en)} ${esc(W(shape).en)}</span>`;
+        rightAnswer(b, !missed).then(() => { r++; setTimeout(round, 600); });
+      } else { missed = true; wrongAnswer(b); sayWord(b.dataset.c).then(() => setTimeout(sayIt, 300)); }
+    });
+    setTimeout(sayIt, 300);
+  };
+  round();
+}
+
+/* 4. memory pairs (from age 5: match the picture with the written word) */
+function playMemory(a, L){
+  const pairs = Math.min(SETS[a.set].length, [2,3,3,4,4][L]), words = shuffle(SETS[a.set]).slice(0, pairs), readMode = L >= 3;
+  const cards = shuffle([...words.map(w => ({ w, t:'p' })), ...words.map(w => ({ w, t: readMode ? 'w' : 'p' }))]);
+  let open = [], matched = 0, busy = false, flips = 0;
+  const cols = cards.length <= 4 ? ' c2' : cards.length >= 8 ? ' c4' : '';
+  $('gin').innerHTML = phead(pairs, 0) + `
+    <div class="ptitle"><h2>${esc(a.t)}</h2><p>${readMode ? 'Match each picture with its word' : 'Turn two cards. Find the pairs!'}</p></div>
+    <div class="mem${cols}">${cards.map(c => `<button class="card" data-w="${c.w}"><span class="f"><span class="s back">${gidro({})}</span><span class="s front">${c.t === 'w' ? `<span class="wd">${esc(W(c.w).mg)}</span>` : picOf(c.w)}</span></span></button>`).join('')}</div>`;
+  bindX(); sayEn('matchpairs');
+  $('gin').querySelectorAll('.card').forEach(c => c.onclick = () => {
+    if (busy || c.classList.contains('open') || c.classList.contains('ok')) return;
+    c.classList.add('open'); tone(660, .08); sayWord(c.dataset.w); open.push(c);
+    if (open.length === 2) {
+      busy = true; flips++; const [x, y] = open;
+      if (x.dataset.w === y.dataset.w) {
+        setTimeout(() => { x.classList.add('ok'); y.classList.add('ok'); matched++; score(true); rightAnswer(y, true);
+          const d = $('gin').querySelectorAll('.dots i'); if (d[matched - 1]) d[matched - 1].classList.add('on');
+          open = []; busy = false; if (matched === words.length) setTimeout(finish, 1400); }, 500);
+      } else { setTimeout(() => { x.classList.remove('open'); y.classList.remove('open'); open = []; busy = false; }, 1100); if (flips > pairs * 2) score(false); }
+    }
+  });
+}
+
+/* 5. music and movement (the same 6 actions as Gidro School) */
+let mvStop = false;
+function playMove(){
+  const acts = [ { v:'jump', t:'Jump!', e:'🦘' }, { v:'clap', t:'Clap your hands!', e:'👏🏾' }, { v:'turn', t:'Turn around!', e:'🔄' },
+                 { v:'run', t:'Run in place!', e:'🏃🏾' }, { v:'dance', t:'Dance!', e:'💃🏾' }, { v:'head', t:'Touch your head!', e:'🙆🏾' } ];
+  mvStop = false; const tune = [523, 659, 784, 659, 587, 698, 880, 698]; let i = 0;
+  const step = async () => {
+    if (mvStop || !playing) return;
+    if (i >= acts.length) { sayEn('mvend'); return finish(); }
+    const x = acts[i];
+    $('gin').innerHTML = phead(acts.length, i) + `<div class="mv"><div class="big">${x.e}</div><h3>${x.t}</h3><div class="cnt" id="cnt">5</div></div>`;
+    bindX(); await sayEn('mv-' + x.v);
+    for (let s = 5; s > 0; s--) { if (mvStop || !playing) return; const c = $('cnt'); if (c) c.textContent = s;
+      tone(tune[(s + i) % tune.length], .25); tone(tune[(s + i + 2) % tune.length] / 2, .25, .25, 'sine', .08);
+      await new Promise(r => setTimeout(r, 1000)); }
+    addTickets(1); playing.earned++; i++; step();
+  };
+  $('gin').innerHTML = phead(acts.length, 0) + `<div class="mv"><div class="guide" style="justify-content:center"><span class="gp">${chrPic('lova')}</span><span class="gp" style="width:90px">${gidro()}</span><span class="gp">${chrPic('tiana')}</span></div><h3>Stand up and move with Gidro, Lova and Tiana!</h3><button class="btn green" id="mvGo" style="max-width:260px">Start</button></div>`;
+  bindX(); sayEn('mvintro'); $('mvGo').onclick = step;
+}
+
+/* 6. books: Gidro's stories, read by Nene */
+function playStory(a){
+  const st = GSTORY[a.n], k = a.n + 1; let i = 0, showEn = true;
+  const draw = () => {
+    if (!playing) return;
+    if (i >= st.pages.length) return finish();
+    const p = st.pages[i];
+    $('gin').innerHTML = phead(st.pages.length, i) + `
+      <div class="ptitle"><h2>${esc(a.t)}</h2></div>
+      <div class="book"><div class="bs">${p.sc.map(x => x === 'G' ? `<span class="g">${gidro()}</span>` : `<span>${x}</span>`).join('')}</div>
+        <div class="bt"><div class="mg">${esc(p.mg)}</div><div class="en" id="enl" ${showEn ? '' : 'style="visibility:hidden"'}>${esc(p.en)}</div></div></div>
+      <button class="btn ghost" id="hear">🔊 Listen again</button>
+      <div class="row">${i ? '<button class="btn ghost" id="bk" style="width:40%">Back</button>' : ''}<button class="btn green" id="nx">${i + 1 < st.pages.length ? 'Next page' : 'The end'}</button></div>`;
+    bindX();
+    const say = () => playFile('en-st' + k + 'p' + (i + 1) + '.mp3', 15000);
+    say(); $('hear').onclick = say; $('enl').onclick = () => { showEn = !showEn; $('enl').style.visibility = showEn ? 'visible' : 'hidden'; };
+    $('nx').onclick = () => { stopAudio(); tone(700, .08); i++; draw(); };
+    if ($('bk')) $('bk').onclick = () => { stopAudio(); i--; draw(); };
+  };
+  draw();
+}
+
+/* ================= ticket shop (the child chooses) ================= */
+const ITEMS = [
+  { id:'bow', tab:'wear', slot:'head', en:'Pink bow', price:10 }, { id:'hat', tab:'wear', slot:'head', en:'Green hat', price:15 },
+  { id:'crown', tab:'wear', slot:'head', en:'Flower crown', price:25 }, { id:'glasses', tab:'wear', slot:'eyes', en:'Sunglasses', price:20 },
+  { id:'lamba', tab:'wear', slot:'neck', mg:'lamba', en:'Red lamba scarf', price:30 }, { id:'medal', tab:'wear', slot:'neck', en:'Gold medal', price:40 },
+  { id:'rug', tab:'room', en:'Round rug', price:10 }, { id:'ball', tab:'room', en:'Red ball', price:10 }, { id:'books', tab:'room', en:'Book shelf', price:15 },
+  { id:'plant', tab:'room', mg:'ravinala', en:'Ravinala plant', price:20 }, { id:'drum', tab:'room', en:'Drum', price:25 },
+  { id:'lamp', tab:'room', en:'Moon lamp', price:25 }, { id:'baobab', tab:'room', mg:'baobab', en:'Baobab picture', price:35 }
+];
+const ROOMART = {
+  rug:'<ellipse cx="180" cy="262" rx="110" ry="22" fill="#e07a3f"/><ellipse cx="180" cy="262" rx="80" ry="14" fill="#f4a940"/><ellipse cx="180" cy="262" rx="44" ry="7" fill="#c8483b"/>',
+  ball:'<circle cx="292" cy="250" r="18" fill="#c8483b"/><path d="M276 244c10 4 22 4 32 0M280 260c8-3 18-3 26 0" stroke="#fff" stroke-width="3" fill="none"/>',
+  books:'<rect x="248" y="96" width="86" height="8" fill="#8c5430"/><rect x="254" y="66" width="10" height="30" fill="#3a7ca5"/><rect x="266" y="70" width="10" height="26" fill="#c8483b"/><rect x="278" y="64" width="10" height="32" fill="#3e8c63"/><rect x="290" y="72" width="10" height="24" fill="#f4a940"/><path d="M304 96l10-28 8 3-10 25z" fill="#7a5ea8"/>',
+  plant:'<rect x="20" y="226" width="34" height="34" rx="4" fill="#b5651d"/><path d="M37 226V170" stroke="#2f6e4c" stroke-width="4"/><g fill="#3e8c63"><path d="M37 172c-20-6-28-26-22-40 12 8 20 24 22 40z"/><path d="M37 172c20-6 28-26 22-40-12 8-20 24-22 40z"/><path d="M37 170c-4-18 0-34 0-48 6 14 6 30 0 48z"/></g>',
+  drum:'<path d="M60 224h44v34a5 5 0 0 1-5 5H65a5 5 0 0 1-5-5z" fill="#c8483b"/><ellipse cx="82" cy="224" rx="22" ry="7" fill="#fde6d6" stroke="#94530f" stroke-width="2"/><path d="M63 230l8 30M101 230l-8 30M82 232v31" stroke="#f4a940" stroke-width="2.5"/>',
+  lamp:'<path d="M318 120v100" stroke="#1f2a44" stroke-width="3"/><ellipse cx="318" cy="222" rx="16" ry="5" fill="#1f2a44"/><path d="M332 106a20 20 0 1 1-16-26 16 16 0 0 0 16 26z" fill="#ffd166"/>',
+  baobab:'<rect x="128" y="34" width="104" height="70" rx="4" fill="#f4a940"/><rect x="134" y="40" width="92" height="58" fill="#fbd9a8"/><circle cx="208" cy="54" r="7" fill="#e07a3f"/><rect x="175" y="64" width="10" height="34" fill="#8c5430"/><path d="M175 66c-8-2-12-8-10-14M185 66c8-2 12-8 10-14M180 64v-10" stroke="#8c5430" stroke-width="3" fill="none"/><circle cx="165" cy="50" r="6" fill="#3e8c63"/><circle cx="195" cy="50" r="6" fill="#3e8c63"/><circle cx="180" cy="48" r="7" fill="#3e8c63"/>'
+};
+const WEARPREV = { bow:{head:'bow'}, hat:{head:'hat'}, crown:{head:'crown'}, glasses:{eyes:'glasses'}, lamba:{neck:'lamba'}, medal:{neck:'medal'} };
+let shopTab = 'wear';
+function drawShop(){
+  $('shopGuide').innerHTML = chrPic('tiana');
+  $('tabWear').setAttribute('aria-pressed', shopTab === 'wear'); $('tabRoom').setAttribute('aria-pressed', shopTab === 'room');
+  $('items').innerHTML = ITEMS.filter(it => it.tab === shopTab).map(it => {
+    const own = S.owned.includes(it.id), on = it.tab === 'wear' ? S.wear[it.slot] === it.id : S.room.includes(it.id);
+    const prev = it.tab === 'wear' ? gidro(WEARPREV[it.id]) : `<svg viewBox="0 0 360 300" aria-hidden="true">${ROOMART[it.id]}</svg>`;
+    const btn = !own ? `<button class="buy${S.tickets < it.price ? ' poor' : ''}" data-buy="${it.id}">${TICKET} ${it.price}</button>`
+      : `<button class="buy ${on ? 'on' : 'own'}" data-use="${it.id}">${on ? (it.tab === 'wear' ? 'Wearing ✓' : 'In the room ✓') : (it.tab === 'wear' ? 'Put on' : 'Put in room')}</button>`;
+    return `<div class="item"><div class="iv">${prev}</div><b>${esc(it.en)}${it.mg ? `<small>${esc(it.mg)}</small>` : ''}</b>${btn}</div>`;
+  }).join('');
+  $('items').querySelectorAll('[data-buy]').forEach(b => b.onclick = () => buy(b.dataset.buy));
+  $('items').querySelectorAll('[data-use]').forEach(b => b.onclick = () => useItem(b.dataset.use));
+}
+function buy(id){
+  const it = ITEMS.find(x => x.id === id);
+  if (S.tickets < it.price) { boop(); toast(`You need ${it.price - S.tickets} more tickets. Tap Play to earn more!`); return; }
+  S.tickets -= it.price; S.owned.push(id); chaching(); confetti(10); useItem(id, true);
+  toast(it.tab === 'wear' ? 'Gidro loves it!' : 'Added to Gidro’s room!');
+}
+function useItem(id, forceOn){
+  const it = ITEMS.find(x => x.id === id);
+  if (it.tab === 'wear') S.wear[it.slot] = (S.wear[it.slot] === id && !forceOn) ? null : id;
+  else { const k = S.room.indexOf(id); if (k >= 0 && !forceOn) S.room.splice(k, 1); else if (k < 0) S.room.push(id); }
+  save(); refreshTop(); drawShop();
+}
+$('tabWear').onclick = () => { shopTab = 'wear'; drawShop(); };
+$('tabRoom').onclick = () => { shopTab = 'room'; drawShop(); };
+function drawRoom(){
+  const order = ['baobab','books','lamp','rug','plant','drum','ball'];
+  $('room').innerHTML = `<svg viewBox="0 0 360 300" aria-hidden="true"><rect width="360" height="300" fill="#f6dcb5"/>
+     <g stroke="#e9c896" stroke-width="2">${Array.from({ length:9 }, (_, i) => `<path d="M${i * 45} 0v210"/>`).join('')}</g>
+     <rect y="210" width="360" height="90" fill="#c99360"/><g stroke="#b5814f" stroke-width="2">${Array.from({ length:5 }, (_, i) => `<path d="M0 ${226 + i * 16}h360"/>`).join('')}</g>
+     <rect x="24" y="40" width="80" height="80" rx="40" fill="#9edcf0" stroke="#8c5430" stroke-width="6"/><path d="M64 40v80M24 80h80" stroke="#8c5430" stroke-width="4"/><circle cx="84" cy="62" r="8" fill="#ffd166"/>
+     ${order.filter(k => S.room.includes(k)).map(k => ROOMART[k]).join('')}</svg><div class="gd">${gidro()}</div>`;
+  if (!S.room.length) $('room').insertAdjacentHTML('beforeend', '<p style="position:absolute;left:0;right:0;top:44%;text-align:center;font-weight:800;color:#94530f;margin:0">The room is empty. Choose things in the shop!</p>');
+}
+
+/* ================= start ================= */
+$('tkIcon').innerHTML = TICKET;
+$('icLib').innerHTML = IC.lib; $('icCls').innerHTML = IC.cls; $('icShop').innerHTML = IC.shop; $('icRoom').innerHTML = IC.room;
+refreshTop(); show('home');
+if (!S.age) askAge(true);
+if (LIVE) { try { window.G.onChange(() => show(screen)); window.G.start(); } catch (e) {} }
+</script>
+</body>
+</html>
